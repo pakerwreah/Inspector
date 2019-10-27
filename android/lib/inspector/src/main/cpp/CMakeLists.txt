@@ -10,7 +10,7 @@ cmake_minimum_required(VERSION 3.10.2)
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
 
-set(sources ../../../../../cpp)
+set(sources ../../../../../../cpp)
 
 add_subdirectory(${sources} build)
 include_directories("${sources}/src")
