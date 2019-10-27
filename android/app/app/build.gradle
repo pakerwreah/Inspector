@@ -29,7 +29,9 @@ android {
 }
 
 dependencies {
+    localImplementation project(':inspector')
+    mavenImplementation 'br.newm.inspector:inspector:1.0.0@aar'
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    mavenImplementation 'br.newm.inspector:inspector:1.0.0@aar'
 }

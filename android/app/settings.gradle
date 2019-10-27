@@ -1,2 +1,3 @@
-include ':app'
+include ':app', ':inspector'
 rootProject.name='Inspector'
+project(':inspector').projectDir = new File(settingsDir, '../lib/inspector')
