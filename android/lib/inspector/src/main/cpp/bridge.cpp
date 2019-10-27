@@ -34,7 +34,8 @@ protected:
     vector<string> databaseList() override {
         auto env = attachThread();
 
-        jmethodID methodID = env->GetStaticMethodID(driver, "databaseList", "()[Ljava/lang/String;");
+        jmethodID methodID = env->GetStaticMethodID(driver, "databaseList",
+                                                    "()[Ljava/lang/String;");
         auto res = (jobjectArray) env->CallStaticObjectMethod(driver, methodID);
 
         int count = env->GetArrayLength(res);
@@ -54,7 +55,7 @@ protected:
     }
 };
 
-AndroidInpector inspector;
+AndroidInpector *inspector;
 
 jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     if (vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION_1_6) != JNI_OK) {
@@ -69,13 +70,15 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
 
     driver = (jclass) env->NewGlobalRef(driver);
 
+    inspector = new AndroidInpector;
+
     // No emulador precisa executar: ./adb forward tcp:30000 tcp:30000
-    inspector.bind(30000);
+    inspector->bind(30000);
 
     return JNI_VERSION_1_6;
 }
 
 extern "C" JNIEXPORT void JNICALL
 Java_br_newm_inspector_Inspector_initialize(JNIEnv *env, jobject /* this */) {
-    inspector.preselectDB();
+    inspector->preselectDB();
 }
