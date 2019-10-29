@@ -8,36 +8,28 @@
 
 #import "IOSInspector.h"
 #import "Inspector.h"
-#import <UIKit/UIKit.h>
 
 using namespace std;
 
-class InspectorImpl : public Inspector {
-protected:
-    vector<string> databaseList() override {
-        NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
-        
-        auto list = vector<string>();
+static id <IOSInspectorProtocol> delegate;
 
-        for (id name : @[@"banco_1.db", @"banco_2.db"]) {
-            auto path = [[documentsPath stringByAppendingPathComponent: name] UTF8String];
-            list.push_back(path);
+@implementation IOSInspector {
+    class InspectorImpl : public Inspector {
+    protected:
+        vector<string> databaseList() override {
+            auto list = vector<string>();
+            auto paths = delegate.databaseList;
+            for (NSString *path in paths) {
+                list.push_back(path.UTF8String);
+            }
+            return list;
         }
-        
-        return list;
-    }
-};
+    };
+}
 
-@implementation IOSInspector
-
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        auto inspector = new InspectorImpl;
-        inspector->bind(30000);
-    }
-    return self;
++ (void)initializeWithDelegate:(nonnull id <IOSInspectorProtocol>)_delegate port:(int)port {
+    delegate = _delegate;
+    (new InspectorImpl)->bind(port);
 }
 
 @end

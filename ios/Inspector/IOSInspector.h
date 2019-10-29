@@ -8,6 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
+@protocol IOSInspectorProtocol
+
+- (nonnull NSArray<NSString *> *)databaseList;
+
+@end
+
 @interface IOSInspector : NSObject
+
++ (void)initializeWithDelegate:(nonnull id <IOSInspectorProtocol>)delegate port:(int)port;
 
 @end
