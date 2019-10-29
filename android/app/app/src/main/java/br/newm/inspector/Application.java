@@ -5,7 +5,7 @@ public class Application extends android.app.Application {
     public void onCreate() {
         super.onCreate();
 
-        Inspector.initializeWithDefaults(this);
+        Inspector.initializeWith(this, 30000);
     }
 
     @Override

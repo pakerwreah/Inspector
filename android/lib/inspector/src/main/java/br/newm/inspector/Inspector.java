@@ -10,10 +10,10 @@ public class Inspector {
         System.loadLibrary("inspector");
     }
 
-    public static void initializeWithDefaults(Context context) {
+    public static void initializeWith(Context context, int port) {
         Inspector.context = context;
 
-        initialize();
+        initialize(port);
     }
 
     private static String[] databaseList() {
@@ -24,5 +24,5 @@ public class Inspector {
         return paths;
     }
 
-    private static native void initialize();
+    private static native void initialize(int port);
 }
