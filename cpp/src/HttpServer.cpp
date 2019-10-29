@@ -34,7 +34,7 @@ Request::Request(const string &plain) {
             this->headers[name] = value;
         }
 
-        this->body = plain.substr(body_start);
+        this->body = plain.substr(static_cast<unsigned long>(body_start));
     }
 }
 
@@ -72,37 +72,44 @@ void HttpServer::put(string path, Handler handler) {
     request("PUT", path, handler);
 }
 
+void HttpServer::stop() {
+    _stop = true;
+}
+
 thread *HttpServer::start(int port) {
+    _stop = false;
     return new thread([this, port] {
-        Socket server;
-        server.create();
-        server.bind(port);
-        server.listen();
+        while (!_stop) {
+            Socket server;
+            server.create();
+            server.bind(port);
+            server.listen();
 
-        Socket *client;
-        while (server.accept(client)) {
-            string plain, buf;
+            Socket *client;
+            while (server.accept(client)) {
+                string plain, buf;
 
-            while (client->recv(buf, timeval{0, 100000})) {
-                plain += buf;
-            }
-
-            Request request(plain);
-
-            if (request.valid()) {
-                try {
-                    auto handler = routes.at(request.method).at(request.path);
-
-                    auto response = handler(request);
-
-                    client->send(response);
-
-                } catch (out_of_range ex) {
-                    client->send(Response::NotFound());
+                while (client->recv(buf, timeval{0, 100000})) {
+                    plain += buf;
                 }
-            }
 
-            delete client;
+                Request request(plain);
+
+                if (request.valid()) {
+                    try {
+                        auto handler = routes.at(request.method).at(request.path);
+
+                        auto response = handler(request);
+
+                        client->send(response);
+
+                    } catch (out_of_range ex) {
+                        client->send(Response::NotFound());
+                    }
+                }
+
+                delete client;
+            }
         }
     });
 }

@@ -12,7 +12,7 @@
 using namespace std;
 
 struct Request {
-    Request(const string& plain);
+    Request(const string &plain);
 
     map<string, string> headers;
     string method, path, body;
@@ -38,6 +38,8 @@ struct Response {
 typedef function<Response(const Request &)> Handler;
 
 class HttpServer {
+    bool _stop = false;
+
     map<string, map<string, Handler>> routes;
 
     void request(string method, string path, Handler handler);
@@ -49,7 +51,9 @@ public:
 
     void put(string path, Handler handler);
 
-    thread * start(int port);
+    void stop();
+
+    thread *start(int port);
 };
 
 
