@@ -18,7 +18,7 @@ class Database {
 public:
     Database(string path);
 
-    virtual ~Database();
+    ~Database();
 
     void commit();
 

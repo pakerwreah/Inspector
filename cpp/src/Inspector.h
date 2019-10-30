@@ -8,20 +8,17 @@
 #include <vector>
 #include <thread>
 #include "HttpServer.h"
+#include "DatabasePlugin.h"
 
-class Inspector {
-    HttpServer server;
-    string db_path;
+class Inspector : public DatabaseProvider {
+    HttpServer *server;
+    DatabasePlugin *databasePlugin;
 public:
     Inspector();
 
-    thread * bind(int port);
+    thread *bind(int port);
 
     void preselectDB();
-
-protected:
-    virtual vector<string> databaseList() = 0;
-
 };
 
 

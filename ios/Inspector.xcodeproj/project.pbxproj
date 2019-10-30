@@ -16,6 +16,7 @@
 		344C1C392367E6D100B62594 /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C2F2367E6D000B62594 /* util.cpp */; };
 		344C1C3B2367E6D100B62594 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C312367E6D000B62594 /* sqlite3.c */; };
 		344C1C3C2367E6D100B62594 /* HttpServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C332367E6D000B62594 /* HttpServer.cpp */; };
+		657FEFFEB9C578D7E05EEB11 /* DatabasePlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657FE7265DB0ABE839354EDE /* DatabasePlugin.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +43,8 @@
 		344C1C322367E6D000B62594 /* picohttpparser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = picohttpparser.h; sourceTree = "<group>"; };
 		344C1C332367E6D000B62594 /* HttpServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpServer.cpp; sourceTree = "<group>"; };
 		344C1C342367E6D000B62594 /* HttpServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpServer.h; sourceTree = "<group>"; };
+		657FE7265DB0ABE839354EDE /* DatabasePlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DatabasePlugin.cpp; sourceTree = "<group>"; };
+		657FEFA39983E8F73462861B /* DatabasePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabasePlugin.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +115,8 @@
 				344C1C262367E6D000B62594 /* sqlite3.h */,
 				344C1C2F2367E6D000B62594 /* util.cpp */,
 				344C1C252367E6D000B62594 /* util.h */,
+				657FEFA39983E8F73462861B /* DatabasePlugin.h */,
+				657FE7265DB0ABE839354EDE /* DatabasePlugin.cpp */,
 			);
 			name = lib;
 			path = ../cpp/src;
@@ -195,6 +200,7 @@
 				344C1C362367E6D100B62594 /* Database.cpp in Sources */,
 				344C1C392367E6D100B62594 /* util.cpp in Sources */,
 				344C1C3B2367E6D100B62594 /* sqlite3.c in Sources */,
+				657FEFFEB9C578D7E05EEB11 /* DatabasePlugin.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

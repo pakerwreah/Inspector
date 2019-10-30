@@ -12,7 +12,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate, IOSInspectorProtocol {
 
     func applicationDidFinishLaunching(_ application: UIApplication) {
-        IOSInspector.initialize(withDelegate: self, port: 5555)
+        IOSInspector.initialize(withDelegate: self, port: 30000)
     }
 
     func databaseList() -> [String] {

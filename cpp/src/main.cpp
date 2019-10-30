@@ -3,11 +3,12 @@
 //
 
 #include "Inspector.h"
+#include <vector>
 
 class TestInspector : public Inspector {
 protected:
     vector<string> databaseList() override {
-        return {"database_1.db"};
+        return {"database_1.db", "database_2.db"};
     }
 };
 

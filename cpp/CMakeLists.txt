@@ -9,14 +9,17 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 project(inspector)
 
-set(sources
+set(
+        sources
         src/sqlite3.c
         src/picohttpparser.c
         src/util.cpp
         src/Socket.cpp
         src/HttpServer.cpp
+        src/Inspector.cpp
         src/Database.cpp
-        src/Inspector.cpp)
+        src/DatabasePlugin.cpp
+)
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
