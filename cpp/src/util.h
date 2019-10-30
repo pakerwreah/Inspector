@@ -8,9 +8,14 @@
 #include <string>
 #include <sstream>
 #include <vector>
+#include <sys/time.h>
 
 namespace util {
     using namespace std;
+
+    typedef unsigned long long timestamp_t;
+
+    timestamp_t timestamp();
 
     string join(const vector<string> &pieces, const char &glue);
 

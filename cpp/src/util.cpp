@@ -5,6 +5,12 @@
 #include "util.h"
 
 namespace util {
+    timestamp_t timestamp() {
+        struct timeval now;
+        gettimeofday(&now, nullptr);
+        return now.tv_usec + (timestamp_t) now.tv_sec * 1000000;
+    }
+
     string join(const vector<string> &pieces, const char &glue) {
         string a;
         auto leng = pieces.size();

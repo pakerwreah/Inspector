@@ -13,12 +13,12 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
     this->provider = _provider;
 
     server->get("/database/list", [this](Request req) {
-        auto list = provider->databaseList();
-        ostringstream os;
-        for (auto name : list) {
-            os << split(name, '/').back() << endl;
+        auto paths = provider->databaseList();
+        json names = json::array();
+        for (auto path : paths) {
+            names += split(path, '/').back();
         }
-        return Response(os.str());
+        return Response(names);
     });
 
     server->put("/database/current/{index}", [this](Request req) {
@@ -37,45 +37,52 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
         return Response(db_path);
     });
 
-    //TODO: retornar dados como JSON
     server->post("/database/query", [this](Request req) {
         auto sql = req.body;
 
         try {
             Database db(db_path);
 
+            auto t0 = timestamp();
+
             auto res = db.query(sql);
 
-            ostringstream os;
+            auto t1 = timestamp();
 
-            os << join(res.headers(), ';') << endl;
+            auto duration = t1 - t0;
 
-            int cols = res.headers().size();
+            auto headers = res.headers();
+
+            auto cols = headers.size();
+
+            json rows = json::array();
 
             while (res.next()) {
-                vector<string> row;
+                json row;
                 for (int i = 0; i < cols; i++) {
-                    ostringstream val;
                     switch (res.type(i)) {
                         case SQLITE_INTEGER:
-                            val << res.integer(i);
+                            row += res.integer(i);
                             break;
                         case SQLITE_FLOAT:
-                            val << res.decimal(i);
+                            row += res.decimal(i);
                             break;
                         case SQLITE_NULL:
-                            val << "NULL";
+                            row += "NULL";
                             break;
                         default:
-                            val << res.text(i);
+                            row += res.text(i);
                             break;
                     }
-                    row.push_back(val.str());
                 }
-                os << join(row, ';') << endl;
+                rows += row;
             }
 
-            return Response(os.str());
+            json data = {{"headers", headers},
+                         {"data",    rows},
+                         {"usec",    duration}};
+
+            return Response(data);
         } catch (exception &ex) {
             return Response(string(ex.what()) + "\n\n" + sql, 400);
         }
@@ -85,11 +92,22 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
         try {
             Database db(db_path);
 
+            auto t0 = timestamp();
+
             db.transaction();
             db.execute(req.body);
             db.commit();
 
-            return Response();
+            auto t1 = timestamp();
+
+            auto duration = t1 - t0;
+
+            string msg = "Script executed";
+
+            json data = {{"msg",  msg},
+                         {"usec", duration}};
+
+            return Response(data);
         } catch (exception &ex) {
             return Response(ex.what(), 400);
         }

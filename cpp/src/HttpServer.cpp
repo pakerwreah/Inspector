@@ -45,8 +45,21 @@ bool Request::valid() {
     return !method.empty();
 }
 
-Response::Response(string body, int code) {
-    this->body = body;
+Response::Response(json data, int code, string content_type) {
+    string resp;
+    if (data.is_null()) {
+        resp = "";
+    } else if (data.is_string()) {
+        if (content_type == ContentType::JSON) {
+            resp = json{{"msg", data}}.dump();
+        } else {
+            resp = data.get<string>();
+        }
+    } else {
+        resp = data.dump();
+    }
+    this->content_type = content_type;
+    this->body = resp;
     this->code = code;
 }
 

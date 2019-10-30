@@ -9,8 +9,16 @@
 #include <string>
 #include <thread>
 #include <functional>
+#include "json.hpp"
+
+using json = nlohmann::json;
 
 using namespace std;
+
+namespace ContentType {
+    const string HTML = "text/html";
+    const string JSON = "application/json";
+}
 
 struct Request {
     Request(const string &plain);
@@ -22,13 +30,13 @@ struct Request {
 };
 
 struct Response {
-    Response(string body = "", int code = 200);
+    Response(json data = "", int code = 200, string content_type = ContentType::JSON);
 
     operator string();
 
     map<string, string> headers;
     int code;
-    string content_type = "text/html";
+    string content_type;
     string body;
 
     static Response NotFound() {
