@@ -51,8 +51,13 @@ Response::operator string() {
     ostringstream resp;
     resp << "HTTP/1.1 " << code << "\n"
          << "Content-Type: " << content_type << " charset=utf-8\n"
-         << "Content-Length: " << body.length() << "\n"
-         << "\n" << body;
+         << "Content-Length: " << body.length() << "\n";
+
+    for (auto header : headers) {
+        resp << header.first << ": " << header.second << "\n";
+    }
+
+    resp << "\n" << body;
     return resp.str();
 }
 
