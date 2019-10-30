@@ -29,6 +29,8 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
             selectDB(index);
 
             Database db(db_path);
+        } catch (out_of_range &ex) {
+            return Response(ex.what(), 400);
         } catch (exception &ex) {
             return Response(ex.what(), 500);
         }
@@ -96,7 +98,9 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
 
 void DatabasePlugin::selectDB(int index) {
     auto list = provider->databaseList();
-    if (list.size()) {
+    if (index >= 0 && index < list.size()) {
         db_path = list[index];
+    } else {
+        throw out_of_range("Index out of range");
     }
 }
