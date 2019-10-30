@@ -15,7 +15,7 @@ using namespace std;
 struct Request {
     Request(const string &plain);
 
-    map<string, string> headers;
+    map<string, string> headers, params;
     string method, path, body;
 
     bool valid();
@@ -44,6 +44,8 @@ class HttpServer {
     map<string, map<string, Handler>> routes;
 
     void request(string method, string path, Handler handler);
+
+    Handler find_route(Request &request);
 
 public:
     void get(string path, Handler handler);

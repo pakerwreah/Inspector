@@ -7,6 +7,9 @@
 #include "HttpServer.h"
 #include "Socket.h"
 #include "picohttpparser.h"
+#include "util.h"
+
+using namespace util;
 
 Request::Request(const string &plain) {
     const char *method, *path;
@@ -102,7 +105,7 @@ thread *HttpServer::start(int port) {
 
                 if (request.valid()) {
                     try {
-                        auto handler = routes.at(request.method).at(request.path);
+                        Handler handler = find_route(request);
 
                         auto response = handler(request);
 
@@ -117,4 +120,31 @@ thread *HttpServer::start(int port) {
             }
         }
     });
+}
+
+Handler HttpServer::find_route(Request &request) {
+    auto path_pieces = split(request.path, '/');
+    int path_size = path_pieces.size();
+
+    for (auto route : routes[request.method]) {
+        auto route_pieces = split(route.first, '/');
+        if (path_size == route_pieces.size()) {
+            map<string, string> params;
+            for (int i = 0; i < path_size; i++) {
+                auto rp = route_pieces[i];
+                auto pp = path_pieces[i];
+                if (rp.find('{') == 0) {
+                    auto key = trim(rp, "{}");
+                    params[key] = pp;
+                } else if (rp != pp) {
+                    break;
+                }
+                if (i == path_size - 1) {
+                    request.params = params;
+                    return route.second;
+                }
+            }
+        }
+    }
+    throw out_of_range("Route not found");
 }

@@ -21,10 +21,10 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
         return Response(os.str());
     });
 
-    server->put("/database/current", [this](Request req) {
+    server->put("/database/current/{index}", [this](Request req) {
         try {
             auto body = req.body;
-            auto index = atoi(req.body.c_str());
+            auto index = stoi(req.params["index"]);
 
             selectDB(index);
 
@@ -34,7 +34,7 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
         } catch (exception &ex) {
             return Response(ex.what(), 500);
         }
-        return Response("Selected: " + db_path);
+        return Response(db_path);
     });
 
     //TODO: retornar dados como JSON
