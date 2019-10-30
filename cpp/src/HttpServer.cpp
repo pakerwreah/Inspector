@@ -124,7 +124,7 @@ thread *HttpServer::start(int port) {
 
 Handler HttpServer::find_route(Request &request) {
     auto path_pieces = split(request.path, '/');
-    int path_size = path_pieces.size();
+    auto path_size = path_pieces.size();
 
     for (auto route : routes[request.method]) {
         auto route_pieces = split(route.first, '/');

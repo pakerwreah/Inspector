@@ -7,7 +7,7 @@
 namespace util {
     string join(const vector<string> &pieces, const char &glue) {
         string a;
-        int leng = pieces.size();
+        auto leng = pieces.size();
         for (int i = 0; i < leng; i++) {
             a += pieces[i];
             if (i < (leng - 1))
