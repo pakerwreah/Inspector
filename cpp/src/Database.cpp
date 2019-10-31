@@ -9,6 +9,9 @@ Database::Database(string path) {
     if (!path.length()) {
         throw runtime_error("Database path not selected");
     }
+    if (path.find("file://") == 0) {
+        path = path.substr(7);
+    }
     auto flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_FULLMUTEX;
     auto err = sqlite3_open_v2(path.c_str(), &db, flags, nullptr);
     if (err != SQLITE_OK) {

@@ -1,0 +1,22 @@
+PODS:
+  - Inspector (1.0.0)
+
+DEPENDENCIES:
+  - "Inspector (from `git@gitlab.com:paker_wreah/Inspector/Inspector.git`, branch `pod`)"
+
+EXTERNAL SOURCES:
+  Inspector:
+    :branch: pod
+    :git: "git@gitlab.com:paker_wreah/Inspector/Inspector.git"
+
+CHECKOUT OPTIONS:
+  Inspector:
+    :commit: e26b4fcf9b33480f3ab0e0fb269aa9a9ab191fe2
+    :git: "git@gitlab.com:paker_wreah/Inspector/Inspector.git"
+
+SPEC CHECKSUMS:
+  Inspector: 12b91bcefdcd4b4bdbd94090a3e3599bc99dae7f
+
+PODFILE CHECKSUM: bc956d104b6d1df95141231eaebb40a0a6bdfa87
+
+COCOAPODS: 1.8.4

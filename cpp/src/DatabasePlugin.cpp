@@ -82,7 +82,7 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
 
             return Response(data);
         } catch (exception &ex) {
-            return Response(string(ex.what()) + "\n\n" + sql, 400);
+            return Response(ex.what(), 400);
         }
     });
 

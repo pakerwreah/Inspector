@@ -5,8 +5,6 @@
 #ifndef INSPECTOR_INSPECTOR_H
 #define INSPECTOR_INSPECTOR_H
 
-#include <vector>
-#include <thread>
 #include "HttpServer.h"
 #include "DatabasePlugin.h"
 
