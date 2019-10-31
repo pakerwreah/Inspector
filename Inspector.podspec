@@ -6,7 +6,7 @@ Pod::Spec.new do |spec|
   spec.license      = 'LGPL'
   spec.authors      = { "Carlos César Neves Enumo" => "paker_wreah@hotmail.com" }
 
-  spec.source       = { :git => "git@gitlab.com:paker_wreah/Inspector/Inspector.git", :tag => spec.version.to_s }
+  spec.source       = { :git => "git@gitlab.com:paker_wreah/Inspector/Inspector.git" }
 
   spec.source_files = 'cpp/**/*.{h,hpp,c,cpp}', 'ios/Inspector/IOSInspector.{h,mm}'
   spec.public_header_files  = 'ios/Inspector/IOSInspector.h'
