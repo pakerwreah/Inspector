@@ -24,13 +24,13 @@ namespace util {
     static const char *whitespace = " \t\n\r\f\v";
 
     // trim from end of string (right)
-    std::string &rtrim(std::string &s, const char *t = whitespace);
+    string &rtrim(string &s, const char *t = whitespace);
 
     // trim from beginning of string (left)
-    std::string &ltrim(std::string &s, const char *t = whitespace);
+    string &ltrim(string &s, const char *t = whitespace);
 
     // trim from both ends of string (right then left)
-    std::string &trim(std::string &s, const char *t = whitespace);
+    string &trim(string &s, const char *t = whitespace);
 }
 
 #endif //INSPECTOR_UTIL_H

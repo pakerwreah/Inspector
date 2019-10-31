@@ -14,7 +14,7 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
 
     server->get("/database/list", [this](Request req) {
         auto paths = provider->databaseList();
-        json names = json::array();
+        auto names = json::array();
         for (auto path : paths) {
             names += split(path, '/').back();
         }
@@ -55,7 +55,7 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
 
             auto cols = headers.size();
 
-            json rows = json::array();
+            auto rows = json::array();
 
             while (res.next()) {
                 json row;
