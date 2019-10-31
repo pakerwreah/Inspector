@@ -4,11 +4,27 @@
 
 #include "util.h"
 
+using namespace std;
+using namespace nlohmann;
+
 namespace util {
-    timestamp_t timestamp() {
+    timeval timestamp() {
         struct timeval now;
         gettimeofday(&now, nullptr);
-        return now.tv_usec + (timestamp_t) now.tv_sec * 1000000;
+        return now;
+    }
+
+    timeval timediff(const timeval &start, const timeval &end) {
+        struct timeval duration;
+        timersub(&end, &start, &duration);
+        return duration;
+    }
+
+    json benchmark(const timeval &start) {
+        auto end = timestamp();
+        auto diff = timediff(start, end);
+        return {{"sec",  diff.tv_sec},
+                {"usec", diff.tv_usec}};
     }
 
     string join(const vector<string> &pieces, const char &glue) {

@@ -9,13 +9,19 @@
 #include <sstream>
 #include <vector>
 #include <sys/time.h>
+#include "json.hpp"
+
+using json = nlohmann::json;
+
+using namespace std;
 
 namespace util {
-    using namespace std;
 
-    typedef unsigned long long timestamp_t;
+    timeval timestamp();
 
-    timestamp_t timestamp();
+    timeval timediff(const timeval &start, const timeval &end);
+
+    json benchmark(const timeval &start);
 
     string join(const vector<string> &pieces, const char &glue);
 

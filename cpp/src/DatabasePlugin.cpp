@@ -43,13 +43,11 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
         try {
             Database db(db_path);
 
-            auto t0 = timestamp();
+            auto start = timestamp();
 
             auto res = db.query(sql);
 
-            auto t1 = timestamp();
-
-            auto duration = t1 - t0;
+            auto duration = benchmark(start);
 
             auto headers = res.headers();
 
@@ -78,9 +76,9 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
                 rows += row;
             }
 
-            json data = {{"headers", headers},
-                         {"data",    rows},
-                         {"usec",    duration}};
+            json data = {{"headers",  headers},
+                         {"data",     rows},
+                         {"duration", duration}};
 
             return Response(data);
         } catch (exception &ex) {
@@ -92,20 +90,15 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
         try {
             Database db(db_path);
 
-            auto t0 = timestamp();
+            auto start = timestamp();
 
             db.transaction();
             db.execute(req.body);
             db.commit();
 
-            auto t1 = timestamp();
+            auto duration = benchmark(start);
 
-            auto duration = t1 - t0;
-
-            string msg = "Script executed";
-
-            json data = {{"msg",  msg},
-                         {"usec", duration}};
+            json data = {{"duration", duration}};
 
             return Response(data);
         } catch (exception &ex) {
