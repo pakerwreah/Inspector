@@ -29,7 +29,9 @@ static id <IOSInspectorProtocol> delegate;
 
 + (void)initializeWithDelegate:(nonnull id <IOSInspectorProtocol>)_delegate port:(int)port {
     delegate = _delegate;
-    (new InspectorImpl)->bind(port);
+    auto inspector = new InspectorImpl;
+    inspector->preselectDB();
+    inspector->bind(port);
 }
 
 @end
