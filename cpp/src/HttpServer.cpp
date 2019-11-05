@@ -119,12 +119,17 @@ thread *HttpServer::start(int port) {
 
                 if (request.valid()) {
                     try {
-                        Handler handler = find_route(request);
+                        if (request.method == "OPTIONS") {
+                            Response response;
+                            response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT";
+                            client->send(response);
+                        } else {
+                            Handler handler = find_route(request);
 
-                        auto response = handler(request);
+                            auto response = handler(request);
 
-                        client->send(response);
-
+                            client->send(response);
+                        }
                     } catch (out_of_range ex) {
                         client->send(Response::NotFound());
                     }

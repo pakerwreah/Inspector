@@ -30,7 +30,7 @@ struct Request {
 };
 
 struct Response {
-    Response(json data = "", int code = 200, string content_type = ContentType::JSON);
+    Response(json data = nullptr, int code = 200, string content_type = ContentType::JSON);
 
     operator string();
 
