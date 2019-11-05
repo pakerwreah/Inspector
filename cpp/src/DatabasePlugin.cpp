@@ -13,12 +13,20 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
     this->provider = _provider;
 
     server->get("/database/list", [this](Request req) {
+        int index = 0;
         auto paths = provider->databaseList();
         auto names = json::array();
-        for (auto path : paths) {
-            names += split(path, '/').back();
+        for (int i = 0; i < paths.size(); i++) {
+            names += split(paths[i], '/').back();
+            if (paths[i] == db_path) {
+                index = i;
+            }
         }
-        return Response(names);
+
+        json data = {{"databases", names},
+                     {"current",   index}};
+
+        return Response(data);
     });
 
     server->put("/database/current/{index}", [this](Request req) {
