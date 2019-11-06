@@ -111,7 +111,7 @@ thread *HttpServer::start(int port) {
             while (server.accept(client)) {
                 string plain, buf;
 
-                while (client->recv(buf, timeval{0, 5000})) {
+                while (client->recv(buf, timeval{0, 8000})) {
                     plain += buf;
                 }
 
