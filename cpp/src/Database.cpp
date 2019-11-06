@@ -37,7 +37,7 @@ void Database::transaction() {
 ResultSet Database::query(string sql) {
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr);
-    if (rc != SQLITE_OK) {
+    if (rc != SQLITE_OK || stmt == nullptr) {
         throw runtime_error(string() + "Error executing query: " + sqlite3_errmsg(db));
     }
 
