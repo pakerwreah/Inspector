@@ -8,7 +8,7 @@
 class TestInspector : public Inspector {
 protected:
     vector<string> databaseList() override {
-        return {"database_1.db", "database_2.db"};
+        return {"database.db", "database2.db"};
     }
 };
 

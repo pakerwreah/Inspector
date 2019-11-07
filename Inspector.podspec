@@ -10,4 +10,5 @@ Pod::Spec.new do |spec|
 
   spec.source_files = 'cpp/**/*.{h,hpp,c,cpp}', 'ios/Inspector/IOSInspector.{h,mm}'
   spec.public_header_files  = 'ios/Inspector/IOSInspector.h'
+  spec.library = 'z'
 end

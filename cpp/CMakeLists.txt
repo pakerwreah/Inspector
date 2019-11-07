@@ -42,5 +42,5 @@ add_library( # Sets the name of the library.
 if (NOT DEFINED ANDROID_NDK)
     add_executable(inspector-test src/main.cpp)
 
-    target_link_libraries(inspector-test inspector-cpp)
+    target_link_libraries(inspector-test inspector-cpp z)
 endif ()

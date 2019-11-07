@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		34232AF42374C06000E45BCA /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 34232AF32374C03E00E45BCA /* libz.tbd */; };
 		3436339D2367F8DB002DB8BF /* IOSInspector.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3436339C2367F8DA002DB8BF /* IOSInspector.mm */; };
 		344AFA15236A857D007B2896 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C0E2367E64C00B62594 /* AppDelegate.swift */; };
 		344C1C0F2367E64C00B62594 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C0E2367E64C00B62594 /* AppDelegate.swift */; };
@@ -23,6 +24,8 @@
 
 /* Begin PBXFileReference section */
 		04D00EA7C5B28B5EB7DB4359 /* Pods-Inspector-pod.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Inspector-pod.debug.xcconfig"; path = "Target Support Files/Pods-Inspector-pod/Pods-Inspector-pod.debug.xcconfig"; sourceTree = "<group>"; };
+		34232AF22374BF5F00E45BCA /* compress.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = compress.hpp; sourceTree = "<group>"; };
+		34232AF32374C03E00E45BCA /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		3436339B2367F8DA002DB8BF /* IOSInspector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IOSInspector.h; sourceTree = "<group>"; };
 		3436339C2367F8DA002DB8BF /* IOSInspector.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = IOSInspector.mm; sourceTree = "<group>"; };
 		344AFA20236A857D007B2896 /* Inspector-pod.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Inspector-pod.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -64,6 +67,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34232AF42374C06000E45BCA /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,6 +86,7 @@
 		3436336B2367F087002DB8BF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				34232AF32374C03E00E45BCA /* libz.tbd */,
 				AF6E007F7005D4507CED6AC2 /* Pods_Inspector_pod.framework */,
 			);
 			name = Frameworks;
@@ -122,6 +127,7 @@
 		344C1C232367E6B100B62594 /* lib */ = {
 			isa = PBXGroup;
 			children = (
+				34232AF22374BF5F00E45BCA /* compress.hpp */,
 				344C1C292367E6D000B62594 /* Database.cpp */,
 				344C1C272367E6D000B62594 /* Database.h */,
 				344C1C332367E6D000B62594 /* HttpServer.cpp */,

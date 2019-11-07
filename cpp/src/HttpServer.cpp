@@ -8,6 +8,7 @@
 #include "Socket.h"
 #include "picohttpparser.h"
 #include "util.h"
+#include "compress.hpp"
 
 using namespace util;
 
@@ -127,6 +128,11 @@ thread *HttpServer::start(int port) {
                             Handler handler = find_route(request);
 
                             auto response = handler(request);
+
+                            if (request.headers["Accept-Encoding"].find("gzip") >= 0) {
+                                response.body = gzip::compress(response.body.data(), response.body.size());
+                                response.headers["Content-Encoding"] = "gzip";
+                            }
 
                             client->send(response);
                         }
