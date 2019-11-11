@@ -3,7 +3,6 @@
 //  IOSInspectorDriver
 //
 //  Created by Paker on 29/10/19.
-//  Copyright © 2019 NewM. All rights reserved.
 //
 
 #import "IOSInspector.h"
@@ -12,6 +11,7 @@
 using namespace std;
 
 static id <IOSInspectorProtocol> delegate;
+static Inspector *inspector;
 
 @implementation IOSInspector {
     class InspectorImpl : public Inspector {
@@ -27,11 +27,53 @@ static id <IOSInspectorProtocol> delegate;
     };
 }
 
+static string buildHeaders(NSDictionary<NSString*,NSString*> *headers) {
+    string headerstr;
+    NSArray<NSString *> *sorted_headers = [[headers allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+    for(NSString *_key in sorted_headers) {
+        NSString *key = _key;
+        if([key hasPrefix:@"_"]) {
+            key = [key substringFromIndex: 1];
+        }
+        headerstr += string() + key.UTF8String + ": " + headers[_key].UTF8String + "\n";
+    }
+    return headerstr;
+}
+
 + (void)initializeWithDelegate:(nonnull id <IOSInspectorProtocol>)_delegate port:(int)port {
     delegate = _delegate;
-    auto inspector = new InspectorImpl;
+    inspector = new InspectorImpl;
     inspector->preselectDB();
     inspector->bind(port);
+}
+
++ (void)sendRequestWithUID:(nonnull NSString *) uid request:(nonnull NSURLRequest*)request {
+
+    NSMutableDictionary<NSString*,NSString*> *headers = @{
+        @"_URL": request.URL.absoluteString,
+        @"_Method" : request.HTTPMethod
+    }.mutableCopy;
+    
+    if (!headers) {
+        [headers addEntriesFromDictionary: request.allHTTPHeaderFields];
+    }
+
+    auto body = request.HTTPBody;
+
+    inspector->sendRequest(uid.UTF8String, buildHeaders(headers), body ? string((const char*)body.bytes, body.length) : "");
+}
+
++ (void)sendResponseWithUID:(nonnull NSString *) uid response:(nullable NSHTTPURLResponse*)response body:(NSData *)body {
+
+    NSMutableDictionary<NSString*,NSString*> *headers = @{
+        @"_Status": response ? @(response.statusCode).stringValue : @"Error"
+    }.mutableCopy;
+
+    if(response) {
+        [headers addEntriesFromDictionary: response.allHeaderFields];
+    }
+
+    inspector->sendResponse(uid.UTF8String, buildHeaders(headers), body ? string((const char*)body.bytes, body.length) : "");
 }
 
 @end

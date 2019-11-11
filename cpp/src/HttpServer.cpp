@@ -6,13 +6,15 @@
 #include <thread>
 #include "HttpServer.h"
 #include "Socket.h"
-#include "picohttpparser.h"
+#include "libs/picohttpparser.h"
+#include "libs/compress.hpp"
 #include "util.h"
-#include "compress.hpp"
 
 using namespace util;
 
-Request::Request(const string &plain) {
+Request::Request(const string &plain, Socket *client) {
+    socket = shared_ptr<Socket>(client);
+
     const char *method, *path;
     size_t path_len, method_len;
     int minor_version;
@@ -66,13 +68,13 @@ Response::Response(json data, int code, string content_type) {
 
 Response::operator string() {
     ostringstream resp;
-    resp << "HTTP/1.1 " << code << "\n"
-         << "Content-Type: " << content_type << " charset=utf-8\n"
-         << "Content-Length: " << body.length() << "\n"
-         << "Access-Control-Allow-Origin: *\n";
+    resp << "HTTP/1.1 " << code << endl
+         << "Content-Type: " << content_type << " charset=utf-8" << endl
+         << "Content-Length: " << body.length() << endl
+         << "Access-Control-Allow-Origin: *" << endl;
 
     for (auto header : headers) {
-        resp << header.first << ": " << header.second << "\n";
+        resp << header.first << ": " << header.second << endl;
     }
 
     resp << "\n" << body;
@@ -116,20 +118,22 @@ thread *HttpServer::start(int port) {
                     plain += buf;
                 }
 
-                Request request(plain);
+                Request request(plain, client);
 
                 if (request.valid()) {
                     try {
                         if (request.method == "OPTIONS") {
                             Response response;
                             response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT";
+
                             client->send(response);
+
                         } else {
                             Handler handler = find_route(request);
 
                             auto response = handler(request);
 
-                            if (request.headers["Accept-Encoding"].find("gzip") >= 0) {
+                            if (response.body.size() && request.headers["Accept-Encoding"].find("gzip") >= 0) {
                                 response.body = gzip::compress(response.body.data(), response.body.size());
                                 response.headers["Content-Encoding"] = "gzip";
                             }
@@ -141,8 +145,9 @@ thread *HttpServer::start(int port) {
                     }
                 }
 
-                delete client;
+                client = nullptr;
             }
+            sleep(1); // just to avoid an infinite cpu hogging loop
         }
     });
 }

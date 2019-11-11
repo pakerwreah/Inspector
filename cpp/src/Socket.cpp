@@ -5,6 +5,7 @@
 #include <fcntl.h>
 
 Socket::Socket() : m_sock(-1) {
+    signal(SIGPIPE, SIG_IGN);
     memset(&m_addr, 0, sizeof(m_addr));
 }
 

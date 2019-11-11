@@ -9,11 +9,13 @@
 #include <string>
 #include <thread>
 #include <functional>
-#include "json.hpp"
+#include "libs/json.hpp"
 
 using json = nlohmann::json;
 
 using namespace std;
+
+class Socket;
 
 namespace ContentType {
     const string HTML = "text/html";
@@ -21,8 +23,9 @@ namespace ContentType {
 }
 
 struct Request {
-    Request(const string &plain);
+    Request(const string &plain, Socket *pSocket);
 
+    shared_ptr<Socket> socket;
     map<string, string> headers, params;
     string method, path, body;
 

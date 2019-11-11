@@ -5,16 +5,6 @@
 #include "Inspector.h"
 #include "DatabasePlugin.h"
 
-thread *Inspector::bind(int port) {
-    return server->start(port);
-}
-
-void Inspector::preselectDB() {
-    new thread([this] {
-        databasePlugin->selectDB(0);
-    });
-}
-
 Inspector::Inspector() : DatabaseProvider() {
     server = new HttpServer;
 
@@ -23,4 +13,23 @@ Inspector::Inspector() : DatabaseProvider() {
     });
 
     databasePlugin = new DatabasePlugin(server, this);
+    networkPlugin = new NetworkPlugin(server);
+}
+
+thread *Inspector::bind(int port) {
+    return server->start(port);
+}
+
+void Inspector::preselectDB() {
+    thread([this] {
+        databasePlugin->selectDB(0);
+    }).detach();
+}
+
+void Inspector::sendRequest(string uid, string headers, string body) {
+    networkPlugin->sendRequest(uid, headers, body);
+}
+
+void Inspector::sendResponse(string uid, string headers, string body) {
+    networkPlugin->sendResponse(uid, headers, body);
 }
