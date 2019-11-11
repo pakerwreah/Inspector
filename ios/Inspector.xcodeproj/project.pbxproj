@@ -7,16 +7,21 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3405AB622377584C002FA13A /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB582377584B002FA13A /* base64.cpp */; };
+		3405AB632377584C002FA13A /* sha1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB5B2377584C002FA13A /* sha1.cpp */; };
+		3405AB642377584C002FA13A /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB5C2377584C002FA13A /* sqlite3.c */; };
+		3405AB652377584C002FA13A /* picohttpparser.c in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB602377584C002FA13A /* picohttpparser.c */; };
+		3405AB6723775885002FA13A /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB6623775885002FA13A /* Http.swift */; };
+		3405AB6B237794B4002FA13A /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB6623775885002FA13A /* Http.swift */; };
+		3405AB6E2377A1EC002FA13A /* NetworkPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB6C2377A1EC002FA13A /* NetworkPlugin.cpp */; };
 		34232AF42374C06000E45BCA /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 34232AF32374C03E00E45BCA /* libz.tbd */; };
 		3436339D2367F8DB002DB8BF /* IOSInspector.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3436339C2367F8DA002DB8BF /* IOSInspector.mm */; };
 		344AFA15236A857D007B2896 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C0E2367E64C00B62594 /* AppDelegate.swift */; };
 		344C1C0F2367E64C00B62594 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C0E2367E64C00B62594 /* AppDelegate.swift */; };
-		344C1C352367E6D100B62594 /* picohttpparser.c in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C282367E6D000B62594 /* picohttpparser.c */; };
 		344C1C362367E6D100B62594 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C292367E6D000B62594 /* Database.cpp */; };
 		344C1C372367E6D100B62594 /* Inspector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C2A2367E6D000B62594 /* Inspector.cpp */; };
 		344C1C382367E6D100B62594 /* Socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C2D2367E6D000B62594 /* Socket.cpp */; };
 		344C1C392367E6D100B62594 /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C2F2367E6D000B62594 /* util.cpp */; };
-		344C1C3B2367E6D100B62594 /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C312367E6D000B62594 /* sqlite3.c */; };
 		344C1C3C2367E6D100B62594 /* HttpServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C332367E6D000B62594 /* HttpServer.cpp */; };
 		657FEFFEB9C578D7E05EEB11 /* DatabasePlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657FE7265DB0ABE839354EDE /* DatabasePlugin.cpp */; };
 		B3D63DCAC9BC2984740C724A /* Pods_Inspector_pod.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF6E007F7005D4507CED6AC2 /* Pods_Inspector_pod.framework */; };
@@ -24,7 +29,19 @@
 
 /* Begin PBXFileReference section */
 		04D00EA7C5B28B5EB7DB4359 /* Pods-Inspector-pod.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Inspector-pod.debug.xcconfig"; path = "Target Support Files/Pods-Inspector-pod/Pods-Inspector-pod.debug.xcconfig"; sourceTree = "<group>"; };
-		34232AF22374BF5F00E45BCA /* compress.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = compress.hpp; sourceTree = "<group>"; };
+		3405AB582377584B002FA13A /* base64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = base64.cpp; sourceTree = "<group>"; };
+		3405AB592377584B002FA13A /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
+		3405AB5A2377584C002FA13A /* json.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = json.hpp; sourceTree = "<group>"; };
+		3405AB5B2377584C002FA13A /* sha1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sha1.cpp; sourceTree = "<group>"; };
+		3405AB5C2377584C002FA13A /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sqlite3.c; sourceTree = "<group>"; };
+		3405AB5D2377584C002FA13A /* compress.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = compress.hpp; sourceTree = "<group>"; };
+		3405AB5E2377584C002FA13A /* picohttpparser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = picohttpparser.h; sourceTree = "<group>"; };
+		3405AB5F2377584C002FA13A /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha1.h; sourceTree = "<group>"; };
+		3405AB602377584C002FA13A /* picohttpparser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = picohttpparser.c; sourceTree = "<group>"; };
+		3405AB612377584C002FA13A /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base64.h; sourceTree = "<group>"; };
+		3405AB6623775885002FA13A /* Http.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Http.swift; sourceTree = "<group>"; };
+		3405AB6C2377A1EC002FA13A /* NetworkPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NetworkPlugin.cpp; sourceTree = "<group>"; };
+		3405AB6D2377A1EC002FA13A /* NetworkPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkPlugin.h; sourceTree = "<group>"; };
 		34232AF32374C03E00E45BCA /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		3436339B2367F8DA002DB8BF /* IOSInspector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IOSInspector.h; sourceTree = "<group>"; };
 		3436339C2367F8DA002DB8BF /* IOSInspector.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = IOSInspector.mm; sourceTree = "<group>"; };
@@ -34,18 +51,13 @@
 		344C1C1C2367E64F00B62594 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		344C1C242367E6CF00B62594 /* Inspector-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Inspector-Bridging-Header.h"; sourceTree = "<group>"; };
 		344C1C252367E6D000B62594 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
-		344C1C262367E6D000B62594 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
 		344C1C272367E6D000B62594 /* Database.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Database.h; sourceTree = "<group>"; };
-		344C1C282367E6D000B62594 /* picohttpparser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = picohttpparser.c; sourceTree = "<group>"; };
 		344C1C292367E6D000B62594 /* Database.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Database.cpp; sourceTree = "<group>"; };
 		344C1C2A2367E6D000B62594 /* Inspector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Inspector.cpp; sourceTree = "<group>"; };
 		344C1C2B2367E6D000B62594 /* Inspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Inspector.h; sourceTree = "<group>"; };
-		344C1C2C2367E6D000B62594 /* json.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = json.hpp; sourceTree = "<group>"; };
 		344C1C2D2367E6D000B62594 /* Socket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Socket.cpp; sourceTree = "<group>"; };
 		344C1C2E2367E6D000B62594 /* Socket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Socket.h; sourceTree = "<group>"; };
 		344C1C2F2367E6D000B62594 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = util.cpp; sourceTree = "<group>"; };
-		344C1C312367E6D000B62594 /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sqlite3.c; sourceTree = "<group>"; };
-		344C1C322367E6D000B62594 /* picohttpparser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = picohttpparser.h; sourceTree = "<group>"; };
 		344C1C332367E6D000B62594 /* HttpServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpServer.cpp; sourceTree = "<group>"; };
 		344C1C342367E6D000B62594 /* HttpServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpServer.h; sourceTree = "<group>"; };
 		657FE7265DB0ABE839354EDE /* DatabasePlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DatabasePlugin.cpp; sourceTree = "<group>"; };
@@ -115,6 +127,7 @@
 		344C1C0D2367E64C00B62594 /* Inspector */ = {
 			isa = PBXGroup;
 			children = (
+				3405AB6623775885002FA13A /* Http.swift */,
 				3436339B2367F8DA002DB8BF /* IOSInspector.h */,
 				3436339C2367F8DA002DB8BF /* IOSInspector.mm */,
 				344C1C242367E6CF00B62594 /* Inspector-Bridging-Header.h */,
@@ -127,27 +140,41 @@
 		344C1C232367E6B100B62594 /* lib */ = {
 			isa = PBXGroup;
 			children = (
-				34232AF22374BF5F00E45BCA /* compress.hpp */,
+				3405AB6C2377A1EC002FA13A /* NetworkPlugin.cpp */,
+				3405AB6D2377A1EC002FA13A /* NetworkPlugin.h */,
 				344C1C292367E6D000B62594 /* Database.cpp */,
-				344C1C272367E6D000B62594 /* Database.h */,
-				344C1C332367E6D000B62594 /* HttpServer.cpp */,
-				344C1C342367E6D000B62594 /* HttpServer.h */,
-				344C1C2A2367E6D000B62594 /* Inspector.cpp */,
-				344C1C2B2367E6D000B62594 /* Inspector.h */,
-				344C1C2C2367E6D000B62594 /* json.hpp */,
-				344C1C282367E6D000B62594 /* picohttpparser.c */,
-				344C1C322367E6D000B62594 /* picohttpparser.h */,
-				344C1C2D2367E6D000B62594 /* Socket.cpp */,
-				344C1C2E2367E6D000B62594 /* Socket.h */,
-				344C1C312367E6D000B62594 /* sqlite3.c */,
-				344C1C262367E6D000B62594 /* sqlite3.h */,
-				344C1C2F2367E6D000B62594 /* util.cpp */,
-				344C1C252367E6D000B62594 /* util.h */,
-				657FEFA39983E8F73462861B /* DatabasePlugin.h */,
 				657FE7265DB0ABE839354EDE /* DatabasePlugin.cpp */,
+				344C1C332367E6D000B62594 /* HttpServer.cpp */,
+				344C1C2A2367E6D000B62594 /* Inspector.cpp */,
+				344C1C2D2367E6D000B62594 /* Socket.cpp */,
+				344C1C2F2367E6D000B62594 /* util.cpp */,
+				344C1C272367E6D000B62594 /* Database.h */,
+				657FEFA39983E8F73462861B /* DatabasePlugin.h */,
+				344C1C342367E6D000B62594 /* HttpServer.h */,
+				344C1C2B2367E6D000B62594 /* Inspector.h */,
+				344C1C2E2367E6D000B62594 /* Socket.h */,
+				344C1C252367E6D000B62594 /* util.h */,
+				657FE5492190C5D1D11F3C51 /* libs */,
 			);
 			name = lib;
 			path = ../cpp/src;
+			sourceTree = "<group>";
+		};
+		657FE5492190C5D1D11F3C51 /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				3405AB582377584B002FA13A /* base64.cpp */,
+				3405AB612377584C002FA13A /* base64.h */,
+				3405AB5D2377584C002FA13A /* compress.hpp */,
+				3405AB5A2377584C002FA13A /* json.hpp */,
+				3405AB602377584C002FA13A /* picohttpparser.c */,
+				3405AB5E2377584C002FA13A /* picohttpparser.h */,
+				3405AB5B2377584C002FA13A /* sha1.cpp */,
+				3405AB5F2377584C002FA13A /* sha1.h */,
+				3405AB5C2377584C002FA13A /* sqlite3.c */,
+				3405AB592377584B002FA13A /* sqlite3.h */,
+			);
+			path = libs;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -289,6 +316,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				344AFA15236A857D007B2896 /* AppDelegate.swift in Sources */,
+				3405AB6B237794B4002FA13A /* Http.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,14 +325,18 @@
 			buildActionMask = 2147483647;
 			files = (
 				344C1C382367E6D100B62594 /* Socket.cpp in Sources */,
+				3405AB6723775885002FA13A /* Http.swift in Sources */,
 				344C1C3C2367E6D100B62594 /* HttpServer.cpp in Sources */,
 				344C1C372367E6D100B62594 /* Inspector.cpp in Sources */,
-				344C1C352367E6D100B62594 /* picohttpparser.c in Sources */,
 				344C1C0F2367E64C00B62594 /* AppDelegate.swift in Sources */,
 				3436339D2367F8DB002DB8BF /* IOSInspector.mm in Sources */,
+				3405AB622377584C002FA13A /* base64.cpp in Sources */,
 				344C1C362367E6D100B62594 /* Database.cpp in Sources */,
 				344C1C392367E6D100B62594 /* util.cpp in Sources */,
-				344C1C3B2367E6D100B62594 /* sqlite3.c in Sources */,
+				3405AB632377584C002FA13A /* sha1.cpp in Sources */,
+				3405AB652377584C002FA13A /* picohttpparser.c in Sources */,
+				3405AB6E2377A1EC002FA13A /* NetworkPlugin.cpp in Sources */,
+				3405AB642377584C002FA13A /* sqlite3.c in Sources */,
 				657FEFFEB9C578D7E05EEB11 /* DatabasePlugin.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

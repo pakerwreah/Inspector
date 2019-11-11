@@ -11,15 +11,17 @@ project(inspector)
 
 set(
         sources
-        src/sqlite3.c
-        src/picohttpparser.c
+        src/libs/sqlite3.c
+        src/libs/picohttpparser.c
+        src/libs/base64.cpp
+        src/libs/sha1.cpp
         src/util.cpp
         src/Socket.cpp
         src/HttpServer.cpp
         src/Inspector.cpp
         src/Database.cpp
         src/DatabasePlugin.cpp
-)
+        src/NetworkPlugin.cpp)
 
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.

@@ -7,16 +7,22 @@
 
 #include "HttpServer.h"
 #include "DatabasePlugin.h"
+#include "NetworkPlugin.h"
 
 class Inspector : public DatabaseProvider {
     HttpServer *server;
+    NetworkPlugin *networkPlugin;
     DatabasePlugin *databasePlugin;
 public:
     Inspector();
 
-    thread *bind(int port);
+    thread * bind(int port);
 
     void preselectDB();
+
+    void sendRequest(string uid, string headers, string body);
+
+    void sendResponse(string uid, string headers, string body);
 };
 
 
