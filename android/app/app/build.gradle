@@ -1,5 +1,11 @@
 apply plugin: 'com.android.application'
 
+repositories {
+    maven {
+        url 'https://artifactory.newm.com.br/artifactory/inspector'
+    }
+}
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -30,7 +36,7 @@ android {
 
 dependencies {
     localImplementation project(':inspector')
-    mavenImplementation 'br.newm.inspector:inspector:1.0.0@aar'
+    mavenImplementation 'br.newm.inspector:inspector:1.1.0'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'

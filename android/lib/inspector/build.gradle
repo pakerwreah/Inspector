@@ -1,24 +1,13 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.jfrog.artifactory'
 apply plugin: 'maven-publish'
-apply plugin: 'maven'
-
-// maven local
-group = 'br.newm.inspector'
-version = '1.1.0'
-
-uploadArchives {
-    repositories {
-        mavenLocal()
-    }
-}
 
 publishing {
     publications {
         aar(MavenPublication) {
-            groupId group
+            groupId 'br.newm.inspector'
             artifactId 'inspector'
-            version version
+            version '1.1.0'
 
             artifact("$buildDir/outputs/aar/inspector-release.aar")
         }
