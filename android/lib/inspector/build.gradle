@@ -1,12 +1,41 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.jfrog.artifactory'
+apply plugin: 'maven-publish'
 apply plugin: 'maven'
 
+// maven local
 group = 'br.newm.inspector'
 version = '1.1.0'
 
 uploadArchives {
     repositories {
         mavenLocal()
+    }
+}
+
+publishing {
+    publications {
+        aar(MavenPublication) {
+            groupId group
+            artifactId 'inspector'
+            version version
+
+            artifact("$buildDir/outputs/aar/inspector-release.aar")
+        }
+    }
+}
+
+artifactory {
+    contextUrl = 'https://artifactory.newm.com.br/artifactory'
+    publish {
+        repository {
+            repoKey = "inspector"
+            username = "gradle"
+            password = "6291068676fd8ab4b4d7f2bd8b294ee5"
+        }
+        defaults {
+            publications('aar')
+        }
     }
 }
 
