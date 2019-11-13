@@ -1,22 +1,13 @@
 package br.newm.inspector;
 
+import okhttp3.*;
+import okio.Buffer;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
-import okhttp3.Headers;
-import okhttp3.Interceptor;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
-import okio.Buffer;
-
+@SuppressWarnings("unused")
 public class NetworkInterceptor implements Interceptor {
     @NotNull
     @Override
@@ -47,26 +38,27 @@ public class NetworkInterceptor implements Interceptor {
     private Response processResponse(String uid, Chain chain, Request request) throws IOException {
         try {
             Response response = chain.proceed(request);
-            ResponseBody body = response.peekBody(Long.MAX_VALUE);
+            ResponseBody body = response.body();
 
-            byte bytes[] = {};
+            byte[] bytes = {};
 
             if (body != null) {
-                bytes = body.bytes();
+                bytes = response.peekBody(Long.MAX_VALUE).bytes();
             }
 
             boolean compressed = "gzip".equalsIgnoreCase(response.header("Content-Encoding"));
 
             Map<String, String> headers = headerMap(response.headers());
-            headers.put("Status", String.valueOf(response.code()));
+            headers.put("_Status", String.valueOf(response.code()));
 
             sendResponse(uid, buildHeaders(headers), bytes, compressed);
 
             return response;
         } catch (Exception e) {
             Map<String, String> headers = new HashMap<>();
-            headers.put("Status", "Error");
-            sendResponse(uid, buildHeaders(headers), e.getLocalizedMessage().getBytes(), false);
+            headers.put("_Status", "Error");
+            String msg = e.getLocalizedMessage();
+            sendResponse(uid, buildHeaders(headers), (msg != null ? msg : "").getBytes(), false);
             throw e;
         }
     }
@@ -81,20 +73,20 @@ public class NetworkInterceptor implements Interceptor {
 
     private String buildHeaders(Map<String, String> headers) {
         ArrayList<String> keys = new ArrayList<>(headers.keySet());
-        Collections.sort(keys);
+        Collections.sort(keys, String.CASE_INSENSITIVE_ORDER);
 
-        String headerstr = "";
+        StringBuilder headerstr = new StringBuilder();
         for (String _key : keys) {
             String key = _key;
             if (key.startsWith("_")) {
                 key = _key.substring(1);
             }
-            headerstr += key + ": " + headers.get(_key) + "\n";
+            headerstr.append(key).append(": ").append(headers.get(_key)).append("\n");
         }
-        return headerstr;
+        return headerstr.toString();
     }
 
-    private native void sendRequest(String uid, String headers, byte body[]);
+    private native void sendRequest(String uid, String headers, byte[] body);
 
-    private native void sendResponse(String uid, String headers, byte body[], boolean compressed);
+    private native void sendResponse(String uid, String headers, byte[] body, boolean compressed);
 }
