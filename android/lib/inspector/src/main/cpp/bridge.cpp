@@ -27,6 +27,21 @@ void detachThread() {
     jvm->DetachCurrentThread();
 };
 
+string readString(JNIEnv *env, jstring data) {
+    const char *chars = env->GetStringUTFChars(data, nullptr);
+    string str = chars;
+    env->ReleaseStringUTFChars(data, chars);
+    return str;
+}
+
+string readByteArray(JNIEnv *env, jbyteArray data) {
+    int size = env->GetArrayLength(data);
+    auto bytes = env->GetByteArrayElements(data, nullptr);
+    auto str = string((const char *) bytes, size);
+    env->ReleaseByteArrayElements(data, bytes, 0);
+    return str;
+}
+
 const char *InspectorID = "br/newm/inspector/Inspector";
 
 class AndroidInpector : public Inspector {
@@ -42,10 +57,8 @@ protected:
         auto list = vector<string>();
 
         for (int i = 0; i < count; i++) {
-            auto _name = (jstring) env->GetObjectArrayElement(res, i);
-            const char *name = env->GetStringUTFChars(_name, nullptr);
-            list.push_back(name);
-            env->ReleaseStringUTFChars(_name, name);
+            auto name = (jstring) env->GetObjectArrayElement(res, i);
+            list.push_back(readString(env, name));
         }
 
         detachThread();
@@ -80,4 +93,14 @@ Java_br_newm_inspector_Inspector_initialize(JNIEnv *env, jobject, jint port) {
     inspector->bind(port);
 
     inspector->preselectDB();
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_br_newm_inspector_NetworkInterceptor_sendRequest(JNIEnv *env, jobject, jstring uid, jstring headers, jbyteArray data) {
+    inspector->sendRequest(readString(env, uid), readString(env, headers), readByteArray(env, data));
+}
+
+extern "C" JNIEXPORT void JNICALL
+Java_br_newm_inspector_NetworkInterceptor_sendResponse(JNIEnv *env, jobject, jstring uid, jstring headers, jbyteArray data, jboolean compressed) {
+    inspector->sendResponse(readString(env, uid), readString(env, headers), readByteArray(env, data), (bool) compressed);
 }

@@ -30,6 +30,6 @@ void Inspector::sendRequest(string uid, string headers, string body) {
     networkPlugin->sendRequest(uid, headers, body);
 }
 
-void Inspector::sendResponse(string uid, string headers, string body) {
-    networkPlugin->sendResponse(uid, headers, body);
+void Inspector::sendResponse(string uid, string headers, string body, bool compressed) {
+    networkPlugin->sendResponse(uid, headers, body, compressed);
 }
