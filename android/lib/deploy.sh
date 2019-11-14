@@ -1,2 +1,4 @@
 #!/usr/bin/env bash
-./gradlew clean assembleRelease artifactoryPublish
+./gradlew clean
+./gradlew assembleRelease
+./gradlew artifactoryPublish
