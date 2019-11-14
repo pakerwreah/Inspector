@@ -40,10 +40,11 @@ public class NetworkInterceptor implements Interceptor {
     }
 
     private Response processResponse(String uid, Chain chain, Request request) throws IOException {
-        Response response = chain.proceed(request);
+        Response response;
 
         if (isConnected()) {
             try {
+                response = chain.proceed(request);
                 ResponseBody body = response.body();
 
                 byte[] bytes = {};
@@ -66,6 +67,8 @@ public class NetworkInterceptor implements Interceptor {
                 sendResponse(uid, buildHeaders(headers), (msg != null ? msg : "").getBytes(), false);
                 throw e;
             }
+        } else {
+            response = chain.proceed(request);
         }
 
         return response;
