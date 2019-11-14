@@ -2,6 +2,7 @@ package br.newm.inspector;
 
 import okhttp3.*;
 import okio.Buffer;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -19,48 +20,55 @@ public class NetworkInterceptor implements Interceptor {
 
     private Request processRequest(String uid, Chain chain) throws IOException {
         Request request = chain.request();
-        RequestBody body = request.body();
 
-        Map<String, String> headers = headerMap(request.headers());
-        headers.put("_URL", request.url().toString());
-        headers.put("_Method", request.method());
+        if (isConnected()) {
+            RequestBody body = request.body();
 
-        Buffer buffer = new Buffer();
-        if (body != null) {
-            body.writeTo(buffer);
+            Map<String, String> headers = headerMap(request.headers());
+            headers.put("_URL", request.url().toString());
+            headers.put("_Method", request.method());
+
+            Buffer buffer = new Buffer();
+            if (body != null) {
+                body.writeTo(buffer);
+            }
+
+            sendRequest(uid, buildHeaders(headers), buffer.readByteArray());
         }
-
-        sendRequest(uid, buildHeaders(headers), buffer.readByteArray());
 
         return request;
     }
 
     private Response processResponse(String uid, Chain chain, Request request) throws IOException {
-        try {
-            Response response = chain.proceed(request);
-            ResponseBody body = response.body();
+        Response response = chain.proceed(request);
 
-            byte[] bytes = {};
+        if (isConnected()) {
+            try {
+                ResponseBody body = response.body();
 
-            if (body != null) {
-                bytes = response.peekBody(Long.MAX_VALUE).bytes();
+                byte[] bytes = {};
+
+                if (body != null) {
+                    bytes = response.peekBody(Long.MAX_VALUE).bytes();
+                }
+
+                boolean compressed = "gzip".equalsIgnoreCase(response.header("Content-Encoding"));
+
+                Map<String, String> headers = headerMap(response.headers());
+                headers.put("_Status", String.valueOf(response.code()));
+
+                sendResponse(uid, buildHeaders(headers), bytes, compressed);
+
+            } catch (Exception e) {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("_Status", "Error");
+                String msg = e.getLocalizedMessage();
+                sendResponse(uid, buildHeaders(headers), (msg != null ? msg : "").getBytes(), false);
+                throw e;
             }
-
-            boolean compressed = "gzip".equalsIgnoreCase(response.header("Content-Encoding"));
-
-            Map<String, String> headers = headerMap(response.headers());
-            headers.put("_Status", String.valueOf(response.code()));
-
-            sendResponse(uid, buildHeaders(headers), bytes, compressed);
-
-            return response;
-        } catch (Exception e) {
-            Map<String, String> headers = new HashMap<>();
-            headers.put("_Status", "Error");
-            String msg = e.getLocalizedMessage();
-            sendResponse(uid, buildHeaders(headers), (msg != null ? msg : "").getBytes(), false);
-            throw e;
         }
+
+        return response;
     }
 
     private Map<String, String> headerMap(Headers headers) {
@@ -85,6 +93,8 @@ public class NetworkInterceptor implements Interceptor {
         }
         return headerstr.toString();
     }
+
+    private native boolean isConnected();
 
     private native void sendRequest(String uid, String headers, byte[] body);
 

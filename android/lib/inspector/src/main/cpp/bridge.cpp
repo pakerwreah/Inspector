@@ -95,6 +95,11 @@ Java_br_newm_inspector_Inspector_initialize(JNIEnv *env, jobject, jint port) {
     inspector->preselectDB();
 }
 
+extern "C" JNIEXPORT bool JNICALL
+Java_br_newm_inspector_NetworkInterceptor_isConnected(JNIEnv *env, jobject) {
+    return inspector->isConnected();
+}
+
 extern "C" JNIEXPORT void JNICALL
 Java_br_newm_inspector_NetworkInterceptor_sendRequest(JNIEnv *env, jobject, jstring uid, jstring headers, jbyteArray data) {
     inspector->sendRequest(readString(env, uid), readString(env, headers), readByteArray(env, data));

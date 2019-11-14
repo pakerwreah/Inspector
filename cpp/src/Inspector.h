@@ -20,6 +20,8 @@ public:
 
     void preselectDB();
 
+    bool isConnected();
+
     void sendRequest(string uid, string headers, string body);
 
     void sendResponse(string uid, string headers, string body, bool compressed = false);

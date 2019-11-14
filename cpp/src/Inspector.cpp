@@ -26,6 +26,10 @@ void Inspector::preselectDB() {
     }).detach();
 }
 
+bool Inspector::isConnected() {
+    return networkPlugin->isConnected();
+}
+
 void Inspector::sendRequest(string uid, string headers, string body) {
     networkPlugin->sendRequest(uid, headers, body);
 }

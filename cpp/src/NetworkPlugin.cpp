@@ -26,6 +26,10 @@ NetworkPlugin::NetworkPlugin(HttpServer *server) {
     });
 }
 
+bool NetworkPlugin::isConnected() {
+    return request_socket && response_socket;
+}
+
 void NetworkPlugin::sendRequest(string uid, string headers, string body) {
     // create local reference to avoid deallocation
     auto socket = request_socket;
