@@ -1,4 +1,6 @@
-package br.newm.inspector;
+package br.newm.inspector_test;
+
+import br.newm.inspector.Inspector;
 
 public class Application extends android.app.Application {
     @Override
@@ -10,6 +12,6 @@ public class Application extends android.app.Application {
 
     @Override
     public String[] databaseList() {
-        return new String[]{"banco_1.db", "banco_2.db", "banco_3.db"};
+        return new String[]{"database.db", "database2.db", "database3.db"};
     }
 }

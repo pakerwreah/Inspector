@@ -37,6 +37,8 @@ add_library( # Sets the name of the library.
         # Provides a relative path to your source file(s).
         ${sources})
 
+target_link_libraries(inspector-cpp z)
+
 # Specifies libraries CMake should link to your target library. You
 # can link multiple libraries, such as libraries you define in this
 # build script, prebuilt third-party libraries, or system libraries.
@@ -44,5 +46,5 @@ add_library( # Sets the name of the library.
 if (NOT DEFINED ANDROID_NDK)
     add_executable(inspector-test src/main.cpp)
 
-    target_link_libraries(inspector-test inspector-cpp z)
+    target_link_libraries(inspector-test inspector-cpp)
 endif ()
