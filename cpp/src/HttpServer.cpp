@@ -67,17 +67,18 @@ Response::Response(json data, int code, string content_type) {
 }
 
 Response::operator string() {
+    constexpr auto crlf = "\r\n";
     ostringstream resp;
-    resp << "HTTP/1.1 " << code << endl
-         << "Content-Type: " << content_type << " charset=utf-8" << endl
-         << "Content-Length: " << body.length() << endl
-         << "Access-Control-Allow-Origin: *" << endl;
+    resp << "HTTP/1.1 " << code << " " << crlf
+         << "Content-Type: " << content_type << crlf
+         << "Content-Length: " << body.length() << crlf
+         << "Access-Control-Allow-Origin: *" << crlf;
 
     for (auto header : headers) {
-        resp << header.first << ": " << header.second << endl;
+        resp << header.first << ": " << header.second << crlf;
     }
 
-    resp << "\n" << body;
+    resp << crlf << body;
     return resp.str();
 }
 
