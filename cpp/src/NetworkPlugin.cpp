@@ -43,13 +43,13 @@ void NetworkPlugin::sendRequest(string uid, string headers, string body) {
     }
 }
 
-void NetworkPlugin::sendResponse(string uid, string headers, string body, bool compressed) {
+void NetworkPlugin::sendResponse(string uid, string headers, string _body, bool compressed) {
     // create local reference to avoid deallocation
     auto socket = response_socket;
     if (socket) {
         // create a thread to avoid hanging the client
-        thread([=, b = body] {
-            auto body = b;
+        thread([=] {
+            auto body = _body;
             if (!compressed) {
                 body = gzip::compress(body.c_str(), body.size());
             }
