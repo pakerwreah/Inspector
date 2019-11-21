@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "Inspector"
-  spec.version      = "1.1.0"
+  spec.version      = "1.1.1"
   spec.summary      = "Library to inspect databases in mobile apps"
   spec.homepage     = "https://gitlab.com/paker_wreah/Inspector/Inspector"
   spec.license      = 'LGPL'
