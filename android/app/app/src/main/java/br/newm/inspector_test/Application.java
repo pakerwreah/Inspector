@@ -8,6 +8,8 @@ public class Application extends android.app.Application {
         super.onCreate();
 
         Inspector.initializeWith(this, 30000);
+
+        Inspector.setCipherKey("database.db", "123456", 3);
     }
 
     @Override

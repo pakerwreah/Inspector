@@ -172,18 +172,6 @@ namespace sha1
         }
     }
 
-    void toHexString(const unsigned char* hash, char* hexstring)
-    {
-        const char hexDigits[] = { "0123456789abcdef" };
-
-        for (int hashByte = 20; --hashByte >= 0;)
-        {
-            hexstring[hashByte << 1] = hexDigits[(hash[hashByte] >> 4) & 0xf];
-            hexstring[(hashByte << 1) + 1] = hexDigits[hash[hashByte] & 0xf];
-        }
-        hexstring[40] = 0;
-    }
-
     // custom helper
     std::string calc(const std::string &src) {
         unsigned char hash[20];

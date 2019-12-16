@@ -12,8 +12,8 @@
 
 using namespace util;
 
-Request::Request(const string &plain, Socket *client) {
-    socket = shared_ptr<Socket>(client);
+Request::Request(const string &plain, shared_ptr<Socket> client) {
+    socket = client;
 
     const char *method, *path;
     size_t path_len, method_len;
@@ -105,52 +105,65 @@ void HttpServer::stop() {
 thread *HttpServer::start(int port) {
     _stop = false;
     return new thread([this, port] {
+        Socket server;
+        server.create();
+
         while (!_stop) {
-            Socket server;
-            server.create();
-            server.bind(port);
-            server.listen();
-
-            Socket *client;
-            while (server.accept(client)) {
-                string plain, buf;
-
-                while (client->recv(buf, timeval{0, 8000})) {
-                    plain += buf;
-                }
-
-                Request request(plain, client);
-
-                if (request.valid()) {
-                    try {
-                        if (request.method == "OPTIONS") {
-                            Response response;
-                            response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT";
-
-                            client->send(response);
-
-                        } else {
-                            Handler handler = find_route(request);
-
-                            auto response = handler(request);
-
-                            if (response.body.size() && request.headers["Accept-Encoding"].find("gzip") >= 0) {
-                                response.body = gzip::compress(response.body.data(), response.body.size());
-                                response.headers["Content-Encoding"] = "gzip";
-                            }
-
-                            client->send(response);
-                        }
-                    } catch (out_of_range ex) {
-                        client->send(Response::NotFound());
+            if (server.bind(port) && server.listen()) {
+                for (int i = 0; !_stop && i < 3; i++) {
+                    Socket *_client;
+                    if (server.accept(_client)) {
+                        i = -1;
+                        auto client = shared_ptr<Socket>(_client);
+                        thread(&HttpServer::process, this, client).detach();
                     }
                 }
-
-                client = nullptr;
             }
             sleep(1); // just to avoid an infinite cpu hogging loop
         }
     });
+}
+
+void HttpServer::process(shared_ptr<Socket> client) {
+    string plain, buf;
+    bool valid = false;
+
+    for (int i = 0; i < 3 && !valid; i++) {
+        while (client->recv(buf, timeval{0, 3000})) {
+            plain += buf;
+        }
+
+        Request request(plain, client);
+
+        if ((valid = request.valid())) {
+            try {
+                if (request.method == "OPTIONS") {
+                    Response response;
+                    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT";
+
+                    client->send(response);
+
+                } else {
+                    Handler handler = find_route(request);
+
+                    auto response = handler(request);
+
+                    if (response.body.size() && request.headers["Accept-Encoding"].find("gzip") >= 0) {
+                        response.body = gzip::compress(response.body.data(), response.body.size());
+                        response.headers["Content-Encoding"] = "gzip";
+                    }
+
+                    client->send(response);
+                }
+            } catch (out_of_range ex) {
+                client->send(Response::NotFound());
+            }
+        }
+    }
+
+    if (!valid) {
+        client->send(Response::InternalError());
+    }
 }
 
 Handler HttpServer::find_route(Request &request) {

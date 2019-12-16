@@ -91,8 +91,11 @@ extern "C" JNIEXPORT void JNICALL
 Java_br_newm_inspector_Inspector_initialize(JNIEnv *env, jobject, jint port) {
     // No emulador precisa executar: ./adb forward tcp:30000 tcp:30000
     inspector->bind(port);
+}
 
-    inspector->preselectDB();
+extern "C" JNIEXPORT void JNICALL
+Java_br_newm_inspector_Inspector_setCipherKeyJNI(JNIEnv *env, jobject, jstring database, jstring password, jint version) {
+    inspector->setCipherKey(readString(env, database), readString(env, password), version);
 }
 
 extern "C" JNIEXPORT bool JNICALL

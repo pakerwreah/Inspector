@@ -2,24 +2,31 @@
 // Created by Paker on 2019-10-23.
 //
 
-#include <cassert>
 #include "Database.h"
 
-Database::Database(string path) {
+Database::Database(string path, string password, int version) {
     if (!path.length()) {
         throw runtime_error("Database path not selected");
     }
     if (path.find("file://") == 0) {
         path = path.substr(7);
     }
-    auto flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_FULLMUTEX;
+    auto flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_WAL | SQLITE_OPEN_SHAREDCACHE;
     auto err = sqlite3_open_v2(path.c_str(), &db, flags, nullptr);
     if (err != SQLITE_OK) {
         throw runtime_error("Error opening database (" + to_string(err) + "): " + path);
     }
 
+    if (password.length()) {
+        execute("PRAGMA cipher_memory_security = OFF");
+        execute("PRAGMA key = '" + password + "'");
+
+        if (version) {
+            execute("PRAGMA cipher_compatibility = " + to_string(version));
+        }
+    }
+
     execute("PRAGMA foreign_keys = ON");
-    execute("PRAGMA journal_mode = WAL");
 }
 
 Database::~Database() {
