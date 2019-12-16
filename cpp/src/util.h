@@ -37,6 +37,13 @@ namespace util {
 
     // trim from both ends of string (right then left)
     string &trim(string &s, const char *t = whitespace);
+
+    template<typename T>
+    vector<T> filter(const vector<T> &container, function<bool(const T&)> predicate);
+
+    bool endsWith(const string &str, const string &suffix);
+
+    bool startsWith(const string &str, const string &prefix);
 }
 
 #endif //INSPECTOR_UTIL_H

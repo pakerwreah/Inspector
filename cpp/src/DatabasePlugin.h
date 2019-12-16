@@ -5,9 +5,12 @@
 #ifndef INSPECTOR_DATABASEPLUGIN_H
 #define INSPECTOR_DATABASEPLUGIN_H
 
+#include <map>
 #include <string>
 
 class HttpServer;
+
+class Database;
 
 using namespace std;
 
@@ -16,13 +19,27 @@ public:
     virtual vector<string> databaseList() = 0;
 };
 
+struct SQLCipher {
+    string password;
+    int version;
+};
+
 class DatabasePlugin {
     string db_path;
     DatabaseProvider *provider;
+    map<string, SQLCipher> cipher;
+    shared_ptr<Database> db_con;
+
+    shared_ptr<Database> open();
+
+    vector<string> databaseList();
+
+    void selectDB(int index);
+
 public:
     DatabasePlugin(HttpServer *server, DatabaseProvider *provider);
 
-    void selectDB(int index);
+    void setCipherKey(string database, string password, int version);
 };
 
 

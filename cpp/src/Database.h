@@ -16,7 +16,7 @@ class ResultSet;
 class Database {
     sqlite3 *db;
 public:
-    Database(string path);
+    Database(string path, string password = "", int version = 0);
 
     ~Database();
 

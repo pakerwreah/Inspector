@@ -1,6 +1,12 @@
 platform :ios, '12.0'
 use_frameworks!
 
+target 'Inspector' do
+
+  pod 'SQLCipher'
+
+end
+
 target 'Inspector-pod' do
 
   pod "Inspector", :git => 'git@gitlab.com:paker_wreah/Inspector/Inspector.git'

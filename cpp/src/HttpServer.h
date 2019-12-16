@@ -23,11 +23,11 @@ namespace ContentType {
 }
 
 struct Request {
-    Request(const string &plain, Socket *pSocket);
-
     shared_ptr<Socket> socket;
     map<string, string> headers, params;
     string method, path, body;
+
+    Request(const string &plain, shared_ptr<Socket> client);
 
     bool valid();
 };
@@ -45,6 +45,10 @@ struct Response {
     static Response NotFound() {
         return Response("Route not found", 404);
     }
+
+    static Response InternalError() {
+        return Response("Internal Error", 500);
+    }
 };
 
 typedef function<Response(const Request &)> Handler;
@@ -57,6 +61,8 @@ class HttpServer {
     void request(string method, string path, Handler handler);
 
     Handler find_route(Request &request);
+
+    void process(shared_ptr<Socket> client);
 
 public:
     void get(string path, Handler handler);

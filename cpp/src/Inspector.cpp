@@ -20,10 +20,8 @@ thread *Inspector::bind(int port) {
     return server->start(port);
 }
 
-void Inspector::preselectDB() {
-    thread([this] {
-        databasePlugin->selectDB(0);
-    }).detach();
+void Inspector::setCipherKey(string database, string password, int version) {
+    databasePlugin->setCipherKey(database, password, version);
 }
 
 bool Inspector::isConnected() {

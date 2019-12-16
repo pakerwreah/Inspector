@@ -18,7 +18,7 @@ public:
 
     thread * bind(int port);
 
-    void preselectDB();
+    void setCipherKey(string database, string password, int version);
 
     bool isConnected();
 
