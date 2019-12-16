@@ -62,4 +62,21 @@ namespace util {
     string &trim(string &s, const char *t) {
         return ltrim(rtrim(s, t), t);
     }
+
+    template<typename T>
+    vector<T> filter(const vector<T> &container, function<bool(const T&)> predicate) {
+        vector<T> result;
+        copy_if(container.begin(), container.end(), back_inserter(result), predicate);
+        return result;
+    }
+
+    template vector<string> filter(const vector<string> &, function<bool(const string&)>);
+
+    bool endsWith(const string &str, const string &suffix) {
+        return str.size() >= suffix.size() && 0 == str.compare(str.size() - suffix.size(), suffix.size(), suffix);
+    }
+
+    bool startsWith(const string &str, const string &prefix) {
+        return str.size() >= prefix.size() && 0 == str.compare(0, prefix.size(), prefix);
+    }
 }

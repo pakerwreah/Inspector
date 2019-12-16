@@ -7,9 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2AEE959994C19A40FC1C32AA /* Pods_Inspector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DBA2507A0A176526438EB33 /* Pods_Inspector.framework */; };
 		3405AB622377584C002FA13A /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB582377584B002FA13A /* base64.cpp */; };
 		3405AB632377584C002FA13A /* sha1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB5B2377584C002FA13A /* sha1.cpp */; };
-		3405AB642377584C002FA13A /* sqlite3.c in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB5C2377584C002FA13A /* sqlite3.c */; };
 		3405AB652377584C002FA13A /* picohttpparser.c in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB602377584C002FA13A /* picohttpparser.c */; };
 		3405AB6723775885002FA13A /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB6623775885002FA13A /* Http.swift */; };
 		3405AB6B237794B4002FA13A /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB6623775885002FA13A /* Http.swift */; };
@@ -33,7 +33,6 @@
 		3405AB592377584B002FA13A /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
 		3405AB5A2377584C002FA13A /* json.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = json.hpp; sourceTree = "<group>"; };
 		3405AB5B2377584C002FA13A /* sha1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sha1.cpp; sourceTree = "<group>"; };
-		3405AB5C2377584C002FA13A /* sqlite3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = sqlite3.c; sourceTree = "<group>"; };
 		3405AB5D2377584C002FA13A /* compress.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = compress.hpp; sourceTree = "<group>"; };
 		3405AB5E2377584C002FA13A /* picohttpparser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = picohttpparser.h; sourceTree = "<group>"; };
 		3405AB5F2377584C002FA13A /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha1.h; sourceTree = "<group>"; };
@@ -62,7 +61,10 @@
 		344C1C342367E6D000B62594 /* HttpServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpServer.h; sourceTree = "<group>"; };
 		657FE7265DB0ABE839354EDE /* DatabasePlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DatabasePlugin.cpp; sourceTree = "<group>"; };
 		657FEFA39983E8F73462861B /* DatabasePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabasePlugin.h; sourceTree = "<group>"; };
+		844F3BE5E9B4686C70407E17 /* Pods-Inspector.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Inspector.release.xcconfig"; path = "Target Support Files/Pods-Inspector/Pods-Inspector.release.xcconfig"; sourceTree = "<group>"; };
+		8DBA2507A0A176526438EB33 /* Pods_Inspector.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Inspector.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AF6E007F7005D4507CED6AC2 /* Pods_Inspector_pod.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Inspector_pod.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B6923CB392657D3770C01703 /* Pods-Inspector.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Inspector.debug.xcconfig"; path = "Target Support Files/Pods-Inspector/Pods-Inspector.debug.xcconfig"; sourceTree = "<group>"; };
 		DB916D3A6E878B19C23BC956 /* Pods-Inspector-pod.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Inspector-pod.release.xcconfig"; path = "Target Support Files/Pods-Inspector-pod/Pods-Inspector-pod.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -80,6 +82,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34232AF42374C06000E45BCA /* libz.tbd in Frameworks */,
+				2AEE959994C19A40FC1C32AA /* Pods_Inspector.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -91,6 +94,8 @@
 			children = (
 				04D00EA7C5B28B5EB7DB4359 /* Pods-Inspector-pod.debug.xcconfig */,
 				DB916D3A6E878B19C23BC956 /* Pods-Inspector-pod.release.xcconfig */,
+				B6923CB392657D3770C01703 /* Pods-Inspector.debug.xcconfig */,
+				844F3BE5E9B4686C70407E17 /* Pods-Inspector.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -100,6 +105,7 @@
 			children = (
 				34232AF32374C03E00E45BCA /* libz.tbd */,
 				AF6E007F7005D4507CED6AC2 /* Pods_Inspector_pod.framework */,
+				8DBA2507A0A176526438EB33 /* Pods_Inspector.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -171,7 +177,6 @@
 				3405AB5E2377584C002FA13A /* picohttpparser.h */,
 				3405AB5B2377584C002FA13A /* sha1.cpp */,
 				3405AB5F2377584C002FA13A /* sha1.h */,
-				3405AB5C2377584C002FA13A /* sqlite3.c */,
 				3405AB592377584B002FA13A /* sqlite3.h */,
 			);
 			path = libs;
@@ -203,9 +208,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 344C1C1F2367E64F00B62594 /* Build configuration list for PBXNativeTarget "Inspector" */;
 			buildPhases = (
+				C63E7381D88B7BEC6F5AC5CC /* [CP] Check Pods Manifest.lock */,
 				344C1C072367E64C00B62594 /* Sources */,
 				344C1C082367E64C00B62594 /* Frameworks */,
 				344C1C092367E64C00B62594 /* Resources */,
+				933B83DE0EA2012A7F4D3CED /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -291,6 +298,45 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		933B83DE0EA2012A7F4D3CED /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Inspector/Pods-Inspector-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Inspector/Pods-Inspector-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Inspector/Pods-Inspector-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C63E7381D88B7BEC6F5AC5CC /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Inspector-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		D0D59D77008E1BADDD55641F /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -336,7 +382,6 @@
 				3405AB632377584C002FA13A /* sha1.cpp in Sources */,
 				3405AB652377584C002FA13A /* picohttpparser.c in Sources */,
 				3405AB6E2377A1EC002FA13A /* NetworkPlugin.cpp in Sources */,
-				3405AB642377584C002FA13A /* sqlite3.c in Sources */,
 				657FEFFEB9C578D7E05EEB11 /* DatabasePlugin.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -497,6 +542,7 @@
 		};
 		344C1C202367E64F00B62594 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B6923CB392657D3770C01703 /* Pods-Inspector.debug.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";
@@ -516,6 +562,7 @@
 		};
 		344C1C212367E64F00B62594 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 844F3BE5E9B4686C70407E17 /* Pods-Inspector.release.xcconfig */;
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
 				CLANG_CXX_LIBRARY = "libc++";

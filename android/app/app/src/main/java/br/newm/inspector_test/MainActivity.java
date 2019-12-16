@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("Inspector", resp);
                 }
             }
-        }).start();
+        });//.start();
     }
 
 }

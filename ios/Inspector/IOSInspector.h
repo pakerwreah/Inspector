@@ -17,6 +17,8 @@
 
 + (void)initializeWithDelegate:(nonnull id <IOSInspectorProtocol>)delegate port:(int)port;
 
++ (void)setCipherKey:(nonnull NSString *) database password:(nonnull NSString *)password version:(int)version;
+
 + (void)sendRequestWithUID:(nonnull NSString *) uid request:(nonnull NSURLRequest*)request;
 
 + (void)sendResponseWithUID:(nonnull NSString *) uid response:(nullable NSHTTPURLResponse*)response body:(nullable NSData *)body;

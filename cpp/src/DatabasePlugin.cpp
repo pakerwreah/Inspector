@@ -6,15 +6,49 @@
 #include "Database.h"
 #include "HttpServer.h"
 #include "util.h"
+#include <thread>
+#include <unistd.h>
 
 using namespace util;
+
+static int close_token;
+
+shared_ptr<Database> DatabasePlugin::open() {
+    if (db_path.empty()) {
+        try {
+            selectDB(0);
+        } catch (out_of_range &ex) {
+            throw runtime_error("No databases available");
+        }
+    }
+
+    if (!db_con) {
+        auto name = split(db_path, '/').back();
+        if (cipher.count(name)) {
+            SQLCipher config = cipher[name];
+            db_con = make_shared<Database>(db_path, config.password, config.version);
+        } else {
+            db_con = make_shared<Database>(db_path);
+        }
+    }
+
+    thread([this]() {
+        auto token = ++close_token;
+        sleep(5);
+        if (token == close_token) {
+            db_con = nullptr;
+        }
+    }).detach();
+
+    return db_con;
+}
 
 DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) {
     this->provider = _provider;
 
     server->get("/database/list", [this](Request req) {
         int index = 0;
-        auto paths = provider->databaseList();
+        auto paths = databaseList();
         auto names = json::array();
         for (int i = 0; i < paths.size(); i++) {
             names += split(paths[i], '/').back();
@@ -36,7 +70,7 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
 
             selectDB(index);
 
-            Database db(db_path);
+            open();
         } catch (out_of_range &ex) {
             return Response(ex.what(), 400);
         } catch (exception &ex) {
@@ -49,11 +83,11 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
         auto sql = req.body;
 
         try {
-            Database db(db_path);
+            auto db = open();
 
             auto start = timestamp();
 
-            auto res = db.query(sql);
+            auto res = db->query(sql);
 
             auto duration = benchmark(start);
 
@@ -96,13 +130,13 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
 
     server->post("/database/execute", [this](Request req) {
         try {
-            Database db(db_path);
+            auto db = open();
 
             auto start = timestamp();
 
-            db.transaction();
-            db.execute(req.body);
-            db.commit();
+            db->transaction();
+            db->execute(req.body);
+            db->commit();
 
             auto duration = benchmark(start);
 
@@ -115,11 +149,20 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
     });
 }
 
+vector<string> DatabasePlugin::databaseList() {
+    return filter<string>(provider->databaseList(), [](const string &item) { return !endsWith(item, "-journal"); });
+}
+
 void DatabasePlugin::selectDB(int index) {
-    auto list = provider->databaseList();
+    auto list = databaseList();
     if (index >= 0 && index < list.size()) {
         db_path = list[index];
+        db_con = nullptr;
     } else {
         throw out_of_range("Index out of range");
     }
+}
+
+void DatabasePlugin::setCipherKey(string database, string password, int version) {
+    cipher[database] = {password, version};
 }

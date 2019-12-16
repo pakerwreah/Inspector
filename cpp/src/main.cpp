@@ -13,7 +13,7 @@ using namespace std;
 class TestInspector : public Inspector {
 protected:
     vector<string> databaseList() override {
-        return {"database.db", "database2.db"};
+        return {"database.db", "database_cipher3.db", "database_cipher4.db"};
     }
 };
 
@@ -98,11 +98,12 @@ int main() {
 
     TestInspector inspector;
 
+    inspector.setCipherKey("database_cipher3.db", "123456", 3);
+    inspector.setCipherKey("database_cipher4.db", "1234567", 4);
+
     auto th = inspector.bind(30000);
 
-    inspector.preselectDB();
-
-    mockNetwork(inspector);
+//     mockNetwork(inspector);
 
     th->join();
 

@@ -11,7 +11,6 @@ project(inspector)
 
 set(
         sources
-        src/libs/sqlite3.c
         src/libs/picohttpparser.c
         src/libs/base64.cpp
         src/libs/sha1.cpp
@@ -31,7 +30,7 @@ set(
 add_library( # Sets the name of the library.
         inspector-cpp
 
-        # Sets the library as a shared library.
+        # Sets the library as a static library.
         STATIC
 
         # Provides a relative path to your source file(s).
@@ -44,6 +43,10 @@ target_link_libraries(inspector-cpp z)
 # build script, prebuilt third-party libraries, or system libraries.
 
 if (NOT DEFINED ANDROID_NDK)
+    find_library(LIBSQLITE sqlcipher)
+
+    target_link_libraries(inspector-cpp ${LIBSQLITE})
+
     add_executable(inspector-test src/main.cpp)
 
     target_link_libraries(inspector-test inspector-cpp)

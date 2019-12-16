@@ -24,5 +24,7 @@ public class Inspector {
         return paths;
     }
 
+    public static native void setCipherKey(String database, String password, int version);
+
     private static native void initialize(int port);
 }

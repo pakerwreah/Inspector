@@ -43,8 +43,11 @@ static string buildHeaders(NSDictionary<NSString*,NSString*> *headers) {
 + (void)initializeWithDelegate:(nonnull id <IOSInspectorProtocol>)_delegate port:(int)port {
     delegate = _delegate;
     inspector = new InspectorImpl;
-    inspector->preselectDB();
     inspector->bind(port);
+}
+
++ (void)setCipherKey:(nonnull NSString *) database password:(nonnull NSString *)password version:(int)version {
+    inspector->setCipherKey(database.UTF8String, password.UTF8String, version);
 }
 
 + (void)sendRequestWithUID:(nonnull NSString *) uid request:(nonnull NSURLRequest*)request {
