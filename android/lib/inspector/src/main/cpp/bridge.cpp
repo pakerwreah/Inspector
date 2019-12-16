@@ -94,7 +94,7 @@ Java_br_newm_inspector_Inspector_initialize(JNIEnv *env, jobject, jint port) {
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_br_newm_inspector_Inspector_setCipherKey(JNIEnv *env, jobject, jstring database, jstring password, jint version) {
+Java_br_newm_inspector_Inspector_setCipherKeyJNI(JNIEnv *env, jobject, jstring database, jstring password, jint version) {
     inspector->setCipherKey(readString(env, database), readString(env, password), version);
 }
 

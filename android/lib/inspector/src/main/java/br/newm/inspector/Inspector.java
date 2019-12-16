@@ -1,9 +1,11 @@
 package br.newm.inspector;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 
 @SuppressWarnings("unused")
 public class Inspector {
+    @SuppressLint("StaticFieldLeak")
     private static Context context;
 
     static {
@@ -24,7 +26,12 @@ public class Inspector {
         return paths;
     }
 
-    public static native void setCipherKey(String database, String password, int version);
+    // alias to avoid argument obfuscation of public method
+    public static void setCipherKey(String database, String password, int version) {
+        setCipherKeyJNI(database, password, version);
+    }
+
+    private static native void setCipherKeyJNI(String database, String password, int version);
 
     private static native void initialize(int port);
 }
