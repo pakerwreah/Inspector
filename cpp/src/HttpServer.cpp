@@ -129,7 +129,7 @@ void HttpServer::process(shared_ptr<Socket> client) {
     bool valid = false;
 
     for (int i = 0; i < 3 && !valid; i++) {
-        while (client->recv(buf, timeval{0, 3000})) {
+        while (client->recv(buf, timeval{0, 10000})) {
             plain += buf;
         }
 
