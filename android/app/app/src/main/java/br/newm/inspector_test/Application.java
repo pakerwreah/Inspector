@@ -8,12 +8,12 @@ public class Application extends android.app.Application {
         super.onCreate();
 
         Inspector.initializeWith(this, 30000);
-
-        Inspector.setCipherKey("database.db", "123456", 3);
+        Inspector.setCipherKey("database_cipher3.db", "123456", 3);
+        Inspector.setCipherKey("database_cipher4.db", "1234567", 4);
     }
 
     @Override
     public String[] databaseList() {
-        return new String[]{"database.db", "database2.db", "database3.db"};
+        return new String[]{"database.db", "database_cipher3.db", "database_cipher4.db"};
     }
 }
