@@ -10,6 +10,10 @@ import java.util.*;
 
 @SuppressWarnings("unused")
 public class NetworkInterceptor implements Interceptor {
+    static {
+        System.loadLibrary("inspector");
+    }
+
     @NotNull
     @Override
     public Response intercept(@NotNull Chain chain) throws IOException {

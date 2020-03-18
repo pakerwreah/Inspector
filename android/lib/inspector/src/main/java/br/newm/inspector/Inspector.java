@@ -5,12 +5,12 @@ import android.content.Context;
 
 @SuppressWarnings("unused")
 public class Inspector {
-    @SuppressLint("StaticFieldLeak")
-    private static Context context;
-
     static {
         System.loadLibrary("inspector");
     }
+
+    @SuppressLint("StaticFieldLeak")
+    private static Context context;
 
     public static void initializeWith(Context context, int port) {
         Inspector.context = context;
