@@ -10,7 +10,7 @@ repositories {
 }
 
 dependencies {
-    implementation "br.newm.inspector:inspector:1.2.1"
+    implementation "br.newm.inspector:inspector:1.2.2"
 }
 ```
 

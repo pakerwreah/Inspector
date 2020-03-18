@@ -103,7 +103,7 @@ int main() {
 
     auto th = inspector.bind(30000);
 
-//     mockNetwork(inspector);
+    mockNetwork(inspector);
 
     th->join();
 

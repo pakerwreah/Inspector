@@ -8,7 +8,7 @@ repositories {
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "29.0.3"
     defaultConfig {
         applicationId "br.newm.inspector_test"
         minSdkVersion 21
@@ -36,9 +36,8 @@ android {
 
 dependencies {
     localImplementation project(':inspector')
-    mavenImplementation 'br.newm.inspector:inspector:1.2.1'
+    mavenImplementation 'br.newm.inspector:inspector:1.2.2'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'com.squareup.okhttp3:okhttp:4.2.2'
 }

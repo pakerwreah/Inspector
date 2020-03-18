@@ -7,7 +7,7 @@ publishing {
         aar(MavenPublication) {
             groupId 'br.newm.inspector'
             artifactId 'inspector'
-            version '1.2.1'
+            version '1.2.2'
 
             artifact("$buildDir/outputs/aar/inspector-release.aar")
 
@@ -43,7 +43,7 @@ artifactory {
 
 android {
     compileSdkVersion 29
-    buildToolsVersion "29.0.2"
+    buildToolsVersion "29.0.3"
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 29
@@ -63,6 +63,6 @@ android {
 }
 
 dependencies {
-    implementation 'com.squareup.okhttp3:okhttp:4.2.2'
+    implementation 'com.squareup.okhttp3:okhttp:4.4.0'
     implementation "net.zetetic:android-database-sqlcipher:4.2.0@aar"
 }
