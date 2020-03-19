@@ -66,7 +66,7 @@ new OkHttpClient.Builder().addNetworkInterceptor(new NetworkInterceptor());
 
 #### CocoaPods
 ```
-pod "Inspector", :git => 'git@github.com:pakerwreah/Inspector.git'
+pod "Inspector", :git => 'https://github.com/pakerwreah/Inspector.git'
 ```
 
 #### AppDelegate
