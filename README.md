@@ -5,6 +5,9 @@ The main goal of this tool is to inspect the SQLite databases and intercept netw
 The data is shown in a web interface and uses WebSocket to communicate directly with the app via local network.
 To keep network log history the web system uses the built-in IndexedDB from the browser.
 
+#### Frontend repository
+https://github.com/pakerwreah/InspectorWeb
+
 ## Android
 
 #### Gradle
