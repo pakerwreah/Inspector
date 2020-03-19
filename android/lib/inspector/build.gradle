@@ -27,13 +27,26 @@ publishing {
     }
 }
 
+def getProperties(filename) {
+    try {
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file(filename).newDataInputStream())
+        return properties
+    } catch (Exception ex) {
+        logger.log(LogLevel.ERROR, ex.message)
+    }
+}
+
 artifactory {
+    def props = getProperties('artifactory.properties')
     contextUrl = 'https://artifactory.newm.com.br/artifactory'
     publish {
         repository {
             repoKey = "inspector"
-            username = "gradle"
-            password = "6291068676fd8ab4b4d7f2bd8b294ee5"
+            if (props) {
+                username = props.getProperty("username")
+                password = props.getProperty("password")
+            }
         }
         defaults {
             publications('aar')
