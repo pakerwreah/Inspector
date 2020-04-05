@@ -16,13 +16,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IOSInspectorProtocol {
         IOSInspector.setCipherKey("database_cipher3.db", password: "123456", version: 3)
         IOSInspector.setCipherKey("database_cipher4.db", password: "1234567", version: 4)
 
-//        mockNetwork()
+        IOSInspector.addPlugin("prefs", name: "User Defaults") {
+            let dict = UserDefaults.standard.dictionaryRepresentation()
+            if let data = try? JSONSerialization.data(withJSONObject: dict),
+                let json = String(data: data, encoding: .utf8) {
+                return json
+            }
+            return "No data"
+        }
+
+        mockNetwork()
     }
 
     func mockNetwork() {
         DispatchQueue.global().async {
             while(true) {
-                Http.request(url: "https://viacep.com.br/ws/15020340/json")
+                Http.request(url: "https://viacep.com.br/ws/01001000/json")
                 Http.request(url: "https://viacep.com.br/ws/15020035/json")
                 sleep(1)
                 Http.request(url: "https://viacep.com.br/ws/1020035/json")

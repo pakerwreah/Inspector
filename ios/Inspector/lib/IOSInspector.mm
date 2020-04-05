@@ -6,26 +6,13 @@
 //
 
 #import "IOSInspector.h"
-#import "Inspector.h"
+#import "DatabaseProviderAdapter.h"
 
 using namespace std;
 
-static id <IOSInspectorProtocol> delegate;
 static Inspector *inspector;
 
-@implementation IOSInspector {
-    class InspectorImpl : public Inspector {
-    protected:
-        vector<string> databaseList() override {
-            auto list = vector<string>();
-            auto paths = delegate.databaseList;
-            for (NSString *path in paths) {
-                list.push_back(path.UTF8String);
-            }
-            return list;
-        }
-    };
-}
+@implementation IOSInspector
 
 static string buildHeaders(NSDictionary<NSString*,NSString*> *headers) {
     string headerstr;
@@ -40,9 +27,8 @@ static string buildHeaders(NSDictionary<NSString*,NSString*> *headers) {
     return headerstr;
 }
 
-+ (void)initializeWithDelegate:(nonnull id <IOSInspectorProtocol>)_delegate port:(int)port {
-    delegate = _delegate;
-    inspector = new InspectorImpl;
++ (void)initializeWithDelegate:(nonnull id <IOSInspectorProtocol>)delegate port:(int)port {
+    inspector = new Inspector(new DatabaseProviderAdapter(delegate));
     inspector->bind(port);
 }
 
@@ -77,6 +63,12 @@ static string buildHeaders(NSDictionary<NSString*,NSString*> *headers) {
     }
 
     inspector->sendResponse(uid.UTF8String, buildHeaders(headers), body ? string((const char*)body.bytes, body.length) : "");
+}
+
++ (void)addPlugin:(nonnull NSString *) key name:(nonnull NSString *)name action:(nonnull PluginActionBlock)action {
+    inspector->addPlugin(key.UTF8String, name.UTF8String, [action] {
+        return action().UTF8String;
+    });
 }
 
 @end

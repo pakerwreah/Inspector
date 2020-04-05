@@ -37,19 +37,19 @@ string readString(JNIEnv *env, jstring data) {
 string readByteArray(JNIEnv *env, jbyteArray data) {
     int size = env->GetArrayLength(data);
     auto bytes = env->GetByteArrayElements(data, nullptr);
-    auto str = string((const char *) bytes, size);
+    auto str = string(reinterpret_cast<const char *>(bytes), static_cast<unsigned int>(size));
     env->ReleaseByteArrayElements(data, bytes, 0);
     return str;
 }
 
 const char *InspectorID = "br/newm/inspector/Inspector";
 
-class AndroidInpector : public Inspector {
+class AndroidDatabaseProvider : public DatabaseProvider {
 protected:
-    vector<string> databaseList() override {
+    vector<string> databasePathList() override {
         auto env = attachThread();
 
-        jmethodID methodID = env->GetStaticMethodID(driver, "databaseList", "()[Ljava/lang/String;");
+        jmethodID methodID = env->GetStaticMethodID(driver, "databasePathList", "()[Ljava/lang/String;");
         auto res = (jobjectArray) env->CallStaticObjectMethod(driver, methodID);
 
         int count = env->GetArrayLength(res);
@@ -67,9 +67,9 @@ protected:
     }
 };
 
-AndroidInpector *inspector;
+Inspector *inspector;
 
-jint JNI_OnLoad(JavaVM *vm, void *reserved) {
+jint JNI_OnLoad(JavaVM *vm, void *) {
     if (vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION_1_6) != JNI_OK) {
         return -1;
     }
@@ -82,25 +82,43 @@ jint JNI_OnLoad(JavaVM *vm, void *reserved) {
 
     driver = (jclass) env->NewGlobalRef(driver);
 
-    inspector = new AndroidInpector;
+    inspector = new Inspector(new AndroidDatabaseProvider);
 
     return JNI_VERSION_1_6;
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_br_newm_inspector_Inspector_initialize(JNIEnv *env, jobject, jint port) {
-    // No emulador precisa executar: ./adb forward tcp:30000 tcp:30000
+Java_br_newm_inspector_Inspector_initialize(JNIEnv *, jclass, jint port) {
+    // Emulator: ./adb forward tcp:30000 tcp:30000
     inspector->bind(port);
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_br_newm_inspector_Inspector_setCipherKeyJNI(JNIEnv *env, jobject, jstring database, jstring password, jint version) {
+Java_br_newm_inspector_Inspector_setCipherKeyJNI(JNIEnv *env, jclass, jstring database, jstring password, jint version) {
     inspector->setCipherKey(readString(env, database), readString(env, password), version);
 }
 
-extern "C" JNIEXPORT bool JNICALL
-Java_br_newm_inspector_NetworkInterceptor_isConnected(JNIEnv *env, jobject) {
-    return inspector->isConnected();
+extern "C"
+JNIEXPORT void JNICALL
+Java_br_newm_inspector_Inspector_addPluginJNI(JNIEnv *e, jclass, jstring key, jstring name, jobject _plugin) {
+    auto plugin = env->NewGlobalRef(_plugin);
+
+    inspector->addPlugin(readString(e, key), readString(e, name), [plugin] {
+        auto env = attachThread();
+
+        auto clazz = env->GetObjectClass(plugin);
+        jmethodID methodID = env->GetMethodID(clazz, "action", "()Ljava/lang/String;");
+        auto res = readString(env, (jstring) env->CallObjectMethod(plugin, methodID));
+
+        detachThread();
+
+        return res;
+    });
+}
+
+extern "C" JNIEXPORT jboolean JNICALL
+Java_br_newm_inspector_NetworkInterceptor_isConnected(JNIEnv *, jobject) {
+    return static_cast<jboolean>(inspector->isConnected());
 }
 
 extern "C" JNIEXPORT void JNICALL
@@ -110,5 +128,5 @@ Java_br_newm_inspector_NetworkInterceptor_sendRequest(JNIEnv *env, jobject, jstr
 
 extern "C" JNIEXPORT void JNICALL
 Java_br_newm_inspector_NetworkInterceptor_sendResponse(JNIEnv *env, jobject, jstring uid, jstring headers, jbyteArray data, jboolean compressed) {
-    inspector->sendResponse(readString(env, uid), readString(env, headers), readByteArray(env, data), (bool) compressed);
+    inspector->sendResponse(readString(env, uid), readString(env, headers), readByteArray(env, data), compressed);
 }

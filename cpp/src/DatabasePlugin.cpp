@@ -48,7 +48,7 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
 
     server->get("/database/list", [this](Request req) {
         int index = 0;
-        auto paths = databaseList();
+        auto paths = databasePathList();
         auto names = json::array();
         for (int i = 0; i < paths.size(); i++) {
             names += split(paths[i], '/').back();
@@ -149,12 +149,12 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
     });
 }
 
-vector<string> DatabasePlugin::databaseList() {
-    return filter<string>(provider->databaseList(), [](const string &item) { return !endsWith(item, "-journal"); });
+vector<string> DatabasePlugin::databasePathList() {
+    return filter<string>(provider->databasePathList(), [](const string &item) { return !endsWith(item, "-journal"); });
 }
 
 void DatabasePlugin::selectDB(int index) {
-    auto list = databaseList();
+    auto list = databasePathList();
     if (index >= 0 && index < list.size()) {
         db_path = list[index];
         db_con = nullptr;

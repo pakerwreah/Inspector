@@ -7,12 +7,13 @@
 #include <thread>
 #include <vector>
 #include <sys/time.h>
+#include <sstream>
 
 using namespace std;
 
-class TestInspector : public Inspector {
+class TestDatabaseProvider : public DatabaseProvider {
 protected:
-    vector<string> databaseList() override {
+    vector<string> databasePathList() override {
         return {"database.db", "database_cipher3.db", "database_cipher4.db"};
     }
 };
@@ -96,7 +97,7 @@ static void mockNetwork(Inspector &inspector) {
 
 int main() {
 
-    TestInspector inspector;
+    Inspector inspector(new TestDatabaseProvider);
 
     inspector.setCipherKey("database_cipher3.db", "123456", 3);
     inspector.setCipherKey("database_cipher4.db", "1234567", 4);
@@ -104,6 +105,31 @@ int main() {
     auto th = inspector.bind(30000);
 
     mockNetwork(inspector);
+
+    inspector.addPlugin("prefs", "Shared Preferences", [] {
+        sleep(1);
+        return json{
+                {"foo",    "bar"},
+                {"number", 123},
+                {"array",  {1, 2, 3}}
+        }.dump();
+    });
+
+    inspector.addPlugin("lorem-ipsum", "Lorem ipsum", [] {
+        sleep(3);
+        ostringstream os;
+        for (int i = 0; i < 10; i++) {
+            os << R"(
+                <span class='accent--text'>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                </span>
+            )";
+        }
+        return os.str();
+    });
 
     th->join();
 
