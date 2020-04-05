@@ -9,6 +9,6 @@ end
 
 target 'Inspector-pod' do
 
-  pod "Inspector", :git => 'git@gitlab.com:paker_wreah/Inspector/Inspector.git', :branch => 'develop'
+  pod "Inspector", :git => 'git@gitlab.com:paker_wreah/Inspector/Inspector.git'
 
 end
