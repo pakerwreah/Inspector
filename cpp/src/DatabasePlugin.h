@@ -16,7 +16,7 @@ using namespace std;
 
 class DatabaseProvider {
 public:
-    virtual vector<string> databaseList() = 0;
+    virtual vector<string> databasePathList() = 0;
 };
 
 struct SQLCipher {
@@ -32,7 +32,7 @@ class DatabasePlugin {
 
     shared_ptr<Database> open();
 
-    vector<string> databaseList();
+    vector<string> databasePathList();
 
     void selectDB(int index);
 

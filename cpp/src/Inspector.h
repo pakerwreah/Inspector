@@ -8,15 +8,18 @@
 #include "HttpServer.h"
 #include "DatabasePlugin.h"
 #include "NetworkPlugin.h"
+#include "CustomPlugin.h"
 
-class Inspector : public DatabaseProvider {
+class Inspector {
     HttpServer *server;
     NetworkPlugin *networkPlugin;
     DatabasePlugin *databasePlugin;
-public:
-    Inspector();
+    CustomPlugin *customPlugin;
 
-    thread * bind(int port);
+public:
+    Inspector(DatabaseProvider *databaseProvider);
+
+    thread *bind(int port);
 
     void setCipherKey(string database, string password, int version);
 
@@ -25,6 +28,8 @@ public:
     void sendRequest(string uid, string headers, string body);
 
     void sendResponse(string uid, string headers, string body, bool compressed = false);
+
+    void addPlugin(string key, string name, PluginAction action);
 };
 
 
