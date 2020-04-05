@@ -7,7 +7,7 @@ publishing {
         aar(MavenPublication) {
             groupId 'br.newm.inspector'
             artifactId 'inspector'
-            version '1.2.2'
+            version '1.3.0'
 
             artifact("$buildDir/outputs/aar/inspector-release.aar")
 

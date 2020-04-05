@@ -5,15 +5,16 @@
 #include "Inspector.h"
 #include "DatabasePlugin.h"
 
-Inspector::Inspector() : DatabaseProvider() {
+Inspector::Inspector(DatabaseProvider *databaseProvider) {
     server = new HttpServer;
 
     server->get("/", [](Request req) {
         return Response("Server up!");
     });
 
-    databasePlugin = new DatabasePlugin(server, this);
+    databasePlugin = new DatabasePlugin(server, databaseProvider);
     networkPlugin = new NetworkPlugin(server);
+    customPlugin = new CustomPlugin(server);
 }
 
 thread *Inspector::bind(int port) {
@@ -34,4 +35,8 @@ void Inspector::sendRequest(string uid, string headers, string body) {
 
 void Inspector::sendResponse(string uid, string headers, string body, bool compressed) {
     networkPlugin->sendResponse(uid, headers, body, compressed);
+}
+
+void Inspector::addPlugin(string key, string name, PluginAction action) {
+    customPlugin->addPlugin(key, name, action);
 }

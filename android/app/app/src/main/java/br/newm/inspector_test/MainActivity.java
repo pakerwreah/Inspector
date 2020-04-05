@@ -1,5 +1,6 @@
 package br.newm.inspector_test;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -8,6 +9,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,12 +22,21 @@ public class MainActivity extends AppCompatActivity {
         touch.mkdirs();
         touch.delete();
 
+        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("test_1", "abcde");
+        editor.putInt("test_2", 12345);
+        editor.putBoolean("test_3", true);
+        editor.putFloat("test_4", 0.12345f);
+        editor.apply();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
                 String urls[] = {
                         "https://google.com.br",
-                        "https://viacep.com.br/ws/15020340/json",
+                        "https://viacep.com.br/ws/01001000/json",
                         "https://viacep.com.br/ws/15020035/json",
                         "https://viacep.com.br/ws/1020035/json"
                 };
