@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
 
   spec.source       = { :git => "https://github.com/pakerwreah/Inspector.git", :tag => '1.3.0-beta' }
   spec.source_files = 'cpp/**/*.{h,hpp,c,cpp}', 'ios/Inspector/lib/*.{h,mm}'
-  spec.public_header_files  = 'ios/Inspector/IOSInspector.h'
+  spec.public_header_files  = 'ios/Inspector/lib/IOSInspector.h'
   spec.library = 'z'
 
   spec.dependency 'SQLCipher'
