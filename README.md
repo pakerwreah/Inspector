@@ -62,6 +62,17 @@ import br.newm.inspector.NetworkInterceptor;
 new OkHttpClient.Builder().addNetworkInterceptor(new NetworkInterceptor());
 ```
 
+#### Custom plugins
+Accepts returning JSON, HTML or plain text
+```java
+Inspector.addPlugin("prefs", "Shared Preferences", new PluginAction() {
+    @Override
+    public String action() {
+        return new JSONObject(prefs.getAll()).toString();
+    }
+});
+```
+
 ## iOS
 
 #### CocoaPods
@@ -111,4 +122,17 @@ URLSession.shared.dataTask(with: request) { data, response, error in
     }
 
 }.resume()
+```
+
+#### Custom plugins
+Accepts returning JSON, HTML or plain text
+```java
+IOSInspector.addPlugin("prefs", name: "User Defaults") {
+    let dict = UserDefaults.standard.dictionaryRepresentation()
+    if let data = try? JSONSerialization.data(withJSONObject: dict),
+        let json = String(data: data, encoding: .utf8) {
+        return json
+    }
+    return "No data"
+}
 ```
