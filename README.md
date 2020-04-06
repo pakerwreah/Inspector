@@ -126,7 +126,7 @@ URLSession.shared.dataTask(with: request) { data, response, error in
 
 #### Custom plugins
 Accepts returning JSON, HTML or plain text
-```java
+```swift
 IOSInspector.addPlugin("prefs", name: "User Defaults") {
     let dict = UserDefaults.standard.dictionaryRepresentation()
     if let data = try? JSONSerialization.data(withJSONObject: dict),
