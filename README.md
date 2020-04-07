@@ -72,6 +72,14 @@ Inspector.addPlugin("prefs", "Shared Preferences", new PluginAction() {
 });
 ```
 
+#### :warning: Attention
+You should run this command to work with emulators
+```bash
+# same port number used to initialize the plugin
+adb forward tcp:30000 tcp:30000
+```
+Or configure its network as bridge and use the device's IP
+
 ## iOS
 [![Version](https://img.shields.io/cocoapods/v/IOSInspector.svg)](https://cocoapods.org/pods/IOSInspector)
 #### CocoaPods
