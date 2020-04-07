@@ -4,7 +4,7 @@ Pod::Spec.new do |spec|
     spec.license      		    = 'MIT'
     spec.summary      		    = 'Library to inspect database and network in mobile apps'
     spec.homepage     		    = 'https://github.com/pakerwreah/Inspector'
-    spec.authors      		    = { 'Carlos César Neves Enumo' => 'paker_wreah@hotmail.com'
+    spec.authors      		    = { 'Carlos César Neves Enumo' => 'paker_wreah@hotmail.com' }
 
     spec.source       		    = { :git => 'https://github.com/pakerwreah/Inspector.git', :tag => 'v1.3.0' }
     spec.source_files 		    = 'cpp/**/*.{h,hpp,c,cpp}', 'ios/Inspector/lib/*.{h,mm}'
