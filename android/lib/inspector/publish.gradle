@@ -1,0 +1,69 @@
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+
+version '1.3.0'
+group 'br.newm.inspector'
+
+def getProperties(filename) {
+    try {
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file(filename).newDataInputStream())
+        return properties
+    } catch (Exception ex) {
+        logger.log(LogLevel.ERROR, ex.message)
+    }
+}
+
+publishing {
+    publications {
+        Production(MavenPublication) {
+            artifact("$buildDir/outputs/aar/inspector-release.aar")
+            groupId this.group
+            artifactId 'inspector'
+            version this.version
+
+            pom.withXml {
+                def dependenciesNode = asNode().appendNode('dependencies')
+
+                //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
+                configurations.releaseCompileClasspath.allDependencies.each {
+                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                    dependencyNode.appendNode('groupId', it.group)
+                    dependencyNode.appendNode('artifactId', it.name)
+                    dependencyNode.appendNode('version', it.version)
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+artifacts {
+    archives sourcesJar
+}
+
+bintray {
+    def props = getProperties('bintray.properties')
+    if (props) {
+        user = props.getProperty("user")
+        key = props.getProperty("key")
+    }
+    publications = ['Production']
+    configurations = ['archives']
+    dryRun = false
+    publish = true
+    override = true
+    pkg {
+        repo = 'Inspector'
+        name = this.group
+        version {
+            name = this.version
+            vcsTag = "v${this.version}"
+            released  = new Date()
+        }
+    }
+}

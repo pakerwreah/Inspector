@@ -1,58 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.jfrog.artifactory'
-apply plugin: 'maven-publish'
-
-publishing {
-    publications {
-        aar(MavenPublication) {
-            groupId 'br.newm.inspector'
-            artifactId 'inspector'
-            version '1.3.0'
-
-            artifact("$buildDir/outputs/aar/inspector-release.aar")
-
-            //The publication doesn't know about our dependencies, so we have to manually add them to the pom
-            pom.withXml {
-                def dependenciesNode = asNode().appendNode('dependencies')
-
-                //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
-                configurations.releaseCompileClasspath.allDependencies.each {
-                    def dependencyNode = dependenciesNode.appendNode('dependency')
-                    dependencyNode.appendNode('groupId', it.group)
-                    dependencyNode.appendNode('artifactId', it.name)
-                    dependencyNode.appendNode('version', it.version)
-                }
-            }
-        }
-    }
-}
-
-def getProperties(filename) {
-    try {
-        Properties properties = new Properties()
-        properties.load(project.rootProject.file(filename).newDataInputStream())
-        return properties
-    } catch (Exception ex) {
-        logger.log(LogLevel.ERROR, ex.message)
-    }
-}
-
-artifactory {
-    def props = getProperties('artifactory.properties')
-    contextUrl = 'https://artifactory.newm.com.br/artifactory'
-    publish {
-        repository {
-            repoKey = "inspector"
-            if (props) {
-                username = props.getProperty("username")
-                password = props.getProperty("password")
-            }
-        }
-        defaults {
-            publications('aar')
-        }
-    }
-}
 
 android {
     compileSdkVersion 29
@@ -80,3 +26,5 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.4.0'
     implementation "net.zetetic:android-database-sqlcipher:4.2.0@aar"
 }
+
+apply from: 'publish.gradle'
