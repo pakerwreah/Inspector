@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.util.Log;
 
 import java.io.File;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
@@ -18,10 +16,20 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        createDatabaseFolder();
+
+        mockPrefs();
+
+        mockNetwork();
+    }
+
+    private void createDatabaseFolder() {
         File touch = getDatabasePath("touch");
         touch.mkdirs();
         touch.delete();
+    }
 
+    private void mockPrefs() {
         final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
         SharedPreferences.Editor editor = prefs.edit();
@@ -30,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
         editor.putBoolean("test_3", true);
         editor.putFloat("test_4", 0.12345f);
         editor.apply();
+    }
 
+    private void mockNetwork() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -47,9 +57,11 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
 
-                    String resp = Http.request(urls[i % urls.length]);
+                    String url = urls[i % urls.length];
 
-                    Log.d("Inspector", resp);
+                    Http.request(url);
+
+                    Log.d("Inspector", url);
                 }
             }
         }).start();
