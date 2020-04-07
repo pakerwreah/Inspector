@@ -1,11 +1,5 @@
 apply plugin: 'com.android.application'
 
-repositories {
-    maven {
-        url 'https://artifactory.newm.com.br/artifactory/inspector'
-    }
-}
-
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"

@@ -10,17 +10,16 @@ To keep network log history the web system uses the built-in IndexedDB from the 
 https://github.com/pakerwreah/InspectorWeb
 
 ## Android
-
+[![Version](https://api.bintray.com/packages/pakerwreah/Inspector/br.newm.inspector/images/download.svg)](https://bintray.com/pakerwreah/Inspector/br.newm.inspector/_latestVersion)
 #### Gradle
 ```gradle
 repositories {
-    maven {
-        url 'https://artifactory.newm.com.br/artifactory/inspector'
-    }
+    jcenter()
 }
-// ...
+```
+```gradle
 dependencies {
-    implementation "br.newm.inspector:inspector:1.2.2"
+    implementation "br.newm.inspector:inspector:<version>"
 }
 ```
 
@@ -74,10 +73,12 @@ Inspector.addPlugin("prefs", "Shared Preferences", new PluginAction() {
 ```
 
 ## iOS
-
+[![Version](https://img.shields.io/cocoapods/v/IOSInspector.svg)](https://cocoapods.org/pods/IOSInspector)
 #### CocoaPods
-```
-pod "Inspector", :git => 'https://github.com/pakerwreah/Inspector.git'
+```gradle
+target 'MyApp' do
+   pod "IOSInspector"
+end
 ```
 
 #### AppDelegate
