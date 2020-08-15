@@ -8,7 +8,7 @@
 Inspector::Inspector(DatabaseProvider *databaseProvider) {
     server = new HttpServer;
 
-    server->get("/", [](Request req) {
+    server->get("/", [](const Request &req, const Params &params) {
         return Response("Server up!");
     });
 
@@ -25,7 +25,7 @@ void Inspector::setCipherKey(string database, string password, int version) {
     databasePlugin->setCipherKey(database, password, version);
 }
 
-bool Inspector::isConnected() {
+bool Inspector::isConnected() const {
     return networkPlugin->isConnected();
 }
 

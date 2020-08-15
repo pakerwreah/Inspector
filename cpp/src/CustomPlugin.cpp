@@ -10,19 +10,19 @@ void to_json(json &j, const PluginMeta &p) {
          {"name", p.name}};
 }
 
-void CustomPlugin::addPlugin(string key, string name, PluginAction action) {
+void CustomPlugin::addPlugin(const string &key, const string &name, const PluginAction &action) {
     plugins.push_back({key, name});
     actions[key] = action;
 }
 
 CustomPlugin::CustomPlugin(HttpServer *server) {
-    server->get("/plugins", [this](Request req) {
+    server->get("/plugins", [this](const Request &req, const Params &) {
         return Response(plugins);
     });
 
-    server->get("/plugins/{key}", [this](Request req) {
+    server->get("/plugins/{key}", [this](const Request &req, const Params &params) {
         try {
-            auto action = actions.at(req.params["key"]);
+            auto action = actions.at(params.at("key"));
             auto res = action();
             try {
                 return Response(json::parse(res));

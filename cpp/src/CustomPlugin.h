@@ -26,7 +26,7 @@ class CustomPlugin {
 public:
     CustomPlugin(HttpServer *server);
 
-    void addPlugin(string key, string name, PluginAction action);
+    void addPlugin(const string &key, const string &name, const PluginAction &action);
 };
 
 

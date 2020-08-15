@@ -27,7 +27,7 @@ namespace util {
                 {"usec", diff.tv_usec}};
     }
 
-    string join(const vector<string> &pieces, const char &glue) {
+    string join(const vector<string> &pieces, char glue) {
         string a;
         auto leng = pieces.size();
         for (int i = 0; i < leng; i++) {
@@ -38,7 +38,7 @@ namespace util {
         return a;
     }
 
-    vector<string> split(const string &str, const char &delim) {
+    vector<string> split(const string &str, char delim) {
         stringstream ss(str);
         string token;
         vector<string> parts;
@@ -49,17 +49,17 @@ namespace util {
     }
 
     // trim from end of string (right)
-    string &rtrim(string &s, const char *t) {
-        return s.erase(s.find_last_not_of(t) + 1);
+    string rtrim(const string &s, const string &t) {
+        return string(s).erase(s.find_last_not_of(t) + 1);
     }
 
     // trim from beginning of string (left)
-    string &ltrim(string &s, const char *t) {
-        return s.erase(0, s.find_first_not_of(t));
+    string ltrim(const string &s, const string &t) {
+        return string(s).erase(0, s.find_first_not_of(t));
     }
 
     // trim from both ends of string (right then left)
-    string &trim(string &s, const char *t) {
+    string trim(const string &s, const string &t) {
         return ltrim(rtrim(s, t), t);
     }
 

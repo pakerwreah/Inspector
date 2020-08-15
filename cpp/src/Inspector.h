@@ -23,7 +23,7 @@ public:
 
     void setCipherKey(string database, string password, int version);
 
-    bool isConnected();
+    bool isConnected() const;
 
     void sendRequest(string uid, string headers, string body);
 

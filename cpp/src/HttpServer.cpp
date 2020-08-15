@@ -48,7 +48,7 @@ bool Request::valid() {
     return !method.empty();
 }
 
-Response::Response(json data, int code, string content_type) {
+Response::Response(const json &data, int code, const string &content_type) {
     string resp;
     if (data.is_null()) {
         resp = "";
@@ -82,19 +82,19 @@ Response::operator string() {
     return resp.str();
 }
 
-void HttpServer::request(string method, string path, Handler handler) {
+void HttpServer::request(const string &method, const string &path, Handler handler) {
     routes[method][path] = handler;
 }
 
-void HttpServer::get(string path, Handler handler) {
+void HttpServer::get(const string &path, Handler handler) {
     request("GET", path, handler);
 }
 
-void HttpServer::post(string path, Handler handler) {
+void HttpServer::post(const string &path, Handler handler) {
     request("POST", path, handler);
 }
 
-void HttpServer::put(string path, Handler handler) {
+void HttpServer::put(const string &path, Handler handler) {
     request("PUT", path, handler);
 }
 
@@ -124,7 +124,7 @@ thread *HttpServer::start(int port) {
     });
 }
 
-void HttpServer::process(shared_ptr<Socket> client) {
+void HttpServer::process(shared_ptr<Socket> client) const {
     string plain, buf;
     bool valid = false;
 
@@ -144,9 +144,9 @@ void HttpServer::process(shared_ptr<Socket> client) {
                     client->send(response);
 
                 } else {
-                    Handler handler = find_route(request);
-
-                    auto response = handler(request);
+                    Params params;
+                    Handler handler = find_handler(request, &params);
+                    auto response = handler(request, params);
 
                     if (response.body.size() && request.headers["Accept-Encoding"].find("gzip") >= 0) {
                         response.body = gzip::compress(response.body.data(), response.body.size());
@@ -166,25 +166,23 @@ void HttpServer::process(shared_ptr<Socket> client) {
     }
 }
 
-Handler HttpServer::find_route(Request &request) {
+Handler HttpServer::find_handler(const Request &request, Params *params) const {
     auto path_pieces = split(request.path, '/');
     auto path_size = path_pieces.size();
 
-    for (auto route : routes[request.method]) {
+    for (const auto &route : routes.at(request.method)) {
         auto route_pieces = split(route.first, '/');
         if (path_size == route_pieces.size()) {
-            map<string, string> params;
             for (int i = 0; i < path_size; i++) {
                 auto rp = route_pieces[i];
                 auto pp = path_pieces[i];
                 if (rp.find('{') == 0) {
                     auto key = trim(rp, "{}");
-                    params[key] = pp;
+                    params->operator[](key) = pp;
                 } else if (rp != pp) {
                     break;
                 }
                 if (i == path_size - 1) {
-                    request.params = params;
                     return route.second;
                 }
             }

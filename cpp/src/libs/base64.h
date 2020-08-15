@@ -7,11 +7,9 @@
 
 #include <string>
 
-using namespace std;
-
 namespace base64 {
-    string encode(const string &in);
-    string decode(const string &in);
+    std::string encode(const std::string &in);
+    std::string decode(const std::string &in);
 }
 
 #endif //INSPECTOR_BASE64_H

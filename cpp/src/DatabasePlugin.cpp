@@ -46,7 +46,7 @@ shared_ptr<Database> DatabasePlugin::open() {
 DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) {
     this->provider = _provider;
 
-    server->get("/database/list", [this](Request req) {
+    server->get("/database/list", [this](const Request &req, const Params &) {
         int index = 0;
         auto paths = databasePathList();
         auto names = json::array();
@@ -63,10 +63,10 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
         return Response(data);
     });
 
-    server->put("/database/current/{index}", [this](Request req) {
+    server->put("/database/current/{index}", [this](const Request &req, const Params &params) {
         try {
             auto body = req.body;
-            auto index = stoi(req.params["index"]);
+            auto index = stoi(params.at("index"));
 
             selectDB(index);
 
@@ -79,7 +79,7 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
         return Response(db_path);
     });
 
-    server->post("/database/query", [this](Request req) {
+    server->post("/database/query", [this](const Request &req, const Params &) {
         auto sql = req.body;
 
         try {
@@ -128,7 +128,7 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
         }
     });
 
-    server->post("/database/execute", [this](Request req) {
+    server->post("/database/execute", [this](const Request &req, const Params &) {
         try {
             auto db = open();
 
@@ -163,6 +163,6 @@ void DatabasePlugin::selectDB(int index) {
     }
 }
 
-void DatabasePlugin::setCipherKey(string database, string password, int version) {
+void DatabasePlugin::setCipherKey(const string &database, const string &password, int version) {
     cipher[database] = {password, version};
 }

@@ -39,7 +39,7 @@ class DatabasePlugin {
 public:
     DatabasePlugin(HttpServer *server, DatabaseProvider *provider);
 
-    void setCipherKey(string database, string password, int version);
+    void setCipherKey(const string &database, const string &password, int version);
 };
 
 

@@ -23,20 +23,20 @@ namespace util {
 
     json benchmark(const timeval &start);
 
-    string join(const vector<string> &pieces, const char &glue);
+    string join(const vector<string> &pieces, char glue);
 
-    vector<string> split(const string &str, const char &delim);
+    vector<string> split(const string &str, char delim);
 
     static const char *whitespace = " \t\n\r\f\v";
 
     // trim from end of string (right)
-    string &rtrim(string &s, const char *t = whitespace);
+    string rtrim(const string &s, const string &t = whitespace);
 
     // trim from beginning of string (left)
-    string &ltrim(string &s, const char *t = whitespace);
+    string ltrim(const string &s, const string &t = whitespace);
 
     // trim from both ends of string (right then left)
-    string &trim(string &s, const char *t = whitespace);
+    string trim(const string &s, const string &t = whitespace);
 
     template<typename T>
     vector<T> filter(const vector<T> &container, function<bool(const T&)> predicate);

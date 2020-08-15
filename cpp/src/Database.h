@@ -16,24 +16,23 @@ class ResultSet;
 class Database {
     sqlite3 *db;
 public:
-    Database(string path, string password = "", int version = 0);
+    Database(const string &path, const string &password = "", int version = 0);
 
     ~Database();
 
-    void commit();
+    void commit() const;
 
-    void transaction();
+    void transaction() const;
 
-    void execute(string sql);
+    void execute(const string &sql) const;
 
-    ResultSet query(string sql);
+    ResultSet query(const string &sql) const;
 };
 
 class ResultSet {
     sqlite3 *db;
     sqlite3_stmt *stmt;
     int index = -1, first_step = -1;
-    vector<string> _headers;
 
     bool step();
 
@@ -44,15 +43,15 @@ public:
 
     bool next();
 
-    vector<string> headers();
+    vector<string> headers() const;
 
-    int type(int column);
+    int type(int column) const;
 
-    string text(int column);
+    string text(int column) const;
 
-    int integer(int column);
+    int integer(int column) const;
 
-    double decimal(int column);
+    double decimal(int column) const;
 };
 
 #endif //INSPECTOR_DATABASE_H

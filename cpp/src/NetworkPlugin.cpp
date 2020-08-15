@@ -10,27 +10,27 @@
 #include "libs/sha1.h"
 #include "libs/base64.h"
 
-static Response handshake(Request &request);
+static Response handshake(const Request &request);
 
-static string pack(string msg, bool binary = true);
+static string pack(const string &msg, bool binary = true);
 
 NetworkPlugin::NetworkPlugin(HttpServer *server) {
-    server->get("/network/request", [this](Request req) {
+    server->get("/network/request", [this](const Request &req, const Params &) {
         request_socket = req.socket;
         return handshake(req);
     });
 
-    server->get("/network/response", [this](Request req) {
+    server->get("/network/response", [this](const Request &req, const Params &) {
         response_socket = req.socket;
         return handshake(req);
     });
 }
 
-bool NetworkPlugin::isConnected() {
+bool NetworkPlugin::isConnected() const {
     return request_socket && response_socket;
 }
 
-void NetworkPlugin::sendRequest(string uid, string headers, string body) {
+void NetworkPlugin::sendRequest(const string &uid, const string &headers, const string &body) {
     // create local reference to avoid deallocation
     auto socket = request_socket;
     if (socket) {
@@ -43,25 +43,25 @@ void NetworkPlugin::sendRequest(string uid, string headers, string body) {
     }
 }
 
-void NetworkPlugin::sendResponse(string uid, string headers, string _body, bool compressed) {
+void NetworkPlugin::sendResponse(const string &uid, const string &headers, const string &body, bool compressed) {
     // create local reference to avoid deallocation
     auto socket = response_socket;
     if (socket) {
         // create a thread to avoid hanging the client
         thread([=] {
-            auto body = _body;
+            auto m_body = body;
             if (!compressed) {
-                body = gzip::compress(body.c_str(), body.size());
+                m_body = gzip::compress(body.c_str(), body.size());
             }
-            if (!socket->send(pack(uid + "\n" + headers + "\n" + body))) {
+            if (!socket->send(pack(uid + "\n" + headers + "\n" + m_body))) {
                 response_socket = nullptr;
             }
         }).detach();
     }
 }
 
-static Response handshake(Request &request) {
-    auto secKey = request.headers["Sec-WebSocket-Key"];
+static Response handshake(const Request &request) {
+    auto secKey = request.headers.at("Sec-WebSocket-Key");
     auto magic = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
     auto secAccept = base64::encode(sha1::calc(secKey + magic));
 
@@ -76,7 +76,7 @@ static Response handshake(Request &request) {
     return response;
 }
 
-static string pack(string msg, bool binary) {
+static string pack(const string &msg, bool binary) {
     auto length = msg.size();
 
     ostringstream wrap;
