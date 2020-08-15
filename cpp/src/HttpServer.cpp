@@ -8,6 +8,7 @@
 #include "Socket.h"
 #include "libs/picohttpparser.h"
 #include "libs/compress.hpp"
+#include "libs/url.h"
 #include "util.h"
 
 using namespace util;
@@ -167,7 +168,20 @@ void HttpServer::process(shared_ptr<Socket> client) const {
 }
 
 Handler HttpServer::find_handler(const Request &request, Params *params) const {
-    auto path_pieces = split(request.path, '/');
+    auto pieces = split(request.path, '?');
+    auto path = pieces[0];
+
+    if (pieces.size() > 1) {
+        auto query_pieces = split(pieces[1], '&');
+        for (const string &piece : query_pieces) {
+            auto p = split(piece, '=');
+            if (p.size() == 2) {
+                params->operator[](p[0]) = url_decode(p[1]);
+            }
+        }
+    }
+
+    auto path_pieces = split(path, '/');
     auto path_size = path_pieces.size();
 
     for (const auto &route : routes.at(request.method)) {

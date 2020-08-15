@@ -3,6 +3,7 @@
 //
 
 #include "Inspector.h"
+#include "util.h"
 #include <unistd.h>
 #include <thread>
 #include <vector>
@@ -106,7 +107,7 @@ int main() {
 
     mockNetwork(inspector);
 
-    inspector.addPlugin("prefs", "Shared Preferences", [] {
+    inspector.addPlugin("prefs", "Shared Preferences", [](const Params &params) {
         sleep(1);
         return json{
                 {"foo",    "bar"},
@@ -115,7 +116,7 @@ int main() {
         }.dump();
     });
 
-    inspector.addPlugin("lorem-ipsum", "Lorem ipsum", [] {
+    inspector.addPlugin("lorem-ipsum", "Lorem ipsum", [](const Params &params) {
         sleep(3);
         ostringstream os;
         for (int i = 0; i < 10; i++) {
@@ -128,6 +129,56 @@ int main() {
                 </span>
             )";
         }
+        return os.str();
+    });
+
+    json tree;
+    json::array_t files{
+            "File 1",
+            "File 2",
+            "File 3"
+    };
+    for (int i = 1; i <= 5; i++) {
+        tree["root"]["Folder " + to_string(i)] = {
+                {"Folder A" + to_string(i), files},
+                {"Folder B" + to_string(i), {}},
+                {"Folder C" + to_string(i), {}}
+        };
+    }
+
+    inspector.addPlugin("explorer", "Explorer", [tree](const Params &params) {
+        if(params.find("path") == params.end()) {
+            return string("<iframe style='width:100%;min-height:500px;border:none' src='http://localhost:30000/plugins/explorer?path=/'></iframe>");
+        }
+        const string path = util::trim(params.at("path"), "/");
+        ostringstream os;
+        os << "<style> * { color: white !important; text-decoration: none; } </style>";
+        os << "<h3>/" << path << "</h3>";
+        os << "<ul>";
+        json root = tree["root"];
+        auto parts = util::filter<string>(util::split(path, '/'), [](const string &val) { return !val.empty(); });
+        for (string part : parts) {
+            if (root.is_object()) {
+                root = root.at(part);
+            }
+        }
+        if (parts.size()) {
+            parts.pop_back();
+            string back = util::join(parts, '/');
+            os << "<li><a href='http://localhost:30000/plugins/explorer?path=/" << back << "'>..</a></li>";
+        }
+        for (auto item : root.items()) {
+            os << "<li>";
+            if (item.value().is_string()) {
+                os << "<a>" << item.value().get<string>() << "</a>";
+            } else {
+                os << "<a href='http://localhost:30000/plugins/explorer?path=/" << path << "/" << item.key() << "'>"
+                   << item.key()
+                   << "</a>";
+            }
+            os << "</li>";
+        }
+        os << "</ul>";
         return os.str();
     });
 

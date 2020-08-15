@@ -8,12 +8,11 @@
 #include <map>
 #include <string>
 #include <vector>
-
-class HttpServer;
+#include "HttpServer.h"
 
 using namespace std;
 
-typedef function<string()> PluginAction;
+typedef function<string(const Params &)> PluginAction;
 
 struct PluginMeta {
     string key, name;

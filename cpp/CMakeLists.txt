@@ -14,6 +14,7 @@ set(
         src/libs/picohttpparser.c
         src/libs/base64.cpp
         src/libs/sha1.cpp
+        src/libs/url.cpp
         src/util.cpp
         src/Socket.cpp
         src/HttpServer.cpp

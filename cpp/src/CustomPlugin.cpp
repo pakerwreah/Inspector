@@ -23,7 +23,7 @@ CustomPlugin::CustomPlugin(HttpServer *server) {
     server->get("/plugins/{key}", [this](const Request &req, const Params &params) {
         try {
             auto action = actions.at(params.at("key"));
-            auto res = action();
+            auto res = action(params);
             try {
                 return Response(json::parse(res));
             } catch (exception &ex) {
