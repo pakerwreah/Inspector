@@ -8,6 +8,12 @@ using namespace std;
 using namespace nlohmann;
 
 namespace util {
+    string uid() {
+        struct timeval tp;
+        gettimeofday(&tp, nullptr);
+        return to_string(tp.tv_sec) + "-" + to_string(tp.tv_usec);
+    }
+
     timeval timestamp() {
         struct timeval now;
         gettimeofday(&now, nullptr);

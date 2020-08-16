@@ -9,7 +9,6 @@
 #include <vector>
 #include <sys/time.h>
 #include <sstream>
-#include <fstream>
 
 using namespace std;
 
@@ -20,12 +19,6 @@ protected:
     }
 };
 
-static string get_uid() {
-    struct timeval tp;
-    gettimeofday(&tp, NULL);
-    return to_string(tp.tv_sec) + "-" + to_string(tp.tv_usec);
-}
-
 static void rsleep() {
     srand(time(nullptr)); // use current time as seed for random generator
     sleep((rand() % 5) + 5);
@@ -35,7 +28,7 @@ static void mockNetwork(Inspector &inspector) {
     new thread([&] {
         while (true) {
             sleep(1);
-            string uid = get_uid();
+            string uid = util::uid();
             inspector.sendRequest(uid, "URL: http://www.google.com.br\nMethod: GET\n", "");
             rsleep();
             inspector.sendResponse(uid, "Status: 200\nContent-Type: text/plain\nContent-Length: 13\n", "Hello client!");
@@ -45,7 +38,7 @@ static void mockNetwork(Inspector &inspector) {
     new thread([&] {
         while (true) {
             sleep(2);
-            string uid = get_uid();
+            string uid = util::uid();
             inspector.sendRequest(uid, "URL: http://www.google.com.br/post\nMethod: POST\n", "Some content");
             rsleep();
             string resp = json{{"foo", "bar"}}.dump();
@@ -59,7 +52,7 @@ static void mockNetwork(Inspector &inspector) {
     new thread([&] {
         while (true) {
             sleep(3);
-            string uid = get_uid();
+            string uid = util::uid();
             inspector.sendRequest(uid, "URL: http://www.google.com.br/put\nMethod: PUT\n", "Test");
             rsleep();
             inspector.sendResponse(uid, "Status: 400\nContent-Type: text/html\nContent-Length: 7\n", "Not OK!");
@@ -69,7 +62,7 @@ static void mockNetwork(Inspector &inspector) {
     new thread([&] {
         while (true) {
             sleep(4);
-            string uid = get_uid();
+            string uid = util::uid();
             inspector.sendRequest(uid, "URL: http://www.google.com.br/delete\nMethod: DELETE\n", "");
             rsleep();
             inspector.sendResponse(uid, "Status: 200\nContent-Type: text/plain\nContent-Length: 8\n", "Deleted!");
@@ -79,7 +72,7 @@ static void mockNetwork(Inspector &inspector) {
     new thread([&] {
         while (true) {
             sleep(5);
-            string uid = get_uid();
+            string uid = util::uid();
             inspector.sendRequest(uid, "URL: http://www.google.com.br/patch\nMethod: PATCH\n", "");
             rsleep();
             inspector.sendResponse(uid, "Status: 500\nContent-Type: text/plain\nContent-Length: 22\n",
@@ -89,7 +82,7 @@ static void mockNetwork(Inspector &inspector) {
     new thread([&] {
         while (true) {
             sleep(6);
-            string uid = get_uid();
+            string uid = util::uid();
             inspector.sendRequest(uid, "URL: http://www.terra.com.br/redirect\nMethod: GET\n", "");
             rsleep();
             inspector.sendResponse(uid, "Status: 301\nContent-Type: text/plain\nContent-Length: 11\n", "Redirected!");
@@ -147,24 +140,7 @@ int main() {
         };
     }
 
-    inspector.addPlugin("explorer", "Explorer", [] {
-        string host = "http://localhost:30000";
-        string api = "/plugins/api/filesystem";
-
-        ostringstream os;
-        os << "<div class='absolute-expand panel d-flex flex-column'>";
-        os << "     <h3 class='accent--text pa-3 text-center'>Explorer Plugin</h3>";
-        os << "     <iframe class='flex' style='border:none' src='" + host + api + "'></iframe>";
-        os << "</div>";
-        return os.str();
-    });
-
-    inspector.addPluginAPI("GET", "filesystem", [tree](const Params &params) {
-        ifstream file("../explorer.html");
-        ostringstream buffer;
-        buffer << file.rdbuf();
-        return buffer.str();
-    });
+    inspector.addLivePlugin("explorer", "Explorer", "../explorer.html");
 
     inspector.addPluginAPI("GET", "filesystem/list", [tree](const Params &params) {
         const string path = util::trim(params.at("path"), "/");

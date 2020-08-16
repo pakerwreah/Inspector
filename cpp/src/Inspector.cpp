@@ -44,3 +44,11 @@ void Inspector::addPlugin(const string &key, const string &name, PluginAction ac
 void Inspector::addPluginAPI(const string &method, const string &path, PluginAPIAction action) {
     customPlugin->addPluginAPI(method, path, action);
 }
+
+void Inspector::addLivePlugin(const string &key, const string &name, const string &filepath) {
+    customPlugin->addLivePlugin(key, name, filepath);
+}
+
+void Inspector::addLivePlugin(const string &key, const string &name, PluginAction action) {
+    customPlugin->addLivePlugin(key, name, action);
+}

@@ -21,6 +21,7 @@ struct PluginMeta {
 };
 
 class CustomPlugin {
+    string host;
     vector<PluginMeta> plugins;
     map<PluginKey, PluginAction> actions;
     map<Method, map<Path, PluginAPIAction>> api;
@@ -30,8 +31,10 @@ class CustomPlugin {
 public:
     CustomPlugin(HttpServer *server);
 
-    void addPlugin(const string &key, const string &name, const PluginAction &action);
-    void addPluginAPI(const string &method, const string &path, const PluginAPIAction &action);
+    void addPlugin(const string &key, const string &name, PluginAction action);
+    void addPluginAPI(const string &method, const string &path, PluginAPIAction action);
+    void addLivePlugin(const string &key, const string &name, const string &filepath);
+    void addLivePlugin(const string &key, const string &name, PluginAction action);
 };
 
 

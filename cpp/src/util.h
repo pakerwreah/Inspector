@@ -15,6 +15,8 @@ using json = nlohmann::json;
 
 namespace util {
 
+    std::string uid();
+
     timeval timestamp();
 
     timeval timediff(const timeval &start, const timeval &end);
