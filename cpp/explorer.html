@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Explorer</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <h4>{{ path || '/' }}</h4>
+    <h5 v-if="path"><a href="#" @click="back">&larr; Go back</a></h5>
+    <ol>
+        <li v-for="folder in folders">
+            <a href="#" @click="list(fullpath(folder.name))">{{ folder.name }}</a>
+        </li>
+        <li v-for="file in files">
+            <a href="#" @click="open(fullpath(file.name))">{{ file.name }}</a>
+        </li>
+    </ol>
+</div>
+</body>
+</html>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: () => ({
+            path: '',
+            m_files: []
+        }),
+        computed: {
+            folders() {
+                return this.m_files.filter(f => f.type === 'folder')
+            },
+            files() {
+                return this.m_files.filter(f => f.type === 'file')
+            }
+        },
+        methods: {
+            fullpath(name) {
+                return `${this.path}/${name}`
+            },
+            back() {
+                this.list(this.path.split('/').slice(0, -1).join('/'))
+            },
+            list(path) {
+                return this.request('list', path).then(({data}) => {
+                    this.path = path
+                    this.m_files = data
+                }).catch(e => alert(e.response.data.msg))
+            },
+            open(path) {
+                alert(path)
+            },
+            request(action, path) {
+                return axios.get('/plugins/api/filesystem/' + action, {
+                    params: {path},
+                    headers: {
+                        'Content-type': 'application/x-www-form-urlencoded'
+                    }
+                })
+            }
+        },
+        mounted() {
+            this.list('')
+        }
+    })
+</script>
+
+<style>
+    html {
+        padding: 1.5rem;
+    }
+
+    html * {
+        color: #888;
+        text-decoration: none;
+    }
+
+    h4, h5 * {
+        margin-left: 1.5rem;
+        color: goldenrod;
+    }
+</style>

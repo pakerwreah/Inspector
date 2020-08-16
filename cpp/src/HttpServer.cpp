@@ -175,9 +175,7 @@ static void parse_urlencoded(const string &urlencoded, Params *params) {
     auto pieces = split(urlencoded, '&');
     for (const string &piece : pieces) {
         auto p = split(piece, '=');
-        if (p.size() == 2) {
-            params->operator[](p[0]) = url_decode(p[1]);
-        }
+        params->operator[](p[0]) = p.size() == 2 ? url_decode(p[1]) : "";
     }
 }
 

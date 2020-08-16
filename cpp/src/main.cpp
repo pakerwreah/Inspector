@@ -9,6 +9,7 @@
 #include <vector>
 #include <sys/time.h>
 #include <sstream>
+#include <fstream>
 
 using namespace std;
 
@@ -147,29 +148,28 @@ int main() {
     }
 
     inspector.addPlugin("explorer", "Explorer", [] {
-        string uid = get_uid(); // anti-cache
         string host = "http://localhost:30000";
-        string api = "/plugins/api/filesystem/list";
+        string api = "/plugins/api/filesystem";
 
         ostringstream os;
         os << "<div class='absolute-expand panel d-flex flex-column'>";
         os << "     <h3 class='accent--text pa-3 text-center'>Explorer Plugin</h3>";
-        os << "     <iframe class='flex' style='border:none' src='" + host + api + "?path=/&" + uid + "'></iframe>";
+        os << "     <iframe class='flex' style='border:none' src='" + host + api + "'></iframe>";
         os << "</div>";
         return os.str();
     });
 
-    inspector.addPluginAPI("GET", "filesystem/list", [tree](const Params &params) {
-        const string uid = get_uid(); // anti-cache
-        const string path = util::trim(params.at("path"), "/");
-        ostringstream os;
-        os << R"(<style>
-                    html { padding: 1.5rem; }
-                    html * { color: #888; text-decoration: none; }
-                    h4, h5 * { margin-left: 1.5rem; color: goldenrod; }
-                </style>)";
+    inspector.addPluginAPI("GET", "filesystem", [tree](const Params &params) {
+        ifstream file("../explorer.html");
+        ostringstream buffer;
+        buffer << file.rdbuf();
+        return buffer.str();
+    });
 
-        os << "<h4>/" + path + "</h4>";
+    inspector.addPluginAPI("GET", "filesystem/list", [tree](const Params &params) {
+        const string path = util::trim(params.at("path"), "/");
+
+        json out = json::array();
 
         json root = tree.at("root");
         auto parts = util::split(path, '/', false);
@@ -178,27 +178,18 @@ int main() {
                 root = root.at(part);
             }
         }
-        auto makeLink = [&uid](const string &action, const string &path, const string &name) {
-            return "<a href='/plugins/api/filesystem/" + action +
-                   "?path=/" + util::trim(path, "/") + "&" + uid + "'>" + name +
-                   "</a>";
-        };
 
-        if (parts.size()) {
-            parts.pop_back();
-            string back = util::join(parts, '/');
-            os << "<h5>" + makeLink("list", back, "&larr; Go back") + "</h5>";
-        }
-
-        os << "<ul>";
         for (auto item : root.items()) {
             bool isFile = item.value().is_string();
             string name = isFile ? item.value().get<string>() : item.key();
-            string action = isFile ? "open" : "list";
-            os << "<li>" + makeLink(action, path + "/" + name, name) + "</li>";
+            string type = isFile ? "file" : "folder";
+            out.push_back({
+                                  {"type", type},
+                                  {"name", name}
+                          });
         }
-        os << "</ul>";
-        return os.str();
+
+        return out.dump();
     });
 
     // TODO: Implement "filesystem/open"

@@ -3,8 +3,10 @@
 //
 
 #include "url.h"
+#include "../util.h"
 
-std::string url_decode(const std::string &encoded) {
+std::string url_decode(const std::string &_encoded) {
+    std::string encoded = util::replaceAll(_encoded, "+", "%20");
     std::string ret;
     char ch;
     int i, j;
