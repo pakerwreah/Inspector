@@ -4,6 +4,7 @@
 
 #include "CustomPlugin.h"
 #include "HttpServer.h"
+#include "util.h"
 
 void to_json(json &j, const PluginMeta &p) {
     j = {{"key",  p.key},
@@ -15,24 +16,41 @@ void CustomPlugin::addPlugin(const string &key, const string &name, const Plugin
     actions[key] = action;
 }
 
+void CustomPlugin::addPluginAPI(const string &method, const string &path, const PluginAPIAction &action) {
+    api[method][util::replaceAll(path, "/", "-")] = action;
+}
+
+Response CustomPlugin::execute(PluginAction action) noexcept {
+    string res;
+    try {
+        return Response(json::parse(res = action()));
+    } catch (json::parse_error &ex) {
+        return Response(res, 200, ContentType::HTML);
+    } catch (out_of_range &ex) {
+        return Response(ex.what(), 400);
+    } catch (exception &ex) {
+        return Response(ex.what(), 500);
+    }
+}
+
 CustomPlugin::CustomPlugin(HttpServer *server) {
-    server->get("/plugins", [this](const Request &req, const Params &) {
+    server->get("/plugins", [this](const Request &, const Params &) {
         return Response(plugins);
     });
 
-    server->get("/plugins/{key}", [this](const Request &req, const Params &params) {
-        try {
-            auto action = actions.at(params.at("key"));
-            auto res = action(params);
-            try {
-                return Response(json::parse(res));
-            } catch (exception &ex) {
-                return Response(res, 200, ContentType::HTML);
-            }
-        } catch (out_of_range &ex) {
-            return Response(ex.what(), 400);
-        } catch (exception &ex) {
-            return Response(ex.what(), 500);
-        }
+    server->get("/plugins/{:key:}", [this](const Request &, const Params &params) {
+        return execute([&] {
+            string key = params.at(":key:");
+            PluginAction action = actions.at(key);
+            return action();
+        });
+    });
+
+    server->request("/plugins/api/{:path:}", [this](const Request &request, const Params &params) {
+        return execute([&] {
+            string path = params.at(":path:");
+            PluginAPIAction action = api.at(request.method).at(path);
+            return action(params);
+        });
     });
 }

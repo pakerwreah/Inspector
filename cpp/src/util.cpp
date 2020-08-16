@@ -27,25 +27,41 @@ namespace util {
                 {"usec", diff.tv_usec}};
     }
 
-    string join(const vector<string> &pieces, char glue) {
-        string a;
-        auto leng = pieces.size();
-        for (int i = 0; i < leng; i++) {
-            a += pieces[i];
-            if (i < (leng - 1))
-                a += glue;
+    template<typename T>
+    string join(const vector<string> &pieces, const T &glue) {
+        ostringstream os;
+        for (const string &piece : pieces) {
+            os << piece;
+            if (&piece != &pieces.back())
+                os << glue;
         }
-        return a;
+        return os.str();
     }
 
-    vector<string> split(const string &str, char delim) {
-        stringstream ss(str);
-        string token;
-        vector<string> parts;
-        while (getline(ss, token, delim)) {
-            parts.push_back(token);
-        }
-        return parts;
+    template string join(const vector<string> &pieces, const char &glue);
+
+    template string join(const vector<string> &pieces, const string &glue);
+
+    vector<string> split(const string &str, char delim, bool allow_empty) {
+        return split(str, string(1, delim), allow_empty);
+    }
+
+    vector<string> split(const string &str, const string &delim, bool allow_empty) {
+        assert(!delim.empty());
+        vector<string> tokens;
+        size_t prev = 0, pos = 0;
+        do {
+            pos = str.find(delim, prev);
+            if (pos == string::npos) {
+                pos = str.length();
+            }
+            string token = str.substr(prev, pos - prev);
+            if (allow_empty || !token.empty()) {
+                tokens.push_back(token);
+            }
+            prev = pos + delim.length();
+        } while (pos < str.length() && prev < str.length());
+        return tokens;
     }
 
     // trim from end of string (right)
@@ -64,13 +80,13 @@ namespace util {
     }
 
     template<typename T>
-    vector<T> filter(const vector<T> &container, function<bool(const T&)> predicate) {
+    vector<T> filter(const vector<T> &container, function<bool(const T &)> predicate) {
         vector<T> result;
         copy_if(container.begin(), container.end(), back_inserter(result), predicate);
         return result;
     }
 
-    template vector<string> filter(const vector<string> &, function<bool(const string&)>);
+    template vector<string> filter(const vector<string> &, function<bool(const string &)>);
 
     bool endsWith(const string &str, const string &suffix) {
         return str.size() >= suffix.size() && 0 == str.compare(str.size() - suffix.size(), suffix.size(), suffix);
@@ -78,5 +94,16 @@ namespace util {
 
     bool startsWith(const string &str, const string &prefix) {
         return str.size() >= prefix.size() && 0 == str.compare(0, prefix.size(), prefix);
+    }
+
+    std::string replaceAll(const string &str, const string &needle, const string &replacement) {
+        assert(!needle.empty());
+        string copy = str;
+        auto pos = copy.find(needle);
+        while (pos != string::npos) {
+            copy.replace(pos, needle.size(), replacement);
+            pos = copy.find(needle, pos + replacement.size());
+        }
+        return copy;
     }
 }

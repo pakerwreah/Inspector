@@ -12,7 +12,9 @@
 
 using namespace std;
 
-typedef function<string(const Params &)> PluginAction;
+typedef string PluginKey;
+typedef function<string()> PluginAction;
+typedef function<string(const Params &)> PluginAPIAction;
 
 struct PluginMeta {
     string key, name;
@@ -20,12 +22,16 @@ struct PluginMeta {
 
 class CustomPlugin {
     vector<PluginMeta> plugins;
-    map<string, PluginAction> actions;
+    map<PluginKey, PluginAction> actions;
+    map<Method, map<Path, PluginAPIAction>> api;
+
+    Response execute(PluginAction executor) noexcept;
 
 public:
     CustomPlugin(HttpServer *server);
 
     void addPlugin(const string &key, const string &name, const PluginAction &action);
+    void addPluginAPI(const string &method, const string &path, const PluginAPIAction &action);
 };
 
 

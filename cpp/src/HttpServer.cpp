@@ -99,6 +99,10 @@ void HttpServer::put(const string &path, Handler handler) {
     request("PUT", path, handler);
 }
 
+void HttpServer::request(const string &path, Handler handler) {
+    request("*", path, handler);
+}
+
 void HttpServer::stop() {
     _stop = true;
 }
@@ -167,40 +171,65 @@ void HttpServer::process(shared_ptr<Socket> client) const {
     }
 }
 
+static void parse_urlencoded(const string &urlencoded, Params *params) {
+    auto pieces = split(urlencoded, '&');
+    for (const string &piece : pieces) {
+        auto p = split(piece, '=');
+        if (p.size() == 2) {
+            params->operator[](p[0]) = url_decode(p[1]);
+        }
+    }
+}
+
 Handler HttpServer::find_handler(const Request &request, Params *params) const {
     auto pieces = split(request.path, '?');
     auto path = pieces[0];
 
-    if (pieces.size() > 1) {
-        auto query_pieces = split(pieces[1], '&');
-        for (const string &piece : query_pieces) {
-            auto p = split(piece, '=');
-            if (p.size() == 2) {
-                params->operator[](p[0]) = url_decode(p[1]);
-            }
+    // extract query params
+    if (request.method == "GET" && pieces.size() > 1) {
+        parse_urlencoded(pieces[1], params);
+    } else {
+        // extract body params
+        auto type = request.headers.find("Content-Type");
+        if (type != request.headers.end() && type->second.find(ContentType::URL_ENCODED) != string::npos) {
+            parse_urlencoded(request.body, params);
         }
     }
 
+    // normalize plugin name
+    auto plugin_pieces = util::split(path, "plugins/api/");
+
+    if (plugin_pieces.size() > 1) {
+        auto plugin = util::replaceAll(plugin_pieces[1], "/", "-");
+        path = plugin_pieces[0] + "plugins/api/" + plugin;
+    }
+
+    // find handler
     auto path_pieces = split(path, '/');
     auto path_size = path_pieces.size();
 
-    for (const auto &route : routes.at(request.method)) {
-        auto route_pieces = split(route.first, '/');
-        if (path_size == route_pieces.size()) {
-            for (int i = 0; i < path_size; i++) {
-                auto rp = route_pieces[i];
-                auto pp = path_pieces[i];
-                if (rp.find('{') == 0) {
-                    auto key = trim(rp, "{}");
-                    params->operator[](key) = pp;
-                } else if (rp != pp) {
-                    break;
-                }
-                if (i == path_size - 1) {
-                    return route.second;
+    // check for method then wildcard
+    for (const char *method : {request.method.c_str(), "*"}) {
+        auto m_routes = routes.find(method);
+        if (m_routes != routes.end())
+            for (const auto &route : m_routes->second) {
+                auto route_pieces = split(route.first, '/');
+                if (path_size != route_pieces.size()) continue;
+                for (int i = 0; i < path_size; i++) {
+                    auto rp = route_pieces[i];
+                    auto pp = path_pieces[i];
+                    if (rp.find('{') == 0) {
+                        auto key = trim(rp, "{}");
+                        params->operator[](key) = pp;
+                    } else if (rp != pp) {
+                        break;
+                    }
+                    if (i == path_size - 1) {
+                        return route.second;
+                    }
                 }
             }
-        }
     }
+
     throw out_of_range("Route not found");
 }
