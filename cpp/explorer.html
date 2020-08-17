@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </head>
 <body>
-<div id="app">
+<div id="app" v-if="loaded" :style="cssProps">
     <h4>{{ path || '/' }}</h4>
     <h5 v-if="path"><a href="#" @click="back">&larr; Go back</a></h5>
     <ol>
@@ -22,10 +22,13 @@
 </body>
 </html>
 
+<!--suppress JSUnresolvedVariable, JSUnresolvedFunction -->
 <script>
     new Vue({
         el: '#app',
         data: () => ({
+            loaded: false,
+            colors: null,
             path: '',
             m_files: []
         }),
@@ -35,6 +38,15 @@
             },
             files() {
                 return this.m_files.filter(f => f.type === 'file')
+            },
+            cssProps() {
+                if (this.colors) {
+                    let styles = {}
+                    for (const [key, color] of Object.entries(this.colors)) {
+                        styles[`--${key}`] = color
+                    }
+                    return styles
+                }
             }
         },
         methods: {
@@ -54,32 +66,40 @@
                 alert(path)
             },
             request(action, path) {
-                return axios.get('/plugins/api/filesystem/' + action, {
-                    params: {path},
-                    headers: {
-                        'Content-type': 'application/x-www-form-urlencoded'
-                    }
-                })
+                return axios.get('/plugins/api/filesystem/' + action, {params: {path}})
             }
         },
         mounted() {
+            if (window.self !== window.top) {
+                window.addEventListener('message', ({data}) => {
+                    this.theme = data.theme
+                    this.colors = data.colors
+                    this.loaded = true
+                })
+            } else {
+                this.loaded = true
+            }
             this.list('')
         }
     })
 </script>
 
+<!--suppress CssUnresolvedCustomProperty -->
 <style>
     html {
-        padding: 1.5rem;
+        padding: 0.5rem;
     }
 
-    html * {
-        color: #888;
+    * {
+        color: var(--text);
+    }
+
+    a {
         text-decoration: none;
     }
 
     h4, h5 * {
         margin-left: 1.5rem;
-        color: goldenrod;
+        color: var(--accent);
     }
 </style>
