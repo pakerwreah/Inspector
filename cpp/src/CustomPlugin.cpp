@@ -9,11 +9,12 @@
 
 void to_json(json &j, const PluginMeta &p) {
     j = {{"key",  p.key},
-         {"name", p.name}};
+         {"name", p.name},
+         {"live", p.live}};
 }
 
-void CustomPlugin::addPlugin(const string &key, const string &name, PluginAction action) {
-    plugins.push_back({key, name});
+void CustomPlugin::addPlugin(const string &key, const string &name, PluginAction action, bool live) {
+    plugins.push_back({key, name, live});
     actions[key] = action;
 }
 
@@ -27,17 +28,7 @@ void CustomPlugin::addLivePlugin(const string &key, const string &name, const st
 }
 
 void CustomPlugin::addLivePlugin(const string &key, const string &name, PluginAction action) {
-    addPlugin(key, name, [&] {
-        string src = "http://" + host + "/plugins/api/" + key + "/frontend?" + util::uid();
-        ostringstream os;
-        os << "<div class='absolute-expand d-flex'>";
-        os << "     <iframe class='flex' style='border:none' src='" + src + "'></iframe>";
-        os << "</div>";
-        return os.str();
-    });
-    addPluginAPI("GET", key + "/frontend", [action](const Params &) {
-        return action();
-    });
+    addPlugin(key, name, action, true);
 }
 
 void CustomPlugin::addPluginAPI(const string &method, const string &path, PluginAPIAction action) {

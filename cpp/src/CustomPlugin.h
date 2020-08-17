@@ -18,6 +18,7 @@ typedef function<string(const Params &)> PluginAPIAction;
 
 struct PluginMeta {
     string key, name;
+    bool live;
 };
 
 class CustomPlugin {
@@ -31,7 +32,7 @@ class CustomPlugin {
 public:
     CustomPlugin(HttpServer *server);
 
-    void addPlugin(const string &key, const string &name, PluginAction action);
+    void addPlugin(const string &key, const string &name, PluginAction action, bool live = false);
     void addPluginAPI(const string &method, const string &path, PluginAPIAction action);
     void addLivePlugin(const string &key, const string &name, const string &filepath);
     void addLivePlugin(const string &key, const string &name, PluginAction action);
