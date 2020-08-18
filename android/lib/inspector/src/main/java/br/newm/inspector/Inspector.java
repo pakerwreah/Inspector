@@ -9,7 +9,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-@SuppressWarnings({"unused", "WeakerAccess"})
 public class Inspector {
     static {
         System.loadLibrary("inspector");

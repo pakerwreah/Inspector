@@ -18,7 +18,7 @@ public class Application extends android.app.Application {
         Inspector.addPlugin("prefs", "Shared Preferences", new SharedPrefsPlugin(this));
         Inspector.addPlugin("logcat", "Logcat", new LogcatPlugin(30));
 
-        Inspector.addLivePlugin("explorer", "Explorer", new ExplorerPlugin(this, ".."));
+        Inspector.addLivePlugin("explorer", "Explorer", new ExplorerPlugin(this));
     }
 
     @Override

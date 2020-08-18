@@ -20,6 +20,10 @@ import br.newm.inspector.PluginAction;
 public class ExplorerPlugin implements PluginAction {
     private String frontend = null;
 
+    public ExplorerPlugin(final Context context) {
+        this(context, context.getFilesDir().getAbsolutePath());
+    }
+
     public ExplorerPlugin(final Context context, final String root) {
         try {
             this.frontend = IOUtils.toString(context.getAssets().open("explorer.html"), StandardCharsets.UTF_8);
@@ -29,9 +33,9 @@ public class ExplorerPlugin implements PluginAction {
                 public String action(Map<String, String> params) {
                     JSONArray items = new JSONArray();
                     try {
-                        String dir_path = params.get("path");
-                        if (dir_path != null) {
-                            File[] dir = new File(context.getFilesDir(), root + dir_path).listFiles();
+                        String path = params.get("path");
+                        if (path != null) {
+                            File[] dir = new File(root, path).listFiles();
                             if (dir != null) {
                                 for (File item : dir) {
                                     JSONObject obj = new JSONObject();
@@ -55,8 +59,10 @@ public class ExplorerPlugin implements PluginAction {
                     byte[] out = new byte[0];
                     try {
                         String path = params.get("path");
-                        File file = new File(context.getFilesDir(), root + path);
-                        out = FileUtils.readFileToByteArray(file);
+                        if (path != null) {
+                            File file = new File(root, path);
+                            out = FileUtils.readFileToByteArray(file);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
