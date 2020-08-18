@@ -15,12 +15,14 @@
     </h5>
     <img v-if="image_src" :src="image_src"/>
     <ol v-else>
-        <li v-for="folder in folders" @click="list(fullpath(folder.name))">
-            {{ folder.name }}
+        <li v-for="folder in folders" :title='folder.name' @click="list(fullpath(folder.name))">
+            <div class="filename">{{ folder.name }}</div>
         </li>
-        <li v-for="file in files" @click="open(fullpath(file.name))">
-            {{ file.name }}
-            <div class="filesize">{{ filesize(file.size) }}</div>
+        <li v-for="file in files" :title='file.name' @click="open(fullpath(file.name))">
+            <div class="row">
+                <div class="filename">{{ file.name }}</div>
+                <div class="filesize">{{ filesize(file.size) }}</div>
+            </div>
         </li>
     </ol>
 </div>
@@ -96,12 +98,18 @@
             this.list('')
         }
     })
+
 </script>
 
 <!--suppress CssUnresolvedCustomProperty -->
 <style>
-    html {
+    #app {
         padding: 1rem;
+    }
+
+    img {
+        width: 100%;
+        height: auto;
     }
 
     * {
@@ -115,6 +123,22 @@
 
     li {
         margin-left: -1.5rem;
+        padding: 2px 4px;
+    }
+
+    li div {
+        white-space: nowrap;
+    }
+
+    .row {
+        display: flex;
+    }
+
+    .filename {
+        flex: 1;
+        padding-right: 10px;
+        text-overflow: ellipsis;
+        overflow: hidden;
     }
 
     li, .pointer {
@@ -128,4 +152,5 @@
     .filesize {
         float: right;
     }
+
 </style>
