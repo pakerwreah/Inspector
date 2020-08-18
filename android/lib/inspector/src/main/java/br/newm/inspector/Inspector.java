@@ -48,7 +48,16 @@ public class Inspector {
     public static void addPluginAPI(String method, String path, final PluginAPIAction action) {
         addPluginAPIJNI(method, path, new PluginAPIActionJNI() {
             @Override
-            public String action(String params) {
+            public byte[] action(String params) {
+                return action.action(decodeJSON(params)).getBytes();
+            }
+        });
+    }
+
+    public static void addPluginAPI(String method, String path, final PluginAPIActionBinary action) {
+        addPluginAPIJNI(method, path, new PluginAPIActionJNI() {
+            @Override
+            public byte[] action(String params) {
                 return action.action(decodeJSON(params));
             }
         });
@@ -72,7 +81,7 @@ public class Inspector {
     // Native methods
 
     private interface PluginAPIActionJNI {
-        String action(String params);
+        byte[] action(String params);
     }
 
     private static native void setCipherKeyJNI(String database, String password, int version);

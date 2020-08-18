@@ -9,6 +9,7 @@ constexpr const char *LOG_TAG = "JNILog";
 
 struct Log {
     static void d(const char *str) { __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, "%s", str); }
+
     static void e(const char *str) { __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "%s", str); }
 };
 
@@ -142,9 +143,9 @@ Java_br_newm_inspector_Inspector_addPluginAPIJNI(JNIEnv *env, jclass, jstring me
         auto env = attachThread();
 
         auto clazz = env->GetObjectClass(plugin);
-        jmethodID methodID = env->GetMethodID(clazz, "action", "(Ljava/lang/String;)Ljava/lang/String;");
+        jmethodID methodID = env->GetMethodID(clazz, "action", "(Ljava/lang/String;)[B");
         jstring jparams = env->NewStringUTF(json(params).dump().c_str());
-        auto res = readString(env, (jstring) env->CallObjectMethod(plugin, methodID, jparams));
+        auto res = readByteArray(env, (jbyteArray) env->CallObjectMethod(plugin, methodID, jparams));
         env->DeleteLocalRef(jparams);
 
         detachThread();

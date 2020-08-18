@@ -14,6 +14,7 @@ import java.util.Map;
 
 import br.newm.inspector.Inspector;
 import br.newm.inspector.PluginAPIAction;
+import br.newm.inspector.PluginAPIActionBinary;
 import br.newm.inspector.PluginAction;
 
 public class ExplorerPlugin implements PluginAction {
@@ -26,7 +27,6 @@ public class ExplorerPlugin implements PluginAction {
             Inspector.addPluginAPI("GET", "filesystem/list", new PluginAPIAction() {
                 @Override
                 public String action(Map<String, String> params) {
-
                     JSONArray items = new JSONArray();
                     try {
                         String dir_path = params.get("path");
@@ -49,14 +49,14 @@ public class ExplorerPlugin implements PluginAction {
                 }
             });
 
-            Inspector.addPluginAPI("GET", "filesystem/open", new PluginAPIAction() {
+            Inspector.addPluginAPI("GET", "filesystem/open", new PluginAPIActionBinary() {
                 @Override
-                public String action(Map<String, String> params) {
-                    String out = "";
+                public byte[] action(Map<String, String> params) {
+                    byte[] out = new byte[0];
                     try {
                         String path = params.get("path");
                         File file = new File(context.getFilesDir(), root + path);
-                        out = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+                        out = FileUtils.readFileToByteArray(file);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
