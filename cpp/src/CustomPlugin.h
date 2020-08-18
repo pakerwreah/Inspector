@@ -8,25 +8,36 @@
 #include <map>
 #include <string>
 #include <vector>
-
-class HttpServer;
+#include "HttpServer.h"
 
 using namespace std;
 
+typedef string PluginKey;
 typedef function<string()> PluginAction;
+typedef function<string(const Params &)> PluginAPIAction;
 
 struct PluginMeta {
     string key, name;
+    bool live;
 };
 
 class CustomPlugin {
     vector<PluginMeta> plugins;
-    map<string, PluginAction> actions;
+    map<PluginKey, PluginAction> actions;
+    map<Method, map<Path, PluginAPIAction>> api;
+
+    Response execute(PluginAction executor) noexcept;
+
+    void addPlugin(const string &key, const string &name, PluginAction action, bool live);
 
 public:
     CustomPlugin(HttpServer *server);
 
-    void addPlugin(string key, string name, PluginAction action);
+    void addPlugin(const string &key, const string &name, PluginAction action);
+
+    void addPluginAPI(const string &method, const string &path, PluginAPIAction action);
+
+    void addLivePlugin(const string &key, const string &name, PluginAction action);
 };
 
 

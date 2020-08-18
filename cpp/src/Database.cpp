@@ -4,17 +4,15 @@
 
 #include "Database.h"
 
-Database::Database(string path, string password, int version) {
+Database::Database(const string &path, const string &password, int version) {
     if (!path.length()) {
         throw runtime_error("Database path not selected");
     }
-    if (path.find("file://") == 0) {
-        path = path.substr(7);
-    }
+    auto m_path = path.find("file://") == 0 ? path.substr(7) : path;
     auto flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_WAL | SQLITE_OPEN_SHAREDCACHE;
-    auto err = sqlite3_open_v2(path.c_str(), &db, flags, nullptr);
+    auto err = sqlite3_open_v2(m_path.c_str(), &db, flags, nullptr);
     if (err != SQLITE_OK) {
-        throw runtime_error("Error opening database (" + to_string(err) + "): " + path);
+        throw runtime_error("Error opening database (" + to_string(err) + "): " + m_path);
     }
 
     if (password.length()) {
@@ -33,15 +31,15 @@ Database::~Database() {
     sqlite3_close_v2(db);
 }
 
-void Database::commit() {
+void Database::commit() const {
     execute("commit transaction");
 }
 
-void Database::transaction() {
+void Database::transaction() const {
     execute("begin exclusive transaction");
 }
 
-ResultSet Database::query(string sql) {
+ResultSet Database::query(const string &sql) const {
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr);
     if (rc != SQLITE_OK || stmt == nullptr) {
@@ -51,7 +49,7 @@ ResultSet Database::query(string sql) {
     return ResultSet(db, stmt);
 }
 
-void Database::execute(string sql) {
+void Database::execute(const string &sql) const {
     char *error;
     sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &error);
 
@@ -73,14 +71,13 @@ ResultSet::~ResultSet() {
     sqlite3_finalize(stmt);
 }
 
-vector<string> ResultSet::headers() {
-    if (!_headers.size()) {
-        int count = sqlite3_column_count(stmt);
-        for (int i = 0; i < count; i++) {
-            _headers.push_back(sqlite3_column_name(stmt, i));
-        }
+vector<string> ResultSet::headers() const {
+    vector<string> headers;
+    int count = sqlite3_column_count(stmt);
+    for (int i = 0; i < count; i++) {
+        headers.push_back(sqlite3_column_name(stmt, i));
     }
-    return _headers;
+    return headers;
 }
 
 bool ResultSet::step() {
@@ -104,19 +101,19 @@ bool ResultSet::next() {
     return step();
 }
 
-int ResultSet::type(int column) {
+int ResultSet::type(int column) const {
     return sqlite3_column_type(stmt, column);
 }
 
-string ResultSet::text(int column) {
+string ResultSet::text(int column) const {
     return (const char *) sqlite3_column_text(stmt, column);
 }
 
-int ResultSet::integer(int column) {
+int ResultSet::integer(int column) const {
     return sqlite3_column_int(stmt, column);
 }
 
-double ResultSet::decimal(int column) {
+double ResultSet::decimal(int column) const {
     return sqlite3_column_double(stmt, column);
 }
 

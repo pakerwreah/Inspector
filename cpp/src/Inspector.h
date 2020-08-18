@@ -21,15 +21,19 @@ public:
 
     thread *bind(int port);
 
-    void setCipherKey(string database, string password, int version);
+    void setCipherKey(const string &database, const string &password, int version);
 
-    bool isConnected();
+    bool isConnected() const;
 
-    void sendRequest(string uid, string headers, string body);
+    void sendRequest(const string &uid, const string &headers, const string &body);
 
-    void sendResponse(string uid, string headers, string body, bool compressed = false);
+    void sendResponse(const string &uid, const string &headers, const string &body, bool compressed = false);
 
-    void addPlugin(string key, string name, PluginAction action);
+    void addPlugin(const string &key, const string &name, PluginAction action);
+
+    void addLivePlugin(const string &key, const string &name, PluginAction action);
+
+    void addPluginAPI(const string &method, const string &path, PluginAPIAction action);
 };
 
 

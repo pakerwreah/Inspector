@@ -1,14 +1,9 @@
 package br.newm.inspector_test;
 
-import android.content.SharedPreferences;
-
-import org.json.JSONObject;
-import org.json.JSONStringer;
-
-import androidx.preference.PreferenceManager;
-
 import br.newm.inspector.Inspector;
-import br.newm.inspector.PluginAction;
+import br.newm.inspector_test.plugins.ExplorerPlugin;
+import br.newm.inspector_test.plugins.LogcatPlugin;
+import br.newm.inspector_test.plugins.SharedPrefsPlugin;
 
 public class Application extends android.app.Application {
     @Override
@@ -20,14 +15,10 @@ public class Application extends android.app.Application {
         Inspector.setCipherKey("database_cipher3.db", "123456", 3);
         Inspector.setCipherKey("database_cipher4.db", "1234567", 4);
 
-        final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Inspector.addPlugin("prefs", "Shared Preferences", new SharedPrefsPlugin(this));
+        Inspector.addPlugin("logcat", "Logcat", new LogcatPlugin(30));
 
-        Inspector.addPlugin("prefs", "Shared Preferences", new PluginAction() {
-            @Override
-            public String action() {
-                return new JSONObject(prefs.getAll()).toString();
-            }
-        });
+        Inspector.addLivePlugin("explorer", "Explorer", new ExplorerPlugin(this));
     }
 
     @Override

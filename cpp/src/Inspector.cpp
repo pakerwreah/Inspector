@@ -8,7 +8,7 @@
 Inspector::Inspector(DatabaseProvider *databaseProvider) {
     server = new HttpServer;
 
-    server->get("/", [](Request req) {
+    server->get("/", [](const Request &, const Params &) {
         return Response("Server up!");
     });
 
@@ -21,22 +21,30 @@ thread *Inspector::bind(int port) {
     return server->start(port);
 }
 
-void Inspector::setCipherKey(string database, string password, int version) {
+void Inspector::setCipherKey(const string &database, const string &password, int version) {
     databasePlugin->setCipherKey(database, password, version);
 }
 
-bool Inspector::isConnected() {
+bool Inspector::isConnected() const {
     return networkPlugin->isConnected();
 }
 
-void Inspector::sendRequest(string uid, string headers, string body) {
+void Inspector::sendRequest(const string &uid, const string &headers, const string &body) {
     networkPlugin->sendRequest(uid, headers, body);
 }
 
-void Inspector::sendResponse(string uid, string headers, string body, bool compressed) {
+void Inspector::sendResponse(const string &uid, const string &headers, const string &body, bool compressed) {
     networkPlugin->sendResponse(uid, headers, body, compressed);
 }
 
-void Inspector::addPlugin(string key, string name, PluginAction action) {
+void Inspector::addPlugin(const string &key, const string &name, PluginAction action) {
     customPlugin->addPlugin(key, name, action);
+}
+
+void Inspector::addLivePlugin(const string &key, const string &name, PluginAction action) {
+    customPlugin->addLivePlugin(key, name, action);
+}
+
+void Inspector::addPluginAPI(const string &method, const string &path, PluginAPIAction action) {
+    customPlugin->addPluginAPI(method, path, action);
 }

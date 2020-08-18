@@ -8,6 +8,7 @@
 #include "Socket.h"
 #include "libs/picohttpparser.h"
 #include "libs/compress.hpp"
+#include "libs/url.h"
 #include "util.h"
 
 using namespace util;
@@ -48,7 +49,7 @@ bool Request::valid() {
     return !method.empty();
 }
 
-Response::Response(json data, int code, string content_type) {
+Response::Response(const json &data, int code, const string &content_type) {
     string resp;
     if (data.is_null()) {
         resp = "";
@@ -82,20 +83,24 @@ Response::operator string() {
     return resp.str();
 }
 
-void HttpServer::request(string method, string path, Handler handler) {
+void HttpServer::request(const string &method, const string &path, Handler handler) {
     routes[method][path] = handler;
 }
 
-void HttpServer::get(string path, Handler handler) {
+void HttpServer::get(const string &path, Handler handler) {
     request("GET", path, handler);
 }
 
-void HttpServer::post(string path, Handler handler) {
+void HttpServer::post(const string &path, Handler handler) {
     request("POST", path, handler);
 }
 
-void HttpServer::put(string path, Handler handler) {
+void HttpServer::put(const string &path, Handler handler) {
     request("PUT", path, handler);
+}
+
+void HttpServer::request(const string &path, Handler handler) {
+    request("*", path, handler);
 }
 
 void HttpServer::stop() {
@@ -124,7 +129,7 @@ thread *HttpServer::start(int port) {
     });
 }
 
-void HttpServer::process(shared_ptr<Socket> client) {
+void HttpServer::process(shared_ptr<Socket> client) const {
     string plain, buf;
     bool valid = false;
 
@@ -144,9 +149,9 @@ void HttpServer::process(shared_ptr<Socket> client) {
                     client->send(response);
 
                 } else {
-                    Handler handler = find_route(request);
-
-                    auto response = handler(request);
+                    Params params;
+                    Handler handler = find_handler(request, &params);
+                    auto response = handler(request, params);
 
                     if (response.body.size() && request.headers["Accept-Encoding"].find("gzip") >= 0) {
                         response.body = gzip::compress(response.body.data(), response.body.size());
@@ -166,29 +171,63 @@ void HttpServer::process(shared_ptr<Socket> client) {
     }
 }
 
-Handler HttpServer::find_route(Request &request) {
-    auto path_pieces = split(request.path, '/');
-    auto path_size = path_pieces.size();
+static void parse_urlencoded(const string &urlencoded, Params *params) {
+    auto pieces = split(urlencoded, '&');
+    for (const string &piece : pieces) {
+        auto p = split(piece, '=');
+        params->operator[](p[0]) = p.size() == 2 ? url_decode(p[1]) : "";
+    }
+}
 
-    for (auto route : routes[request.method]) {
-        auto route_pieces = split(route.first, '/');
-        if (path_size == route_pieces.size()) {
-            map<string, string> params;
-            for (int i = 0; i < path_size; i++) {
-                auto rp = route_pieces[i];
-                auto pp = path_pieces[i];
-                if (rp.find('{') == 0) {
-                    auto key = trim(rp, "{}");
-                    params[key] = pp;
-                } else if (rp != pp) {
-                    break;
-                }
-                if (i == path_size - 1) {
-                    request.params = params;
-                    return route.second;
-                }
-            }
+Handler HttpServer::find_handler(const Request &request, Params *params) const {
+    auto pieces = split(request.path, '?');
+    auto path = pieces[0];
+
+    // extract query params
+    if (request.method == "GET" && pieces.size() > 1) {
+        parse_urlencoded(pieces[1], params);
+    } else {
+        // extract body params
+        auto type = request.headers.find("Content-Type");
+        if (type != request.headers.end() && type->second.find(ContentType::URL_ENCODED) != string::npos) {
+            parse_urlencoded(request.body, params);
         }
     }
+
+    // normalize plugin name
+    auto plugin_pieces = util::split(path, "plugins/api/");
+
+    if (plugin_pieces.size() > 1) {
+        auto plugin = util::replaceAll(plugin_pieces[1], "/", "-");
+        path = plugin_pieces[0] + "plugins/api/" + plugin;
+    }
+
+    // find handler
+    auto path_pieces = split(path, '/');
+    auto path_size = path_pieces.size();
+
+    // check for method then wildcard
+    for (const char *method : {request.method.c_str(), "*"}) {
+        auto m_routes = routes.find(method);
+        if (m_routes != routes.end())
+            for (const auto &route : m_routes->second) {
+                auto route_pieces = split(route.first, '/');
+                if (path_size != route_pieces.size()) continue;
+                for (int i = 0; i < path_size; i++) {
+                    auto rp = route_pieces[i];
+                    auto pp = path_pieces[i];
+                    if (rp.find('{') == 0) {
+                        auto key = trim(rp, "{}");
+                        params->operator[](key) = pp;
+                    } else if (rp != pp) {
+                        break;
+                    }
+                    if (i == path_size - 1) {
+                        return route.second;
+                    }
+                }
+            }
+    }
+
     throw out_of_range("Route not found");
 }

@@ -61,13 +61,46 @@ import br.newm.inspector.NetworkInterceptor;
 new OkHttpClient.Builder().addNetworkInterceptor(new NetworkInterceptor());
 ```
 
-#### Custom plugins
+#### Static plugins
 Accepts returning JSON, HTML or plain text
 ```java
 Inspector.addPlugin("prefs", "Shared Preferences", new PluginAction() {
     @Override
     public String action() {
         return new JSONObject(prefs.getAll()).toString();
+    }
+});
+```
+
+#### Live plugins
+Accepts complex HTML frontend with javascript support
+<br />
+<sub>Check ExplorerPlugin.java for a full example</sub>
+```java
+Inspector.addLivePlugin("explorer", "Explorer", new PluginAction() {
+    @Override
+    public String action() {
+        // return plugin frontend
+    }
+});
+```
+
+#### Plugin API
+Route with parameters to be used as a plugin or standalone api
+<br />
+<sub>Check ExplorerPlugin.java for a full example</sub>
+```java
+Inspector.addPluginAPI("GET", "filesystem/list", new PluginAPIAction() {
+    @Override
+    public String action(Map<String, String> params) {
+        // return json array with list of files
+    }
+});
+
+Inspector.addPluginAPI("GET", "filesystem/open", new PluginAPIActionBinary() {
+    @Override
+    public byte[] action(Map<String, String> params) {
+        // return file contents
     }
 });
 ```
@@ -133,7 +166,7 @@ URLSession.shared.dataTask(with: request) { data, response, error in
 }.resume()
 ```
 
-#### Custom plugins
+#### Static plugins
 Accepts returning JSON, HTML or plain text
 ```swift
 IOSInspector.addPlugin("prefs", name: "User Defaults") {
@@ -143,5 +176,29 @@ IOSInspector.addPlugin("prefs", name: "User Defaults") {
         return json
     }
     return "No data"
+}
+```
+
+#### Live plugins
+Accepts complex HTML frontend with javascript support
+<br />
+<sub>Check ExplorerPlugin.swift for a full example</sub>
+```swift
+IOSInspector.addLivePlugin("explorer", name: "Explorer") {
+    // return plugin frontend
+}
+```
+
+#### Plugin API
+Route with parameters to be used as a plugin or standalone api
+<br />
+<sub>Check ExplorerPlugin.swift for a full example</sub>
+```swift
+IOSInspector.addPluginAPI(forMethod: "GET", path: "filesystem/list") { params -> String in
+    // return json array with list of files
+}
+
+IOSInspector.addPluginAPI(forMethod: "GET", path: "filesystem/open") { params -> Data? in
+    // return file contents
 }
 ```

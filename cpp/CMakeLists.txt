@@ -3,7 +3,7 @@
 
 cmake_minimum_required(VERSION 3.10.2)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -14,6 +14,7 @@ set(
         src/libs/picohttpparser.c
         src/libs/base64.cpp
         src/libs/sha1.cpp
+        src/libs/url.cpp
         src/util.cpp
         src/Socket.cpp
         src/HttpServer.cpp

@@ -2,7 +2,13 @@ package br.newm.inspector;
 
 import android.content.Context;
 
-@SuppressWarnings({"unused", "WeakerAccess"})
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 public class Inspector {
     static {
         System.loadLibrary("inspector");
@@ -34,11 +40,56 @@ public class Inspector {
         addPluginJNI(key, name, action);
     }
 
+    public static void addLivePlugin(String key, String name, PluginAction action) {
+        addLivePluginJNI(key, name, action);
+    }
+
+    public static void addPluginAPI(String method, String path, final PluginAPIAction action) {
+        addPluginAPIJNI(method, path, new PluginAPIActionJNI() {
+            @Override
+            public byte[] action(String params) {
+                return action.action(decodeJSON(params)).getBytes();
+            }
+        });
+    }
+
+    public static void addPluginAPI(String method, String path, final PluginAPIActionBinary action) {
+        addPluginAPIJNI(method, path, new PluginAPIActionJNI() {
+            @Override
+            public byte[] action(String params) {
+                return action.action(decodeJSON(params));
+            }
+        });
+    }
+
+    private static Map<String, String> decodeJSON(String json) {
+        HashMap<String, String> map = new HashMap<>();
+        try {
+            JSONObject obj = new JSONObject(json);
+            Iterator<String> keys = obj.keys();
+            while (keys.hasNext()) {
+                String key = keys.next();
+                map.put(key, obj.getString(key));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
     // Native methods
+
+    private interface PluginAPIActionJNI {
+        byte[] action(String params);
+    }
 
     private static native void setCipherKeyJNI(String database, String password, int version);
 
     private static native void addPluginJNI(String key, String name, PluginAction action);
+
+    private static native void addLivePluginJNI(String key, String name, PluginAction action);
+
+    private static native void addPluginAPIJNI(String method, String path, PluginAPIActionJNI action);
 
     private static native void initialize(int port);
 

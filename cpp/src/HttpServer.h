@@ -17,14 +17,18 @@ using namespace std;
 
 class Socket;
 
+typedef string Method;
+typedef string Path;
+
 namespace ContentType {
     const string HTML = "text/html";
     const string JSON = "application/json";
+    const string URL_ENCODED = "application/x-www-form-urlencoded";
 }
 
 struct Request {
     shared_ptr<Socket> socket;
-    map<string, string> headers, params;
+    map<string, string> headers;
     string method, path, body;
 
     Request(const string &plain, shared_ptr<Socket> client);
@@ -33,7 +37,7 @@ struct Request {
 };
 
 struct Response {
-    Response(json data = nullptr, int code = 200, string content_type = ContentType::JSON);
+    Response(const json &data = nullptr, int code = 200, const string &content_type = ContentType::JSON);
 
     operator string();
 
@@ -51,25 +55,25 @@ struct Response {
     }
 };
 
-typedef function<Response(const Request &)> Handler;
+typedef map<string, string> Params;
+typedef function<Response(const Request &, const Params &)> Handler;
 
 class HttpServer {
     bool _stop = false;
 
-    map<string, map<string, Handler>> routes;
+    map<Method, map<Path, Handler>> routes;
 
-    void request(string method, string path, Handler handler);
+    void request(const string &method, const string &path, Handler handler);
 
-    Handler find_route(Request &request);
+    Handler find_handler(const Request &request, Params *params) const;
 
-    void process(shared_ptr<Socket> client);
+    void process(shared_ptr<Socket> client) const;
 
 public:
-    void get(string path, Handler handler);
-
-    void post(string path, Handler handler);
-
-    void put(string path, Handler handler);
+    void get(const string &path, Handler handler);
+    void post(const string &path, Handler handler);
+    void put(const string &path, Handler handler);
+    void request(const string &path, Handler handler);
 
     void stop();
 

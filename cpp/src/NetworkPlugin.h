@@ -18,11 +18,11 @@ class NetworkPlugin {
 public:
     NetworkPlugin(HttpServer *server);
 
-    bool isConnected();
+    bool isConnected() const;
 
-    void sendRequest(string uid, string headers, string body);
+    void sendRequest(const string &uid, const string &headers, const string &body);
 
-    void sendResponse(string uid, string headers, string body, bool compressed = false);
+    void sendResponse(const string &uid, const string &headers, const string &body, bool compressed = false);
 };
 
 

@@ -3,9 +3,9 @@
 
 namespace base64 {
     typedef unsigned char uchar;
-    static const string b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";//=
-    string encode(const string &in) {
-        string out;
+    static const std::string b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";//=
+    std::string encode(const std::string &in) {
+        std::string out;
 
         int val = 0, valb = -6;
         for (uchar c : in) {
@@ -22,10 +22,10 @@ namespace base64 {
     }
 
 
-    string decode(const string &in) {
-        string out;
+    std::string decode(const std::string &in) {
+        std::string out;
 
-        vector<int> T(256, -1);
+        std::vector<int> T(256, -1);
         for (int i = 0; i < 64; i++) T[b[i]] = i;
 
         int val = 0, valb = -8;
