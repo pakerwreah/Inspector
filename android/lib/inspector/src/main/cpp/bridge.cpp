@@ -7,14 +7,12 @@ using namespace std;
 
 constexpr const char *LOG_TAG = "JNILog";
 
-struct {
-    void d(const char *str) { __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, "%s", str); }
-
-    void e(const char *str) { __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "%s", str); }
-} Log;
+struct Log {
+    static void d(const char *str) { __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, "%s", str); }
+    static void e(const char *str) { __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "%s", str); }
+};
 
 JavaVM *jvm;
-JNIEnv *env;
 jclass driver;
 
 JNIEnv *attachThread() {
@@ -25,7 +23,7 @@ JNIEnv *attachThread() {
 
 void detachThread() {
     jvm->DetachCurrentThread();
-};
+}
 
 string readString(JNIEnv *env, jstring data) {
     const char *chars = env->GetStringUTFChars(data, nullptr);
@@ -70,6 +68,7 @@ protected:
 Inspector *inspector;
 
 jint JNI_OnLoad(JavaVM *vm, void *) {
+    JNIEnv *env;
     if (vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION_1_6) != JNI_OK) {
         return -1;
     }
@@ -100,15 +99,53 @@ Java_br_newm_inspector_Inspector_setCipherKeyJNI(JNIEnv *env, jclass, jstring da
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_br_newm_inspector_Inspector_addPluginJNI(JNIEnv *e, jclass, jstring key, jstring name, jobject _plugin) {
+Java_br_newm_inspector_Inspector_addPluginJNI(JNIEnv *env, jclass, jstring key, jstring name, jobject _plugin) {
     auto plugin = env->NewGlobalRef(_plugin);
 
-    inspector->addPlugin(readString(e, key), readString(e, name), [plugin] {
+    inspector->addPlugin(readString(env, key), readString(env, name), [plugin] {
         auto env = attachThread();
 
         auto clazz = env->GetObjectClass(plugin);
         jmethodID methodID = env->GetMethodID(clazz, "action", "()Ljava/lang/String;");
         auto res = readString(env, (jstring) env->CallObjectMethod(plugin, methodID));
+
+        detachThread();
+
+        return res;
+    });
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_br_newm_inspector_Inspector_addLivePluginJNI(JNIEnv *env, jclass, jstring key, jstring name, jobject _plugin) {
+    auto plugin = env->NewGlobalRef(_plugin);
+
+    inspector->addLivePlugin(readString(env, key), readString(env, name), [plugin] {
+        auto env = attachThread();
+
+        auto clazz = env->GetObjectClass(plugin);
+        jmethodID methodID = env->GetMethodID(clazz, "action", "()Ljava/lang/String;");
+        auto res = readString(env, (jstring) env->CallObjectMethod(plugin, methodID));
+
+        detachThread();
+
+        return res;
+    });
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_br_newm_inspector_Inspector_addPluginAPIJNI(JNIEnv *env, jclass, jstring method, jstring path, jobject _plugin) {
+    auto plugin = env->NewGlobalRef(_plugin);
+
+    inspector->addPluginAPI(readString(env, method), readString(env, path), [plugin](const Params &params) {
+        auto env = attachThread();
+
+        auto clazz = env->GetObjectClass(plugin);
+        jmethodID methodID = env->GetMethodID(clazz, "action", "(Ljava/lang/String;)Ljava/lang/String;");
+        jstring jparams = env->NewStringUTF(json(params).dump().c_str());
+        auto res = readString(env, (jstring) env->CallObjectMethod(plugin, methodID, jparams));
+        env->DeleteLocalRef(jparams);
 
         detachThread();
 

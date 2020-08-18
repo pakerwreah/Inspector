@@ -22,19 +22,21 @@ struct PluginMeta {
 };
 
 class CustomPlugin {
-    string host;
     vector<PluginMeta> plugins;
     map<PluginKey, PluginAction> actions;
     map<Method, map<Path, PluginAPIAction>> api;
 
     Response execute(PluginAction executor) noexcept;
 
+    void addPlugin(const string &key, const string &name, PluginAction action, bool live);
+
 public:
     CustomPlugin(HttpServer *server);
 
-    void addPlugin(const string &key, const string &name, PluginAction action, bool live = false);
+    void addPlugin(const string &key, const string &name, PluginAction action);
+
     void addPluginAPI(const string &method, const string &path, PluginAPIAction action);
-    void addLivePlugin(const string &key, const string &name, const string &filepath);
+
     void addLivePlugin(const string &key, const string &name, PluginAction action);
 };
 

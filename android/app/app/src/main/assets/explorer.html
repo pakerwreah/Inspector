@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Explorer</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.filesizejs.com/filesize.min.js"></script>
+</head>
+<body>
+<div id="app" v-if="loaded" :style="cssProps">
+    <h4>{{ path || '/' }}</h4>
+    <h5 v-if="path || image_src">
+        <span class="pointer" @click="back">&larr; Go back</span>
+    </h5>
+    <img v-if="image_src" :src="image_src"/>
+    <ol v-else>
+        <li v-for="folder in folders" @click="list(fullpath(folder.name))">
+            {{ folder.name }}
+        </li>
+        <li v-for="file in files" @click="open(fullpath(file.name))">
+            {{ file.name }}
+            <div class="filesize">{{ filesize(file.size) }}</div>
+        </li>
+    </ol>
+</div>
+</body>
+</html>
+
+<!--suppress JSUnresolvedVariable, JSUnresolvedFunction -->
+<script>
+    new Vue({
+        el: '#app',
+        data: () => ({
+            loaded: false,
+            colors: null,
+            path: '',
+            m_files: [],
+            image_src: null
+        }),
+        computed: {
+            folders() {
+                return this.m_files.filter(f => f.type === 'folder')
+            },
+            files() {
+                return this.m_files.filter(f => f.type === 'file')
+            },
+            cssProps() {
+                if (this.colors) {
+                    let styles = {}
+                    for (const [key, color] of Object.entries(this.colors)) {
+                        styles[`--${key}`] = color
+                    }
+                    return styles
+                }
+            }
+        },
+        methods: {
+            fullpath(name) {
+                return `${this.path}/${name}`
+            },
+            back() {
+                if (this.image_src) {
+                    this.image_src = null
+                } else {
+                    this.list(this.path.split('/').slice(0, -1).join('/'))
+                }
+            },
+            list(path) {
+                return axios.get('/plugins/api/filesystem/list', {params: {path}})
+                    .then(({data}) => {
+                        this.path = path
+                        this.m_files = data
+                    }).catch(e => alert(e.response.data.msg))
+            },
+            open(path) {
+                this.image_src = null
+                const src = '/plugins/api/filesystem/open?path=' + path
+                if (['png', 'jpg', 'jpeg', 'gif'].includes(path.split('.').pop())) {
+                    this.image_src = src
+                } else {
+                    window.open(src)
+                }
+            }
+        },
+        mounted() {
+            if (window.self !== window.top) {
+                window.addEventListener('message', ({data}) => {
+                    this.theme = data.theme
+                    this.colors = data.colors
+                    this.loaded = true
+                })
+            } else {
+                this.loaded = true
+            }
+            this.list('')
+        }
+    })
+</script>
+
+<!--suppress CssUnresolvedCustomProperty -->
+<style>
+    html {
+        padding: 1rem;
+    }
+
+    * {
+        user-select: none;
+        color: var(--text);
+    }
+
+    h4, h5 span {
+        color: var(--accent);
+    }
+
+    li {
+        margin-left: -1.5rem;
+    }
+
+    li, .pointer {
+        cursor: pointer;
+    }
+
+    li:hover {
+        background: var(--controls_border);
+    }
+
+    .filesize {
+        float: right;
+    }
+</style>

@@ -5,7 +5,6 @@
 #include "CustomPlugin.h"
 #include "HttpServer.h"
 #include "util.h"
-#include <fstream>
 
 void to_json(json &j, const PluginMeta &p) {
     j = {{"key",  p.key},
@@ -18,13 +17,8 @@ void CustomPlugin::addPlugin(const string &key, const string &name, PluginAction
     actions[key] = action;
 }
 
-void CustomPlugin::addLivePlugin(const string &key, const string &name, const string &filepath) {
-    addLivePlugin(key, name, [&filepath] {
-        ifstream file(filepath);
-        ostringstream buffer;
-        buffer << file.rdbuf();
-        return buffer.str();
-    });
+void CustomPlugin::addPlugin(const string &key, const string &name, PluginAction action) {
+    addPlugin(key, name, action, false);
 }
 
 void CustomPlugin::addLivePlugin(const string &key, const string &name, PluginAction action) {
@@ -54,7 +48,6 @@ CustomPlugin::CustomPlugin(HttpServer *server) {
     });
 
     server->get("/plugins/{:key:}", [this](const Request &request, const Params &params) {
-        host = request.headers.at("Host");
         return execute([&] {
             string key = params.at(":key:");
             PluginAction action = actions.at(key);

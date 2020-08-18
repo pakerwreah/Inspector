@@ -31,11 +31,9 @@ public:
 
     void addPlugin(const string &key, const string &name, PluginAction action);
 
-    void addPluginAPI(const string &method, const string &path, PluginAPIAction action);
-
-    void addLivePlugin(const string &key, const string &name, const string &filepath);
-
     void addLivePlugin(const string &key, const string &name, PluginAction action);
+
+    void addPluginAPI(const string &method, const string &path, PluginAPIAction action);
 };
 
 

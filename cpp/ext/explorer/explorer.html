@@ -5,17 +5,22 @@
     <title>Explorer</title>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.filesizejs.com/filesize.min.js"></script>
 </head>
 <body>
 <div id="app" v-if="loaded" :style="cssProps">
     <h4>{{ path || '/' }}</h4>
-    <h5 v-if="path"><a href="#" @click="back">&larr; Go back</a></h5>
-    <ol>
-        <li v-for="folder in folders">
-            <a href="#" @click="list(fullpath(folder.name))">{{ folder.name }}</a>
+    <h5 v-if="path || image_src">
+        <span class="pointer" @click="back">&larr; Go back</span>
+    </h5>
+    <img v-if="image_src" :src="image_src"/>
+    <ol v-else>
+        <li v-for="folder in folders" @click="list(fullpath(folder.name))">
+            {{ folder.name }}
         </li>
-        <li v-for="file in files">
-            <a href="#" @click="open(fullpath(file.name))">{{ file.name }}</a>
+        <li v-for="file in files" @click="open(fullpath(file.name))">
+            {{ file.name }}
+            <div class="filesize">{{ filesize(file.size) }}</div>
         </li>
     </ol>
 </div>
@@ -30,7 +35,8 @@
             loaded: false,
             colors: null,
             path: '',
-            m_files: []
+            m_files: [],
+            image_src: null
         }),
         computed: {
             folders() {
@@ -54,19 +60,27 @@
                 return `${this.path}/${name}`
             },
             back() {
-                this.list(this.path.split('/').slice(0, -1).join('/'))
+                if (this.image_src) {
+                    this.image_src = null
+                } else {
+                    this.list(this.path.split('/').slice(0, -1).join('/'))
+                }
             },
             list(path) {
-                return this.request('list', path).then(({data}) => {
-                    this.path = path
-                    this.m_files = data
-                }).catch(e => alert(e.response.data.msg))
+                return axios.get('/plugins/api/filesystem/list', {params: {path}})
+                    .then(({data}) => {
+                        this.path = path
+                        this.m_files = data
+                    }).catch(e => alert(e.response.data.msg))
             },
             open(path) {
-                alert(path)
-            },
-            request(action, path) {
-                return axios.get('/plugins/api/filesystem/' + action, {params: {path}})
+                this.image_src = null
+                const src = '/plugins/api/filesystem/open?path=' + path
+                if (['png', 'jpg', 'jpeg', 'gif'].includes(path.split('.').pop())) {
+                    this.image_src = src
+                } else {
+                    window.open(src)
+                }
             }
         },
         mounted() {
@@ -87,19 +101,31 @@
 <!--suppress CssUnresolvedCustomProperty -->
 <style>
     html {
-        padding: 0.5rem;
+        padding: 1rem;
     }
 
     * {
+        user-select: none;
         color: var(--text);
     }
 
-    a {
-        text-decoration: none;
+    h4, h5 span {
+        color: var(--accent);
     }
 
-    h4, h5 * {
-        margin-left: 1.5rem;
-        color: var(--accent);
+    li {
+        margin-left: -1.5rem;
+    }
+
+    li, .pointer {
+        cursor: pointer;
+    }
+
+    li:hover {
+        background: var(--controls_border);
+    }
+
+    .filesize {
+        float: right;
     }
 </style>

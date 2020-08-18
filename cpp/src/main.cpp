@@ -10,6 +10,8 @@
 #include <sys/time.h>
 #include <sstream>
 
+#include "../ext/explorer/explorer.h"
+
 using namespace std;
 
 class TestDatabaseProvider : public DatabaseProvider {
@@ -126,50 +128,7 @@ int main() {
         return os.str();
     });
 
-    json tree;
-    json::array_t files{
-            "File 1",
-            "File 2",
-            "File 3"
-    };
-    for (int i = 1; i <= 5; i++) {
-        tree["root"]["Folder " + to_string(i)] = {
-                {"Folder A" + to_string(i), files},
-                {"Folder B" + to_string(i), {}},
-                {"Folder C" + to_string(i), {}}
-        };
-    }
-
-    inspector.addLivePlugin("explorer", "Explorer", "../explorer.html");
-
-    inspector.addPluginAPI("GET", "filesystem/list", [tree](const Params &params) {
-        const string path = util::trim(params.at("path"), "/");
-
-        json out = json::array();
-
-        json root = tree.at("root");
-        auto parts = util::split(path, '/', false);
-        for (string part : parts) {
-            if (root.is_object()) {
-                root = root.at(part);
-            }
-        }
-
-        for (auto item : root.items()) {
-            bool isFile = item.value().is_string();
-            string name = isFile ? item.value().get<string>() : item.key();
-            string type = isFile ? "file" : "folder";
-            out.push_back({
-                                  {"type", type},
-                                  {"name", name}
-                          });
-        }
-
-        return out.dump();
-    });
-
-    // TODO: Implement "filesystem/open"
-    // TODO: Explore real files
+    Explorer explorer(inspector, "../../");
 
     th->join();
 
