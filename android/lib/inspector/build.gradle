@@ -24,7 +24,7 @@ android {
 
 dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.4.0'
-    implementation "net.zetetic:android-database-sqlcipher:4.2.0@aar"
+    implementation "net.zetetic:android-database-sqlcipher:4.4.0@aar"
 }
 
 apply from: 'publish.gradle'

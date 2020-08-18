@@ -13,9 +13,9 @@
 
 using json = nlohmann::json;
 
-using namespace std;
-
 namespace util {
+
+    std::string uid();
 
     timeval timestamp();
 
@@ -23,27 +23,31 @@ namespace util {
 
     json benchmark(const timeval &start);
 
-    string join(const vector<string> &pieces, char glue);
+    template<typename T>
+    std::string join(const std::vector<std::string> &pieces, const T &glue);
 
-    vector<string> split(const string &str, char delim);
+    std::vector<std::string> split(const std::string &str, char delim, bool allow_empty = true);
+    std::vector<std::string> split(const std::string &str, const std::string &delim, bool allow_empty = true);
 
     static const char *whitespace = " \t\n\r\f\v";
 
     // trim from end of string (right)
-    string rtrim(const string &s, const string &t = whitespace);
+    std::string rtrim(const std::string &s, const std::string &t = whitespace);
 
     // trim from beginning of string (left)
-    string ltrim(const string &s, const string &t = whitespace);
+    std::string ltrim(const std::string &s, const std::string &t = whitespace);
 
     // trim from both ends of string (right then left)
-    string trim(const string &s, const string &t = whitespace);
+    std::string trim(const std::string &s, const std::string &t = whitespace);
 
     template<typename T>
-    vector<T> filter(const vector<T> &container, function<bool(const T&)> predicate);
+    std::vector<T> filter(const std::vector<T> &container, std::function<bool(const T &)> predicate);
 
-    bool endsWith(const string &str, const string &suffix);
+    bool endsWith(const std::string &str, const std::string &suffix);
 
-    bool startsWith(const string &str, const string &prefix);
+    bool startsWith(const std::string &str, const std::string &prefix);
+
+    std::string replaceAll(const std::string &str, const std::string &needle, const std::string &replacement);
 }
 
 #endif //INSPECTOR_UTIL_H

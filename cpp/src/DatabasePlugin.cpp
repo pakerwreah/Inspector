@@ -46,7 +46,7 @@ shared_ptr<Database> DatabasePlugin::open() {
 DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) {
     this->provider = _provider;
 
-    server->get("/database/list", [this](const Request &req, const Params &) {
+    server->get("/database/list", [this](const Request &, const Params &) {
         int index = 0;
         auto paths = databasePathList();
         auto names = json::array();
@@ -63,9 +63,9 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
         return Response(data);
     });
 
-    server->put("/database/current/{index}", [this](const Request &req, const Params &params) {
+    server->put("/database/current/{index}", [this](const Request &request, const Params &params) {
         try {
-            auto body = req.body;
+            auto body = request.body;
             auto index = stoi(params.at("index"));
 
             selectDB(index);
@@ -79,8 +79,8 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
         return Response(db_path);
     });
 
-    server->post("/database/query", [this](const Request &req, const Params &) {
-        auto sql = req.body;
+    server->post("/database/query", [this](const Request &request, const Params &) {
+        auto sql = request.body;
 
         try {
             auto db = open();
@@ -128,14 +128,14 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
         }
     });
 
-    server->post("/database/execute", [this](const Request &req, const Params &) {
+    server->post("/database/execute", [this](const Request &request, const Params &) {
         try {
             auto db = open();
 
             auto start = timestamp();
 
             db->transaction();
-            db->execute(req.body);
+            db->execute(request.body);
             db->commit();
 
             auto duration = benchmark(start);

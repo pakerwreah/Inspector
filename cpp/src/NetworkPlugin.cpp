@@ -15,14 +15,14 @@ static Response handshake(const Request &request);
 static string pack(const string &msg, bool binary = true);
 
 NetworkPlugin::NetworkPlugin(HttpServer *server) {
-    server->get("/network/request", [this](const Request &req, const Params &) {
-        request_socket = req.socket;
-        return handshake(req);
+    server->get("/network/request", [this](const Request &request, const Params &) {
+        request_socket = request.socket;
+        return handshake(request);
     });
 
-    server->get("/network/response", [this](const Request &req, const Params &) {
-        response_socket = req.socket;
-        return handshake(req);
+    server->get("/network/response", [this](const Request &request, const Params &) {
+        response_socket = request.socket;
+        return handshake(request);
     });
 }
 

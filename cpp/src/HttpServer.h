@@ -17,9 +17,13 @@ using namespace std;
 
 class Socket;
 
+typedef string Method;
+typedef string Path;
+
 namespace ContentType {
     const string HTML = "text/html";
     const string JSON = "application/json";
+    const string URL_ENCODED = "application/x-www-form-urlencoded";
 }
 
 struct Request {
@@ -57,7 +61,7 @@ typedef function<Response(const Request &, const Params &)> Handler;
 class HttpServer {
     bool _stop = false;
 
-    map<string, map<string, Handler>> routes;
+    map<Method, map<Path, Handler>> routes;
 
     void request(const string &method, const string &path, Handler handler);
 
@@ -67,10 +71,9 @@ class HttpServer {
 
 public:
     void get(const string &path, Handler handler);
-
     void post(const string &path, Handler handler);
-
     void put(const string &path, Handler handler);
+    void request(const string &path, Handler handler);
 
     void stop();
 

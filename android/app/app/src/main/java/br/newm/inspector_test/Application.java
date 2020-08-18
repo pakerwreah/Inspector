@@ -1,6 +1,7 @@
 package br.newm.inspector_test;
 
 import br.newm.inspector.Inspector;
+import br.newm.inspector_test.plugins.ExplorerPlugin;
 import br.newm.inspector_test.plugins.LogcatPlugin;
 import br.newm.inspector_test.plugins.SharedPrefsPlugin;
 
@@ -16,6 +17,8 @@ public class Application extends android.app.Application {
 
         Inspector.addPlugin("prefs", "Shared Preferences", new SharedPrefsPlugin(this));
         Inspector.addPlugin("logcat", "Logcat", new LogcatPlugin(30));
+
+        Inspector.addLivePlugin("explorer", "Explorer", new ExplorerPlugin(this));
     }
 
     @Override
