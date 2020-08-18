@@ -16,14 +16,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IOSInspectorProtocol {
         IOSInspector.setCipherKey("database_cipher3.db", password: "123456", version: 3)
         IOSInspector.setCipherKey("database_cipher4.db", password: "1234567", version: 4)
 
-        IOSInspector.addPlugin("prefs", name: "User Defaults") {
-            let dict = UserDefaults.standard.dictionaryRepresentation()
-            if let data = try? JSONSerialization.data(withJSONObject: dict),
-                let json = String(data: data, encoding: .utf8) {
-                return json
-            }
-            return "No data"
-        }
+        IOSInspector.addPlugin("prefs", name: "User Defaults", plugin: UserDefaultsPlugin())
+        
+        IOSInspector.addLivePlugin("explorer", name: "Explorer", plugin: ExplorerPlugin())
 
         mockNetwork()
     }
@@ -39,14 +34,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IOSInspectorProtocol {
             }
         }
     }
+    
+    lazy var documentDirectory: URL = {
+        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        print(url.absoluteString)
+        return url
+    }()
 
     func databaseList() -> [String] {
-        let documentsPathURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-
-        print(documentsPathURL.absoluteString)
-
         return ["database.db", "database_cipher3.db", "database_cipher4.db"].map {
-            documentsPathURL.appendingPathComponent($0).absoluteString
+            documentDirectory.appendingPathComponent($0).absoluteString
         }
     }
 }

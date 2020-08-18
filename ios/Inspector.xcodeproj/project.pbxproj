@@ -25,6 +25,10 @@
 		344C1C382367E6D100B62594 /* Socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C2D2367E6D000B62594 /* Socket.cpp */; };
 		344C1C392367E6D100B62594 /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C2F2367E6D000B62594 /* util.cpp */; };
 		344C1C3C2367E6D100B62594 /* HttpServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C332367E6D000B62594 /* HttpServer.cpp */; };
+		34595B4524EC42C100ECB544 /* url.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34595B4324EC42C100ECB544 /* url.cpp */; };
+		34595B4824EC460800ECB544 /* UserDefaultsPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34595B4724EC460800ECB544 /* UserDefaultsPlugin.swift */; };
+		34595B4A24EC468600ECB544 /* ExplorerPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34595B4924EC468600ECB544 /* ExplorerPlugin.swift */; };
+		34595B4C24EC47AA00ECB544 /* explorer.html in Resources */ = {isa = PBXBuildFile; fileRef = 34595B4B24EC47AA00ECB544 /* explorer.html */; };
 		657FEFFEB9C578D7E05EEB11 /* DatabasePlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657FE7265DB0ABE839354EDE /* DatabasePlugin.cpp */; };
 		B3D63DCAC9BC2984740C724A /* Pods_Inspector_pod.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF6E007F7005D4507CED6AC2 /* Pods_Inspector_pod.framework */; };
 /* End PBXBuildFile section */
@@ -65,6 +69,11 @@
 		344C1C2F2367E6D000B62594 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = util.cpp; sourceTree = "<group>"; };
 		344C1C332367E6D000B62594 /* HttpServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpServer.cpp; sourceTree = "<group>"; };
 		344C1C342367E6D000B62594 /* HttpServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpServer.h; sourceTree = "<group>"; };
+		34595B4324EC42C100ECB544 /* url.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = url.cpp; sourceTree = "<group>"; };
+		34595B4424EC42C100ECB544 /* url.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = url.h; sourceTree = "<group>"; };
+		34595B4724EC460800ECB544 /* UserDefaultsPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsPlugin.swift; sourceTree = "<group>"; };
+		34595B4924EC468600ECB544 /* ExplorerPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplorerPlugin.swift; sourceTree = "<group>"; };
+		34595B4B24EC47AA00ECB544 /* explorer.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = explorer.html; path = ../../../cpp/ext/explorer/explorer.html; sourceTree = "<group>"; };
 		657FE7265DB0ABE839354EDE /* DatabasePlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DatabasePlugin.cpp; sourceTree = "<group>"; };
 		657FEFA39983E8F73462861B /* DatabasePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabasePlugin.h; sourceTree = "<group>"; };
 		844F3BE5E9B4686C70407E17 /* Pods-Inspector.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Inspector.release.xcconfig"; path = "Target Support Files/Pods-Inspector/Pods-Inspector.release.xcconfig"; sourceTree = "<group>"; };
@@ -144,6 +153,7 @@
 				344C1C0E2367E64C00B62594 /* AppDelegate.swift */,
 				3405AB6623775885002FA13A /* Http.swift */,
 				34AFB2D5243922CB00146B71 /* lib */,
+				34595B4624EC45CA00ECB544 /* plugins */,
 			);
 			path = Inspector;
 			sourceTree = "<group>";
@@ -173,6 +183,16 @@
 			path = ../cpp/src;
 			sourceTree = "<group>";
 		};
+		34595B4624EC45CA00ECB544 /* plugins */ = {
+			isa = PBXGroup;
+			children = (
+				34595B4B24EC47AA00ECB544 /* explorer.html */,
+				34595B4724EC460800ECB544 /* UserDefaultsPlugin.swift */,
+				34595B4924EC468600ECB544 /* ExplorerPlugin.swift */,
+			);
+			path = plugins;
+			sourceTree = "<group>";
+		};
 		34AFB2D5243922CB00146B71 /* lib */ = {
 			isa = PBXGroup;
 			children = (
@@ -187,6 +207,8 @@
 		657FE5492190C5D1D11F3C51 /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				34595B4324EC42C100ECB544 /* url.cpp */,
+				34595B4424EC42C100ECB544 /* url.h */,
 				3405AB582377584B002FA13A /* base64.cpp */,
 				3405AB612377584C002FA13A /* base64.h */,
 				3405AB5D2377584C002FA13A /* compress.hpp */,
@@ -288,6 +310,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34595B4C24EC47AA00ECB544 /* explorer.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -394,11 +417,14 @@
 				344C1C372367E6D100B62594 /* Inspector.cpp in Sources */,
 				344C1C0F2367E64C00B62594 /* AppDelegate.swift in Sources */,
 				3436339D2367F8DB002DB8BF /* IOSInspector.mm in Sources */,
+				34595B4824EC460800ECB544 /* UserDefaultsPlugin.swift in Sources */,
 				3405AB622377584C002FA13A /* base64.cpp in Sources */,
 				342B0E542438D0F8001D7227 /* DatabaseProviderAdapter.mm in Sources */,
 				344C1C362367E6D100B62594 /* Database.cpp in Sources */,
 				344C1C392367E6D100B62594 /* util.cpp in Sources */,
 				3405AB632377584C002FA13A /* sha1.cpp in Sources */,
+				34595B4524EC42C100ECB544 /* url.cpp in Sources */,
+				34595B4A24EC468600ECB544 /* ExplorerPlugin.swift in Sources */,
 				342B0E572438DA92001D7227 /* CustomPlugin.cpp in Sources */,
 				3405AB652377584C002FA13A /* picohttpparser.c in Sources */,
 				3405AB6E2377A1EC002FA13A /* NetworkPlugin.cpp in Sources */,
@@ -413,7 +439,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 04D00EA7C5B28B5EB7DB4359 /* Pods-Inspector-pod.debug.xcconfig */;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -433,7 +459,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = DB916D3A6E878B19C23BC956 /* Pods-Inspector-pod.release.xcconfig */;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -564,7 +590,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B6923CB392657D3770C01703 /* Pods-Inspector.debug.xcconfig */;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -584,7 +610,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 844F3BE5E9B4686C70407E17 /* Pods-Inspector.release.xcconfig */;
 			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
