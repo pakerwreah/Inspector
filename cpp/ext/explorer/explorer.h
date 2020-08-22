@@ -13,8 +13,6 @@
 
 class Explorer {
 private:
-    string root;
-
     string read_file(const string &path) {
         ifstream file(path);
         ostringstream buffer;
@@ -22,20 +20,15 @@ private:
         return buffer.str();
     }
 
-    string relative_path(const string &path) {
-        return filesystem::path(root + (path.empty() ? "." : path));
-    }
-
 public:
-    Explorer(Inspector &inspector, const string &root) {
-        this->root = root;
+    Explorer(Inspector &inspector, const string &root = ".") {
 
         inspector.addLivePlugin("explorer", "Explorer", [this] {
             return read_file("../ext/explorer/explorer.html");
         });
 
-        inspector.addPluginAPI("GET", "filesystem/list", [this](const Params &params) {
-            const auto entries = filesystem::directory_iterator(relative_path(params.at("path")));
+        inspector.addPluginAPI("GET", "filesystem/list", [root](const Params &params) {
+            const auto entries = filesystem::directory_iterator(root + params.at("path"));
 
             json out = json::array();
 
@@ -52,9 +45,8 @@ public:
             return out.dump();
         });
 
-        inspector.addPluginAPI("GET", "filesystem/open", [this](const Params &params) {
-            auto path = relative_path(params.at("path"));
-            return read_file(path);
+        inspector.addPluginAPI("GET", "filesystem/open", [this, root](const Params &params) {
+            return read_file(root + params.at("path"));
         });
     }
 };
