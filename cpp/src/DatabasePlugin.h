@@ -7,6 +7,8 @@
 
 #include <map>
 #include <string>
+#include <vector>
+#include <memory>
 
 class HttpServer;
 

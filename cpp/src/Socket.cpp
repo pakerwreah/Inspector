@@ -1,12 +1,19 @@
-// Implementation of the Socket class.
 #include "Socket.h"
-#include <string>
+#include <iostream>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <cstring>
 #include <cerrno>
 #include <fcntl.h>
+#include <signal.h>
 
 Socket::Socket() : m_sock(-1) {
     signal(SIGPIPE, SIG_IGN);
-    memset(&m_addr, 0, sizeof(m_addr));
+    std::memset(&m_addr, 0, sizeof(m_addr));
 }
 
 Socket::~Socket() {
@@ -71,7 +78,7 @@ int Socket::recv(std::string &data, timeval timeout) const {
 
     data = "";
 
-    memset(buf, 0, MAXRECV + 1);
+    std::memset(buf, 0, MAXRECV + 1);
 
     int status = (int) ::recv(m_sock, buf, MAXRECV, 0);
 

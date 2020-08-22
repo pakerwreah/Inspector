@@ -5,7 +5,8 @@
 #ifndef INSPECTOR_NETWORKPLUGIN_H
 #define INSPECTOR_NETWORKPLUGIN_H
 
-#include <iostream>
+#include <string>
+#include <memory>
 
 class HttpServer;
 

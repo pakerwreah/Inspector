@@ -3,6 +3,7 @@
 //
 
 #include "Database.h"
+#include <stdexcept>
 
 Database::Database(const string &path, const string &password, int version) {
     if (!path.length()) {

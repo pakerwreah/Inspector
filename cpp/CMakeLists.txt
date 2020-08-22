@@ -46,8 +46,9 @@ target_link_libraries(inspector-cpp z)
 
 if (NOT DEFINED ANDROID_NDK)
     find_library(LIBSQLITE sqlcipher)
+    find_package(Threads REQUIRED)
 
-    target_link_libraries(inspector-cpp ${LIBSQLITE})
+    target_link_libraries(inspector-cpp ${LIBSQLITE} Threads::Threads)
 
     add_executable(inspector-test src/main.cpp)
 
