@@ -150,7 +150,7 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
 }
 
 vector<string> DatabasePlugin::databasePathList() {
-    return filter<string>(provider->databasePathList(), [](const string &item) { return !endsWith(item, "-journal"); });
+    return filter(provider->databasePathList(), [](const string &item) { return !endsWith(item, "-journal"); });
 }
 
 void DatabasePlugin::selectDB(int index) {
