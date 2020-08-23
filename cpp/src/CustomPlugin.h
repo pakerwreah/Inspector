@@ -8,36 +8,39 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <functional>
+
 #include "HttpServer.h"
 
-using namespace std;
-
-typedef string PluginKey;
-typedef function<string()> PluginAction;
-typedef function<string(const Params &)> PluginAPIAction;
+typedef std::function<std::string()> PluginAction;
+typedef std::function<std::string(const Params &)> PluginAPIAction;
 
 struct PluginMeta {
-    string key, name;
+    std::string key, name;
     bool live;
 };
 
 class CustomPlugin {
-    vector<PluginMeta> plugins;
-    map<PluginKey, PluginAction> actions;
-    map<Method, map<Path, PluginAPIAction>> api;
+    std::vector<PluginMeta> plugins;
+
+    // plugin-key: action
+    std::map<std::string, PluginAction> actions;
+
+    // method: { path: action }
+    std::map<std::string, std::map<std::string, PluginAPIAction>> api;
 
     Response execute(PluginAction executor) noexcept;
 
-    void addPlugin(const string &key, const string &name, PluginAction action, bool live);
+    void addPlugin(const std::string &key, const std::string &name, PluginAction action, bool live);
 
 public:
     CustomPlugin(HttpServer *server);
 
-    void addPlugin(const string &key, const string &name, PluginAction action);
+    void addPlugin(const std::string &key, const std::string &name, PluginAction action);
 
-    void addPluginAPI(const string &method, const string &path, PluginAPIAction action);
+    void addPluginAPI(const std::string &method, const std::string &path, PluginAPIAction action);
 
-    void addLivePlugin(const string &key, const string &name, PluginAction action);
+    void addLivePlugin(const std::string &key, const std::string &name, PluginAction action);
 };
 
 

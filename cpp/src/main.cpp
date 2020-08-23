@@ -13,6 +13,7 @@
 #include "../ext/explorer/explorer.h"
 
 using namespace std;
+using json = nlohmann::json;
 
 class TestDatabaseProvider : public DatabaseProvider {
 protected:

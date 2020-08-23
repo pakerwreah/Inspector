@@ -2,13 +2,13 @@
 // Created by Paker on 09/11/19.
 //
 
-#include <sstream>
 #include "NetworkPlugin.h"
-#include "HttpServer.h"
-#include "Socket.h"
 #include "libs/compress.hpp"
 #include "libs/sha1.h"
 #include "libs/base64.h"
+#include <sstream>
+
+using namespace std;
 
 static Response handshake(const Request &request);
 

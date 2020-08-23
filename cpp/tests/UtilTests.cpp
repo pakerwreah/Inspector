@@ -45,6 +45,12 @@ TEST_CASE("util::split") {
         CHECK(split("str1,str3", 'x') == expected);
         CHECK(split("str1,str3", "x") == expected);
     }
+
+    SECTION("empty delim") {
+        vector<string> expected = {"text"};
+
+        CHECK(split("text", "") == expected);
+    }
 }
 
 TEST_CASE("util::rtrim") {

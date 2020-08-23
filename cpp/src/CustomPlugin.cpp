@@ -3,30 +3,15 @@
 //
 
 #include "CustomPlugin.h"
-#include "HttpServer.h"
 #include "util.h"
+
+using namespace std;
+using json = nlohmann::json;
 
 void to_json(json &j, const PluginMeta &p) {
     j = {{"key",  p.key},
          {"name", p.name},
          {"live", p.live}};
-}
-
-void CustomPlugin::addPlugin(const string &key, const string &name, PluginAction action, bool live) {
-    plugins.push_back({key, name, live});
-    actions[key] = action;
-}
-
-void CustomPlugin::addPlugin(const string &key, const string &name, PluginAction action) {
-    addPlugin(key, name, action, false);
-}
-
-void CustomPlugin::addLivePlugin(const string &key, const string &name, PluginAction action) {
-    addPlugin(key, name, action, true);
-}
-
-void CustomPlugin::addPluginAPI(const string &method, const string &path, PluginAPIAction action) {
-    api[method][util::replaceAll(path, "/", "-")] = action;
 }
 
 Response CustomPlugin::execute(PluginAction action) noexcept {
@@ -62,4 +47,21 @@ CustomPlugin::CustomPlugin(HttpServer *server) {
             return action(params);
         });
     });
+}
+
+void CustomPlugin::addPlugin(const string &key, const string &name, PluginAction action, bool live) {
+    plugins.push_back({key, name, live});
+    actions[key] = action;
+}
+
+void CustomPlugin::addPlugin(const string &key, const string &name, PluginAction action) {
+    addPlugin(key, name, action, false);
+}
+
+void CustomPlugin::addLivePlugin(const string &key, const string &name, PluginAction action) {
+    addPlugin(key, name, action, true);
+}
+
+void CustomPlugin::addPluginAPI(const string &method, const string &path, PluginAPIAction action) {
+    api[method][util::replaceAll(path, "/", "-")] = action;
 }

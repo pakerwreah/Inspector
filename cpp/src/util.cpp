@@ -5,7 +5,6 @@
 #include "util.h"
 
 using namespace std;
-using namespace nlohmann;
 
 namespace util {
     string uid() {
@@ -26,7 +25,7 @@ namespace util {
         return duration;
     }
 
-    json benchmark(const timeval &start) {
+    map<string, long> benchmark(const timeval &start) {
         auto end = timestamp();
         auto diff = timediff(start, end);
         return {{"sec",  diff.tv_sec},
@@ -38,7 +37,8 @@ namespace util {
     }
 
     vector<string> split(const string &str, const string &delim, bool allow_empty) {
-        assert(!delim.empty());
+        if (delim.empty()) return {str};
+
         vector<string> tokens;
         size_t prev = 0, pos = 0;
         do {
@@ -52,6 +52,7 @@ namespace util {
             }
             prev = pos + delim.length();
         } while (pos < str.length() && prev < str.length());
+
         return tokens;
     }
 

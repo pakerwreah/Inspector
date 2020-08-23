@@ -3,15 +3,12 @@
 //
 
 #include "DatabasePlugin.h"
-#include "Database.h"
-#include "HttpServer.h"
 #include "util.h"
 #include <thread>
 #include <unistd.h>
 
-using namespace util;
-
-static int close_token;
+using namespace std;
+using json = nlohmann::json;
 
 shared_ptr<Database> DatabasePlugin::open() {
     if (db_path.empty()) {
@@ -23,19 +20,21 @@ shared_ptr<Database> DatabasePlugin::open() {
     }
 
     if (!db_con) {
-        auto name = split(db_path, '/').back();
-        if (cipher.count(name)) {
-            SQLCipher config = cipher[name];
+        auto name = util::split(db_path, '/').back();
+        if (db_meta.count(name)) {
+            DatabaseMeta config = db_meta[name];
             db_con = make_shared<Database>(db_path, config.password, config.version);
         } else {
             db_con = make_shared<Database>(db_path);
         }
     }
 
+    // debouncer to auto close db after a while
+    // it won't abort any queries because it uses shared_ptr
     thread([this]() {
-        auto token = ++close_token;
+        auto token = ++auto_close_token;
         sleep(5);
-        if (token == close_token) {
+        if (token == auto_close_token) {
             db_con = nullptr;
         }
     }).detach();
@@ -51,7 +50,7 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
         auto paths = databasePathList();
         auto names = json::array();
         for (int i = 0; i < paths.size(); i++) {
-            names += split(paths[i], '/').back();
+            names += util::split(paths[i], '/').back();
             if (paths[i] == db_path) {
                 index = i;
             }
@@ -85,11 +84,11 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
         try {
             auto db = open();
 
-            auto start = timestamp();
+            auto start = util::timestamp();
 
             auto res = db->query(sql);
 
-            auto duration = benchmark(start);
+            auto duration = util::benchmark(start);
 
             auto headers = res.headers();
 
@@ -132,13 +131,13 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
         try {
             auto db = open();
 
-            auto start = timestamp();
+            auto start = util::timestamp();
 
             db->transaction();
             db->execute(request.body);
             db->commit();
 
-            auto duration = benchmark(start);
+            auto duration = util::benchmark(start);
 
             json data = {{"duration", duration}};
 
@@ -150,7 +149,7 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
 }
 
 vector<string> DatabasePlugin::databasePathList() {
-    return filter(provider->databasePathList(), [](const string &item) { return !endsWith(item, "-journal"); });
+    return util::filter(provider->databasePathList(), [](const string &item) { return !util::endsWith(item, "-journal"); });
 }
 
 void DatabasePlugin::selectDB(int index) {
@@ -164,5 +163,5 @@ void DatabasePlugin::selectDB(int index) {
 }
 
 void DatabasePlugin::setCipherKey(const string &database, const string &password, int version) {
-    cipher[database] = {password, version};
+    db_meta[database] = {password, version};
 }

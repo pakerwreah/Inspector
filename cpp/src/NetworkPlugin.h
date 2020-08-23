@@ -5,25 +5,18 @@
 #ifndef INSPECTOR_NETWORKPLUGIN_H
 #define INSPECTOR_NETWORKPLUGIN_H
 
-#include <string>
-#include <memory>
-
-class HttpServer;
-
-class Socket;
-
-using namespace std;
+#include "HttpServer.h"
 
 class NetworkPlugin {
-    shared_ptr<Socket> request_socket, response_socket;
+    std::shared_ptr<Socket> request_socket, response_socket;
 public:
     NetworkPlugin(HttpServer *server);
 
     bool isConnected() const;
 
-    void sendRequest(const string &uid, const string &headers, const string &body);
+    void sendRequest(const std::string &uid, const std::string &headers, const std::string &body);
 
-    void sendResponse(const string &uid, const string &headers, const string &body, bool compressed = false);
+    void sendResponse(const std::string &uid, const std::string &headers, const std::string &body, bool compressed = false);
 };
 
 

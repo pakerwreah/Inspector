@@ -5,13 +5,12 @@
 #ifndef INSPECTOR_UTIL_H
 #define INSPECTOR_UTIL_H
 
+#include <map>
 #include <string>
 #include <sstream>
 #include <vector>
+#include <functional>
 #include <sys/time.h>
-#include "libs/json.hpp"
-
-using json = nlohmann::json;
 
 namespace util {
     std::string uid();
@@ -20,7 +19,7 @@ namespace util {
 
     timeval timediff(const timeval &start, const timeval &end);
 
-    json benchmark(const timeval &start);
+    std::map<std::string, long>  benchmark(const timeval &start);
 
     std::vector<std::string> split(const std::string &str, char delim, bool allow_empty = true);
     std::vector<std::string> split(const std::string &str, const std::string &delim, bool allow_empty = true);

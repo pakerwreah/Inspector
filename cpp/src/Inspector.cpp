@@ -3,22 +3,17 @@
 //
 
 #include "Inspector.h"
-#include "DatabasePlugin.h"
+
+using namespace std;
 
 Inspector::Inspector(DatabaseProvider *databaseProvider) {
-    server = new HttpServer;
-
-    server->get("/", [](const Request &, const Params &) {
-        return Response("Server up!");
-    });
-
-    databasePlugin = new DatabasePlugin(server, databaseProvider);
-    networkPlugin = new NetworkPlugin(server);
-    customPlugin = new CustomPlugin(server);
+    databasePlugin = make_unique<DatabasePlugin>(&server, databaseProvider);
+    networkPlugin = make_unique<NetworkPlugin>(&server);
+    customPlugin = make_unique<CustomPlugin>(&server);
 }
 
 thread *Inspector::bind(int port) {
-    return server->start(port);
+    return server.start(port);
 }
 
 void Inspector::setCipherKey(const string &database, const string &password, int version) {

@@ -5,6 +5,8 @@
 #include "Database.h"
 #include <stdexcept>
 
+using namespace std;
+
 Database::Database(const string &path, const string &password, int version) {
     if (!path.length()) {
         throw runtime_error("Database path not selected");
@@ -60,61 +62,3 @@ void Database::execute(const string &sql) const {
         throw runtime_error("Error executing batch: " + str);
     }
 }
-
-ResultSet::ResultSet(sqlite3 *db, sqlite3_stmt *stmt) {
-    this->db = db;
-    this->stmt = stmt;
-    sqlite3_reset(stmt);
-    first_step = step();
-}
-
-ResultSet::~ResultSet() {
-    sqlite3_finalize(stmt);
-}
-
-vector<string> ResultSet::headers() const {
-    vector<string> headers;
-    int count = sqlite3_column_count(stmt);
-    for (int i = 0; i < count; i++) {
-        headers.push_back(sqlite3_column_name(stmt, i));
-    }
-    return headers;
-}
-
-bool ResultSet::step() {
-    index++;
-    int rc = sqlite3_step(stmt);
-
-    if (rc != SQLITE_ROW && rc != SQLITE_DONE) {
-        throw runtime_error(string() + sqlite3_errmsg(db) + "\nSQL: " + sqlite3_sql(stmt));
-    }
-
-    return rc == SQLITE_ROW;
-}
-
-bool ResultSet::next() {
-    if (first_step >= 0) {
-        auto res = first_step;
-        first_step = -1;
-        return res;
-    }
-
-    return step();
-}
-
-int ResultSet::type(int column) const {
-    return sqlite3_column_type(stmt, column);
-}
-
-string ResultSet::text(int column) const {
-    return (const char *) sqlite3_column_text(stmt, column);
-}
-
-int ResultSet::integer(int column) const {
-    return sqlite3_column_int(stmt, column);
-}
-
-double ResultSet::decimal(int column) const {
-    return sqlite3_column_double(stmt, column);
-}
-

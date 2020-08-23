@@ -2,86 +2,12 @@
 // Created by Paker on 2019-10-23.
 //
 
-#include <sstream>
-#include <thread>
 #include "HttpServer.h"
-#include "Socket.h"
-#include "libs/picohttpparser.h"
 #include "libs/compress.hpp"
 #include "libs/url.h"
 #include "util.h"
 
-using namespace util;
-
-Request::Request(const string &plain, shared_ptr<Socket> client) {
-    socket = client;
-
-    const char *method, *path;
-    size_t path_len, method_len;
-    int minor_version;
-    size_t num_headers = 50;
-    struct phr_header headers[num_headers];
-    const char *buffer = plain.c_str();
-
-    int body_start = phr_parse_request(
-            buffer, plain.length(),
-            &method, &method_len,
-            &path, &path_len,
-            &minor_version,
-            headers, &num_headers, 0);
-
-    if (method_len) {
-        this->method = string(method).substr(0, method_len);
-        this->path = string(path).substr(0, path_len);
-
-        for (int i = 0; i < num_headers; i++) {
-            auto header = headers[i];
-            auto name = string(header.name).substr(0, header.name_len);
-            auto value = string(header.value).substr(0, header.value_len);
-            this->headers[name] = value;
-        }
-
-        this->body = plain.substr(static_cast<unsigned long>(body_start));
-    }
-}
-
-bool Request::valid() {
-    return !method.empty();
-}
-
-Response::Response(const json &data, int code, const string &content_type) {
-    string resp;
-    if (data.is_null()) {
-        resp = "";
-    } else if (data.is_string()) {
-        if (content_type == ContentType::JSON) {
-            resp = json{{"msg", data}}.dump();
-        } else {
-            resp = data.get<string>();
-        }
-    } else {
-        resp = data.dump();
-    }
-    this->content_type = content_type;
-    this->body = resp;
-    this->code = code;
-}
-
-Response::operator string() {
-    constexpr auto crlf = "\r\n";
-    ostringstream resp;
-    resp << "HTTP/1.1 " << code << " " << crlf
-         << "Content-Type: " << content_type << crlf
-         << "Content-Length: " << body.length() << crlf
-         << "Access-Control-Allow-Origin: *" << crlf;
-
-    for (auto header : headers) {
-        resp << header.first << ": " << header.second << crlf;
-    }
-
-    resp << crlf << body;
-    return resp.str();
-}
+using namespace std;
 
 void HttpServer::request(const string &method, const string &path, Handler handler) {
     routes[method][path] = handler;
@@ -101,6 +27,10 @@ void HttpServer::put(const string &path, Handler handler) {
 
 void HttpServer::request(const string &path, Handler handler) {
     request("*", path, handler);
+}
+
+HttpServer::~HttpServer() {
+    stop();
 }
 
 void HttpServer::stop() {
@@ -140,7 +70,7 @@ void HttpServer::process(shared_ptr<Socket> client) const {
 
         Request request(plain, client);
 
-        if ((valid = request.valid())) {
+        if ((valid = request.is_valid())) {
             try {
                 if (request.method == "OPTIONS") {
                     Response response;
@@ -172,15 +102,16 @@ void HttpServer::process(shared_ptr<Socket> client) const {
 }
 
 static void parse_urlencoded(const string &urlencoded, Params *params) {
-    auto pieces = split(urlencoded, '&');
+    auto pieces = util::split(urlencoded, '&');
     for (const string &piece : pieces) {
-        auto p = split(piece, '=');
+        auto p = util::split(piece, '=');
         params->operator[](p[0]) = p.size() == 2 ? url_decode(p[1]) : "";
     }
 }
 
+// TODO: create unit tests
 Handler HttpServer::find_handler(const Request &request, Params *params) const {
-    auto pieces = split(request.path, '?');
+    auto pieces = util::split(request.path, '?');
     auto path = pieces[0];
 
     // extract query params
@@ -203,7 +134,7 @@ Handler HttpServer::find_handler(const Request &request, Params *params) const {
     }
 
     // find handler
-    auto path_pieces = split(path, '/');
+    auto path_pieces = util::split(path, '/');
     auto path_size = path_pieces.size();
 
     // check for method then wildcard
@@ -211,13 +142,15 @@ Handler HttpServer::find_handler(const Request &request, Params *params) const {
         auto m_routes = routes.find(method);
         if (m_routes != routes.end())
             for (const auto &route : m_routes->second) {
-                auto route_pieces = split(route.first, '/');
+                auto route_pieces = util::split(route.first, '/');
                 if (path_size != route_pieces.size()) continue;
+                // FIXME: create temporary params object here
                 for (int i = 0; i < path_size; i++) {
                     auto rp = route_pieces[i];
                     auto pp = path_pieces[i];
                     if (rp.find('{') == 0) {
-                        auto key = trim(rp, "{}");
+                        auto key = util::trim(rp, "{}");
+                        // FIXME: should modify a temporary object and merge with params later before return
                         params->operator[](key) = pp;
                     } else if (rp != pp) {
                         break;
