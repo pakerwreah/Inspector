@@ -7,7 +7,7 @@ Pod::Spec.new do |spec|
     spec.authors      		    = { 'Carlos César Neves Enumo' => 'paker_wreah@hotmail.com' }
 
     spec.source       		    = { :git => 'https://github.com/pakerwreah/Inspector.git', :tag => 'v1.4.0' }
-    spec.source_files 		    = 'cpp/**/*.{h,hpp,c,cpp}', 'ios/Inspector/lib/*.{h,mm}'
+    spec.source_files 		    = 'cpp/src/**/*.{h,hpp,c,cpp}', 'ios/Inspector/lib/*.{h,mm}'
     spec.exclude_files 		    = 'cpp/src/main.cpp'
     spec.public_header_files    = 'ios/Inspector/lib/IOSInspector.h'
     spec.library 				= 'z'
