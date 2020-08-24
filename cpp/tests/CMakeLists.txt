@@ -8,12 +8,11 @@ project(inspector-tests)
 
 option(UNIT_TEST ON)
 
-set(sources ..)
+add_subdirectory(.. inspector-build)
 
-add_subdirectory(${sources} inspector-build)
-include_directories("${sources}/src")
+include_directories(../src)
 
-file(GLOB tests "*.cpp")
+file(GLOB tests *.cpp)
 
 add_executable(inspector-tests ${tests})
 

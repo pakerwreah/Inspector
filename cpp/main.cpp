@@ -2,15 +2,15 @@
 // Created by Paker on 26/10/19.
 //
 
-#include "Inspector.h"
-#include "util.h"
 #include <unistd.h>
 #include <thread>
 #include <vector>
 #include <sys/time.h>
 #include <sstream>
 
-#include "../ext/explorer/explorer.h"
+#include "src/Inspector.h"
+#include "src/util.h"
+#include "ext/explorer/explorer.h"
 
 using namespace std;
 using json = nlohmann::json;

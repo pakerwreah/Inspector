@@ -6,29 +6,11 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 project(inspector)
 
-set(
-        sources
-        src/libs/picohttpparser.c
-        src/libs/base64.cpp
-        src/libs/sha1.cpp
-        src/libs/url.cpp
-        src/util.cpp
-        src/Socket.cpp
-        src/HttpServer.cpp
-        src/Request.cpp
-        src/Response.cpp
-        src/Inspector.cpp
-        src/Database.cpp
-        src/ResultSet.cpp
-        src/DatabasePlugin.cpp
-        src/NetworkPlugin.cpp
-        src/CustomPlugin.cpp)
-
+file(GLOB_RECURSE sources src/*.cpp src/*.c)
 
 add_library(inspector-cpp STATIC ${sources})
 
 target_link_libraries(inspector-cpp z)
-
 
 if (NOT DEFINED ANDROID_NDK)
     find_library(LIBSQLITE sqlcipher)
@@ -37,7 +19,7 @@ if (NOT DEFINED ANDROID_NDK)
     target_link_libraries(inspector-cpp ${LIBSQLITE} Threads::Threads)
 
     if (NOT DEFINED UNIT_TEST)
-        add_executable(inspector-demo src/main.cpp ext/explorer/explorer.cpp)
+        add_executable(inspector-demo main.cpp ext/explorer/explorer.cpp)
         target_link_libraries(inspector-demo inspector-cpp)
     endif ()
 endif ()
