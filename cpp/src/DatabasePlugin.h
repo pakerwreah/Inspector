@@ -10,7 +10,7 @@
 #include <vector>
 #include <memory>
 
-#include "HttpServer.h"
+#include "HttpRouter.h"
 #include "Database.h"
 
 class DatabaseProvider {
@@ -31,13 +31,11 @@ class DatabasePlugin {
     std::shared_ptr<Database> db_con;
 
     std::shared_ptr<Database> open();
-
     std::vector<std::string> databasePathList();
-
     void selectDB(int index);
 
 public:
-    DatabasePlugin(HttpServer *server, DatabaseProvider *provider);
+    DatabasePlugin(HttpRouter *router, DatabaseProvider *provider);
 
     void setCipherKey(const std::string &database, const std::string &password, int version);
 };

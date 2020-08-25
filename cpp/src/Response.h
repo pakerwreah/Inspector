@@ -7,16 +7,11 @@
 
 #include <map>
 #include <string>
-#include "libs/json.hpp"
-
-namespace ContentType {
-    const std::string HTML = "text/html";
-    const std::string JSON = "application/json";
-    const std::string URL_ENCODED = "application/x-www-form-urlencoded";
-}
+#include "json.hpp"
+#include "Http.h"
 
 struct Response {
-    Response(const nlohmann::json &data = nullptr, int code = 200, const std::string &content_type = ContentType::JSON);
+    Response(const nlohmann::json &data = nullptr, int code = 200, const std::string &content_type = Http::ContentType::JSON);
 
     operator std::string();
 
@@ -25,12 +20,16 @@ struct Response {
     std::string content_type;
     std::string body;
 
-    static Response NotFound() {
-        return Response("Route not found", 404);
+    static Response BadRequest() {
+        return Response("Bad Request", 400);
     }
 
-    static Response InternalError() {
-        return Response("Internal Error", 500);
+    static Response NotFound(const std::string &error) {
+        return Response(error, 404);
+    }
+
+    static Response InternalError(const std::string &error) {
+        return Response(error, 500);
     }
 };
 

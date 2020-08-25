@@ -14,7 +14,7 @@ shared_ptr<Database> DatabasePlugin::open() {
     if (db_path.empty()) {
         try {
             selectDB(0);
-        } catch (out_of_range &ex) {
+        } catch (const out_of_range &) {
             throw runtime_error("No databases available");
         }
     }
@@ -42,10 +42,10 @@ shared_ptr<Database> DatabasePlugin::open() {
     return db_con;
 }
 
-DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) {
+DatabasePlugin::DatabasePlugin(HttpRouter *router, DatabaseProvider *_provider) {
     this->provider = _provider;
 
-    server->get("/database/list", [this](const Request &, const Params &) {
+    router->get("/database/list", [this](const Request &, const Params &) {
         int index = 0;
         auto paths = databasePathList();
         auto names = json::array();
@@ -62,23 +62,17 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
         return Response(data);
     });
 
-    server->put("/database/current/{index}", [this](const Request &request, const Params &params) {
-        try {
-            auto body = request.body;
-            auto index = stoi(params.at("index"));
+    router->put("/database/current/{index}", [this](const Request &request, const Params &params) {
+        auto body = request.body;
+        auto index = stoi(params.at("index"));
 
-            selectDB(index);
+        selectDB(index);
 
-            open();
-        } catch (out_of_range &ex) {
-            return Response(ex.what(), 400);
-        } catch (exception &ex) {
-            return Response(ex.what(), 500);
-        }
+        open();
         return Response(db_path);
     });
 
-    server->post("/database/query", [this](const Request &request, const Params &) {
+    router->post("/database/query", [this](const Request &request, const Params &) {
         auto sql = request.body;
 
         try {
@@ -122,12 +116,12 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
                          {"duration", duration}};
 
             return Response(data);
-        } catch (exception &ex) {
+        } catch (const exception &ex) {
             return Response(ex.what(), 400);
         }
     });
 
-    server->post("/database/execute", [this](const Request &request, const Params &) {
+    router->post("/database/execute", [this](const Request &request, const Params &) {
         try {
             auto db = open();
 
@@ -142,14 +136,15 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
             json data = {{"duration", duration}};
 
             return Response(data);
-        } catch (exception &ex) {
+        } catch (const exception &ex) {
             return Response(ex.what(), 400);
         }
     });
 }
 
 vector<string> DatabasePlugin::databasePathList() {
-    return util::filter(provider->databasePathList(), [](const string &item) { return !util::endsWith(item, "-journal"); });
+    return util::filter(provider->databasePathList(),
+                        [](const string &item) { return !util::endsWith(item, "-journal"); });
 }
 
 void DatabasePlugin::selectDB(int index) {

@@ -10,7 +10,7 @@ option(UNIT_TEST ON)
 
 add_subdirectory(.. inspector-build)
 
-include_directories(../src)
+include_directories(../src ../src/utils ../src/libs)
 
 file(GLOB tests *.cpp)
 

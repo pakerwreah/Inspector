@@ -5,7 +5,7 @@
 #ifndef INSPECTOR_RESULTSET_H
 #define INSPECTOR_RESULTSET_H
 
-#include "libs/sqlite3.h"
+#include "sqlite3.h"
 #include <string>
 #include <vector>
 

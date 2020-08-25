@@ -6,6 +6,8 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 project(inspector)
 
+include_directories(src src/utils src/libs)
+
 file(GLOB_RECURSE sources src/*.cpp src/*.c)
 
 add_library(inspector-cpp STATIC ${sources})

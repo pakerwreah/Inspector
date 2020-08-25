@@ -5,7 +5,7 @@
 #ifndef INSPECTOR_DATABASE_H
 #define INSPECTOR_DATABASE_H
 
-#include "libs/sqlite3.h"
+#include "sqlite3.h"
 #include <string>
 #include <vector>
 

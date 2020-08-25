@@ -9,14 +9,14 @@
 #include <string>
 #include <memory>
 
-#include "Socket.h"
+#include "Client.h"
 
 struct Request {
-    std::shared_ptr<Socket> socket;
+    std::shared_ptr<Client> client;
     std::map<std::string, std::string> headers;
     std::string method, path, body;
 
-    Request(const std::string &plain, std::shared_ptr<Socket> client);
+    Request(const std::string &plain, std::shared_ptr<Client> client = nullptr);
 
     bool is_valid();
 };

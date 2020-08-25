@@ -7,6 +7,8 @@
 
 #include <string>
 
-std::string url_decode(const std::string &encoded);
+namespace url {
+    std::string decode(const std::string &encoded);
+}
 
 #endif //INSPECTOR_URL_H

@@ -11,31 +11,18 @@
 #include <thread>
 #include <functional>
 
-#include "Request.h"
-#include "Response.h"
-
-typedef std::map<std::string, std::string> Params;
-typedef std::function<Response(const Request &, const Params &)> Handler;
+#include "Client.h"
+#include "HttpRouter.h"
 
 class HttpServer {
-    bool _stop = false;
+    bool _stop;
 
-    // method: { path: handler }
-    std::map<std::string, std::map<std::string, Handler>> routes;
-
-    void request(const std::string &method, const std::string &path, Handler handler);
-
-    Handler find_handler(const Request &request, Params *params) const;
-
-    void process(std::shared_ptr<Socket> client) const;
+    void process(std::shared_ptr<Client> client) const;
 
 public:
-    virtual ~HttpServer();
+    HttpRouter router;
 
-    void get(const std::string &path, Handler handler);
-    void post(const std::string &path, Handler handler);
-    void put(const std::string &path, Handler handler);
-    void request(const std::string &path, Handler handler);
+    virtual ~HttpServer();
 
     void stop();
 

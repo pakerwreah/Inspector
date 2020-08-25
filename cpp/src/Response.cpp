@@ -13,7 +13,7 @@ Response::Response(const json &data, int code, const string &content_type) {
     if (data.is_null()) {
         resp = "";
     } else if (data.is_string()) {
-        if (content_type == ContentType::JSON) {
+        if (content_type == Http::ContentType::JSON) {
             resp = json{{"msg", data}}.dump();
         } else {
             resp = data.get<string>();
@@ -26,7 +26,7 @@ Response::Response(const json &data, int code, const string &content_type) {
     this->code = code;
 }
 
-Response::operator string() {
+Response::operator std::string() {
     const char *crlf = "\r\n";
     ostringstream resp;
     resp << "HTTP/1.1 " << code << " " << crlf

@@ -8,8 +8,8 @@
 #include <sys/time.h>
 #include <sstream>
 
-#include "src/Inspector.h"
-#include "src/util.h"
+#include "Inspector.h"
+#include "util.h"
 #include "ext/explorer/explorer.h"
 
 using namespace std;

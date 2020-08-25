@@ -3,12 +3,12 @@
 //
 
 #include "Request.h"
-#include "libs/picohttpparser.h"
+#include "picohttpparser.h"
 
 using namespace std;
 
-Request::Request(const string &plain, shared_ptr<Socket> client) {
-    socket = client;
+Request::Request(const string &plain, shared_ptr<Client> client) {
+    this->client = client;
 
     const char *method, *path;
     size_t path_len, method_len;

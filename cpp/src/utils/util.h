@@ -19,7 +19,7 @@ namespace util {
 
     timeval timediff(const timeval &start, const timeval &end);
 
-    std::map<std::string, long>  benchmark(const timeval &start);
+    std::map<std::string, long> benchmark(const timeval &start);
 
     std::vector<std::string> split(const std::string &str, char delim, bool allow_empty = true);
     std::vector<std::string> split(const std::string &str, const std::string &delim, bool allow_empty = true);
@@ -62,6 +62,14 @@ namespace util {
                 os << glue;
         }
         return os.str();
+    }
+
+    //FIXME: unit test this
+    template<typename K, typename V>
+    void merge(std::map<K, V> &target, const std::map<K, V> &source) {
+        for (const auto &[key, val] : source) {
+            target[key] = val;
+        }
     }
 }
 

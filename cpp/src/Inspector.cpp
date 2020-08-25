@@ -7,9 +7,9 @@
 using namespace std;
 
 Inspector::Inspector(DatabaseProvider *databaseProvider) {
-    databasePlugin = make_unique<DatabasePlugin>(&server, databaseProvider);
-    networkPlugin = make_unique<NetworkPlugin>(&server);
-    customPlugin = make_unique<CustomPlugin>(&server);
+    databasePlugin = make_unique<DatabasePlugin>(&server.router, databaseProvider);
+    networkPlugin = make_unique<NetworkPlugin>(&server.router);
+    customPlugin = make_unique<CustomPlugin>(&server.router);
 }
 
 thread *Inspector::bind(int port) {

@@ -14,25 +14,21 @@ void to_json(json &j, const PluginMeta &p) {
          {"live", p.live}};
 }
 
-Response CustomPlugin::execute(PluginAction action) noexcept {
+Response CustomPlugin::execute(PluginAction action) {
     string res;
     try {
         return Response(json::parse(res = action()));
-    } catch (json::parse_error &ex) {
-        return Response(res, 200, ContentType::HTML);
-    } catch (out_of_range &ex) {
-        return Response(ex.what(), 400);
-    } catch (exception &ex) {
-        return Response(ex.what(), 500);
+    } catch (const json::parse_error &) {
+        return Response(res, 200, Http::ContentType::HTML);
     }
 }
 
-CustomPlugin::CustomPlugin(HttpServer *server) {
-    server->get("/plugins", [this](const Request &, const Params &) {
+CustomPlugin::CustomPlugin(HttpRouter *router) {
+    router->get("/plugins", [this](const Request &, const Params &) {
         return Response(plugins);
     });
 
-    server->get("/plugins/{:key:}", [this](const Request &request, const Params &params) {
+    router->get("/plugins/{:key:}", [this](const Request &request, const Params &params) {
         return execute([&] {
             string key = params.at(":key:");
             PluginAction action = actions.at(key);
@@ -40,10 +36,9 @@ CustomPlugin::CustomPlugin(HttpServer *server) {
         });
     });
 
-    server->request("/plugins/api/{:path:}", [this](const Request &request, const Params &params) {
+    router->any("/plugins/api/*", [this](const Request &request, const Params &) {
         return execute([&] {
-            string path = params.at(":path:");
-            PluginAPIAction action = api.at(request.method).at(path);
+            const auto[action, params] = api_router.parse(request);
             return action(params);
         });
     });
@@ -63,5 +58,5 @@ void CustomPlugin::addLivePlugin(const string &key, const string &name, PluginAc
 }
 
 void CustomPlugin::addPluginAPI(const string &method, const string &path, PluginAPIAction action) {
-    api[method][util::replaceAll(path, "/", "-")] = action;
+    api_router.route(method, "/plugins/api/" + util::ltrim(path, "/"), action);
 }

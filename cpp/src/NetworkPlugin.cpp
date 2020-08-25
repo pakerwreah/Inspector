@@ -3,10 +3,11 @@
 //
 
 #include "NetworkPlugin.h"
-#include "libs/compress.hpp"
-#include "libs/sha1.h"
-#include "libs/base64.h"
+#include "compress.hpp"
+#include "sha1.h"
+#include "base64.h"
 #include <sstream>
+#include <thread>
 
 using namespace std;
 
@@ -14,30 +15,30 @@ static Response handshake(const Request &request);
 
 static string pack(const string &msg, bool binary = true);
 
-NetworkPlugin::NetworkPlugin(HttpServer *server) {
-    server->get("/network/request", [this](const Request &request, const Params &) {
-        request_socket = request.socket;
+NetworkPlugin::NetworkPlugin(HttpRouter *router) {
+    router->get("/network/request", [this](const Request &request, const Params &) {
+        request_client = request.client;
         return handshake(request);
     });
 
-    server->get("/network/response", [this](const Request &request, const Params &) {
-        response_socket = request.socket;
+    router->get("/network/response", [this](const Request &request, const Params &) {
+        response_client = request.client;
         return handshake(request);
     });
 }
 
 bool NetworkPlugin::isConnected() const {
-    return request_socket && response_socket;
+    return request_client && response_client;
 }
 
 void NetworkPlugin::sendRequest(const string &uid, const string &headers, const string &body) {
     // create local reference to avoid deallocation
-    auto socket = request_socket;
-    if (socket) {
+    auto client = request_client;
+    if (client) {
         // create a thread to avoid hanging the client
         thread([=] {
-            if (!socket->send(pack(uid + "\n" + headers + "\n" + gzip::compress(body.c_str(), body.size())))) {
-                request_socket = nullptr;
+            if (!client->send(pack(uid + "\n" + headers + "\n" + gzip::compress(body.c_str(), body.size())))) {
+                request_client = nullptr;
             }
         }).detach();
     }
@@ -45,16 +46,16 @@ void NetworkPlugin::sendRequest(const string &uid, const string &headers, const 
 
 void NetworkPlugin::sendResponse(const string &uid, const string &headers, const string &body, bool compressed) {
     // create local reference to avoid deallocation
-    auto socket = response_socket;
-    if (socket) {
+    auto client = response_client;
+    if (client) {
         // create a thread to avoid hanging the client
         thread([=] {
             auto m_body = body;
             if (!compressed) {
                 m_body = gzip::compress(body.c_str(), body.size());
             }
-            if (!socket->send(pack(uid + "\n" + headers + "\n" + m_body))) {
-                response_socket = nullptr;
+            if (!client->send(pack(uid + "\n" + headers + "\n" + m_body))) {
+                response_client = nullptr;
             }
         }).detach();
     }
