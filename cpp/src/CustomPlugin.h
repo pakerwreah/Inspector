@@ -10,7 +10,7 @@
 #include <vector>
 #include <functional>
 
-#include "HttpRouter.h"
+#include "Router.h"
 
 typedef std::function<std::string()> PluginAction;
 typedef std::function<std::string(const Params &)> PluginAPIAction;
@@ -21,7 +21,7 @@ struct PluginMeta {
 };
 
 class CustomPlugin {
-    Router<PluginAPIAction> api_router;
+    Router *router;
     std::vector<PluginMeta> plugins;
     std::map<std::string, PluginAction> actions;
 
@@ -30,7 +30,7 @@ class CustomPlugin {
     void addPlugin(const std::string &key, const std::string &name, PluginAction action, bool live);
 
 public:
-    CustomPlugin(HttpRouter *router);
+    CustomPlugin(Router *router);
 
     void addPlugin(const std::string &key, const std::string &name, PluginAction action);
     void addPluginAPI(const std::string &method, const std::string &path, PluginAPIAction action);

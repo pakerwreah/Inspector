@@ -23,30 +23,21 @@ Response CustomPlugin::execute(PluginAction action) {
     }
 }
 
-CustomPlugin::CustomPlugin(HttpRouter *router) {
+CustomPlugin::CustomPlugin(Router *router) {
+    this->router = router;
+
     router->get("/plugins", [this](const Request &, const Params &) {
         return Response(plugins);
-    });
-
-    router->get("/plugins/{:key:}", [this](const Request &request, const Params &params) {
-        return execute([&] {
-            string key = params.at(":key:");
-            PluginAction action = actions.at(key);
-            return action();
-        });
-    });
-
-    router->any("/plugins/api/*", [this](const Request &request, const Params &) {
-        return execute([&] {
-            const auto[action, params] = api_router.parse(request);
-            return action(params);
-        });
     });
 }
 
 void CustomPlugin::addPlugin(const string &key, const string &name, PluginAction action, bool live) {
     plugins.push_back({key, name, live});
-    actions[key] = action;
+    router->get("/plugins/" + key, [this, action](const Request &, const Params &) {
+        return execute([action] {
+            return action();
+        });
+    });
 }
 
 void CustomPlugin::addPlugin(const string &key, const string &name, PluginAction action) {
@@ -58,5 +49,10 @@ void CustomPlugin::addLivePlugin(const string &key, const string &name, PluginAc
 }
 
 void CustomPlugin::addPluginAPI(const string &method, const string &path, PluginAPIAction action) {
-    api_router.route(method, "/plugins/api/" + util::ltrim(path, "/"), action);
+    router->route(method, "/plugins/api/" + util::ltrim(path, "/"),
+                  [this, action](const Request &, const Params &params) {
+                      return execute([action, &params] {
+                          return action(params);
+                      });
+                  });
 }

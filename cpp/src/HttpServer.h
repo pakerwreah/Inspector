@@ -12,7 +12,7 @@
 #include <functional>
 
 #include "Client.h"
-#include "HttpRouter.h"
+#include "Router.h"
 
 class HttpServer {
     bool _stop;
@@ -20,7 +20,7 @@ class HttpServer {
     void process(std::shared_ptr<Client> client) const;
 
 public:
-    HttpRouter router;
+    Router router;
 
     virtual ~HttpServer();
 

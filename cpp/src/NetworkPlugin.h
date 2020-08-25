@@ -5,12 +5,12 @@
 #ifndef INSPECTOR_NETWORKPLUGIN_H
 #define INSPECTOR_NETWORKPLUGIN_H
 
-#include "HttpRouter.h"
+#include "Router.h"
 
 class NetworkPlugin {
     std::shared_ptr<Client> request_client, response_client;
 public:
-    NetworkPlugin(HttpRouter *router);
+    NetworkPlugin(Router *router);
 
     bool isConnected() const;
 

@@ -15,7 +15,7 @@ static Response handshake(const Request &request);
 
 static string pack(const string &msg, bool binary = true);
 
-NetworkPlugin::NetworkPlugin(HttpRouter *router) {
+NetworkPlugin::NetworkPlugin(Router *router) {
     router->get("/network/request", [this](const Request &request, const Params &) {
         request_client = request.client;
         return handshake(request);

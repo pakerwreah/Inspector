@@ -9,7 +9,7 @@
 
 using namespace std;
 
-Params RouteParser::decode(const string &urlencoded) {
+Params Router::decode(const string &urlencoded) {
     Params params;
     auto pieces = util::split(urlencoded, '&');
     for (const string &piece : pieces) {
@@ -19,7 +19,7 @@ Params RouteParser::decode(const string &urlencoded) {
     return params;
 }
 
-pair<Route, Params> RouteParser::parse(const vector<Route> &routes, const Request &request) {
+Response Router::handle(const Request &request) const {
     Params params;
     auto pieces = util::split(request.path, '?');
     auto path = pieces[0];
@@ -29,7 +29,7 @@ pair<Route, Params> RouteParser::parse(const vector<Route> &routes, const Reques
         util::merge(params, decode(pieces[1]));
     } else {
         // extract body params
-        auto type = request.headers.find("Content-Type");
+        auto type = request.headers.find(Http::ContentType::Key);
         if (type != request.headers.end() && type->second.find(Http::ContentType::URL_ENCODED) != string::npos) {
             util::merge(params, decode(request.body));
         }
@@ -37,19 +37,11 @@ pair<Route, Params> RouteParser::parse(const vector<Route> &routes, const Reques
 
     // find handler
     auto path_pieces = util::split(path, '/');
+    auto path_size = path_pieces.size();
 
-    for (const auto &route : routes) {
-        if (route.method != "*" && route.method != request.method) continue;
-
-        auto route_pieces = util::split(route.path, '/');
-        auto path_size = path_pieces.size();
-
-        if (route_pieces.back() == "*") { // subroute
-            if (path_size < route_pieces.size()) continue;
-            route_pieces.pop_back();
-            path_size = route_pieces.size();
-        } else if (path_size != route_pieces.size()) continue;
-
+    for (const auto &[path, handler] : routes.at(request.method)) {
+        auto route_pieces = util::split(path, '/');
+        if (path_size != route_pieces.size()) continue;
         Params m_params;
         for (int i = 0; i < path_size; i++) {
             auto rp = route_pieces[i];
@@ -61,10 +53,26 @@ pair<Route, Params> RouteParser::parse(const vector<Route> &routes, const Reques
             }
             if (i == path_size - 1) {
                 util::merge(params, m_params);
-                return {route, params};
+                return handler(request, params);
             }
         }
     }
 
     throw out_of_range("Route not found");
+}
+
+void Router::route(const string &method, const string &path, Handler handler) {
+    routes[method][path] = handler;
+}
+
+void Router::get(const string &path, Handler handler) {
+    route("GET", path, handler);
+}
+
+void Router::post(const string &path, Handler handler) {
+    route("POST", path, handler);
+}
+
+void Router::put(const string &path, Handler handler) {
+    route("PUT", path, handler);
 }

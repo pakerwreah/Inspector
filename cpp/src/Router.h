@@ -5,67 +5,28 @@
 #ifndef INSPECTOR_ROUTER_H
 #define INSPECTOR_ROUTER_H
 
-#include <unordered_map>
+#include <map>
 #include <string>
-#include <vector>
 #include "Request.h"
+#include "Response.h"
 
 typedef std::map<std::string, std::string> Params;
+typedef std::function<Response(const Request &, const Params &)> Handler;
 
-struct Route {
-    std::string method, path;
-
-    bool operator==(const Route &other) const {
-        return method == other.method && path == other.path;
-    }
-};
-
-namespace RouteParser {
-    Params decode(const std::string &urlencoded);
-    std::pair<Route, Params> parse(const std::vector<Route> &routes, const Request &request);
-}
-
-template<typename Handler>
 class Router {
-    struct RouteHasher {
-        static constexpr auto hash = std::hash<std::string>();
-
-        size_t operator()(const Route &route) const {
-            return hash(route.method) ^ hash(route.path);
-        }
-    };
-
-    std::vector<Route> routes;
-    std::unordered_map<Route, Handler, RouteHasher> handlers;
+    // method: { path: handler }
+    std::map<std::string, std::map<std::string, Handler>> routes;
 
 public:
-    std::pair<Handler, Params> parse(const Request &request) const {
-        const auto &[route, params] = RouteParser::parse(routes, request);
-        return {handlers.at(route), params};
-    }
+    static Params decode(const std::string &urlencoded);
 
-    void route(const std::string &method, const std::string &path, Handler handler) {
-        routes.push_back({method, path});
-        handlers[{method, path}] = handler;
-    }
+    Response handle(const Request &request) const;
 
+    void route(const std::string &method, const std::string &path, Handler handler);
     // convenience methods
-    void any(const std::string &path, Handler handler) {
-        route("*", path, handler);
-    }
-
-    void get(const std::string &path, Handler handler) {
-        route("GET", path, handler);
-    }
-
-    void post(const std::string &path, Handler handler) {
-        route("POST", path, handler);
-    }
-
-    void put(const std::string &path, Handler handler) {
-        route("PUT", path, handler);
-    }
+    void get(const std::string &path, Handler handler);
+    void post(const std::string &path, Handler handler);
+    void put(const std::string &path, Handler handler);
 };
-
 
 #endif //INSPECTOR_ROUTER_H

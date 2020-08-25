@@ -7,6 +7,7 @@
 
 namespace Http {
     namespace ContentType {
+        const std::string Key = "Content-Type";
         const std::string HTML = "text/html";
         const std::string JSON = "application/json";
         const std::string URL_ENCODED = "application/x-www-form-urlencoded";

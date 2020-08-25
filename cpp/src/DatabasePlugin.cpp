@@ -42,7 +42,7 @@ shared_ptr<Database> DatabasePlugin::open() {
     return db_con;
 }
 
-DatabasePlugin::DatabasePlugin(HttpRouter *router, DatabaseProvider *_provider) {
+DatabasePlugin::DatabasePlugin(Router *router, DatabaseProvider *_provider) {
     this->provider = _provider;
 
     router->get("/database/list", [this](const Request &, const Params &) {

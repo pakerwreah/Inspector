@@ -10,7 +10,7 @@
 #include <vector>
 #include <memory>
 
-#include "HttpRouter.h"
+#include "Router.h"
 #include "Database.h"
 
 class DatabaseProvider {
@@ -35,7 +35,7 @@ class DatabasePlugin {
     void selectDB(int index);
 
 public:
-    DatabasePlugin(HttpRouter *router, DatabaseProvider *provider);
+    DatabasePlugin(Router *router, DatabaseProvider *provider);
 
     void setCipherKey(const std::string &database, const std::string &password, int version);
 };
