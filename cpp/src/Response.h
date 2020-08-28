@@ -16,8 +16,7 @@ struct Response {
     operator std::string();
 
     int code;
-    std::map<std::string, std::string> headers;
-    std::string content_type;
+    Headers headers;
     std::string body;
 
     static Response BadRequest() {

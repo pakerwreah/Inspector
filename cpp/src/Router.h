@@ -10,7 +10,6 @@
 #include "Request.h"
 #include "Response.h"
 
-typedef std::map<std::string, std::string> Params;
 typedef std::function<Response(const Request &, const Params &)> Handler;
 
 class Router {
@@ -18,8 +17,6 @@ class Router {
     std::map<std::string, std::map<std::string, Handler>> routes;
 
 public:
-    static Params decode(const std::string &urlencoded);
-
     Response handle(const Request &request) const;
 
     void route(const std::string &method, const std::string &path, Handler handler);

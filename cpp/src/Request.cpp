@@ -7,9 +7,9 @@
 
 using namespace std;
 
-Request::Request(const string &plain, shared_ptr<Client> client) {
-    this->client = client;
+Request::Request(shared_ptr<Client> client) : client(client) {}
 
+bool Request::parse(const string &plain) {
     const char *method, *path;
     size_t path_len, method_len;
     int minor_version;
@@ -24,7 +24,7 @@ Request::Request(const string &plain, shared_ptr<Client> client) {
             &minor_version,
             headers, &num_headers, 0);
 
-    if (method_len) {
+    if (body_start > 0) {
         this->method = string(method).substr(0, method_len);
         this->path = string(path).substr(0, path_len);
 
@@ -36,9 +36,9 @@ Request::Request(const string &plain, shared_ptr<Client> client) {
         }
 
         this->body = plain.substr(static_cast<unsigned long>(body_start));
-    }
-}
 
-bool Request::is_valid() {
-    return !method.empty();
+        return true;
+    }
+
+    return false;
 }

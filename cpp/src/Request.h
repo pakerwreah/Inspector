@@ -10,15 +10,16 @@
 #include <memory>
 
 #include "Client.h"
+#include "Http.h"
 
 struct Request {
     std::shared_ptr<Client> client;
-    std::map<std::string, std::string> headers;
+    Headers headers;
     std::string method, path, body;
 
-    Request(const std::string &plain, std::shared_ptr<Client> client = nullptr);
+    Request(std::shared_ptr<Client> client = nullptr);
 
-    bool is_valid();
+    bool parse(const std::string &plain);
 };
 
 #endif //INSPECTOR_REQUEST_H

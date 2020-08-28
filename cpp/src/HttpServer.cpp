@@ -46,9 +46,9 @@ void HttpServer::process(shared_ptr<Client> client) const {
     do {
         plain += client->read();
 
-        Request request(plain, client);
+        Request request(client);
 
-        if ((valid = request.is_valid())) {
+        if ((valid = request.parse(plain))) {
             if (request.method == "OPTIONS") {
                 Response response;
                 response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT";

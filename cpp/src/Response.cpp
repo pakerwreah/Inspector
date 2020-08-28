@@ -21,7 +21,7 @@ Response::Response(const json &data, int code, const string &content_type) {
     } else {
         resp = data.dump();
     }
-    this->content_type = content_type;
+    headers[Http::ContentType::Key] = content_type;
     this->body = resp;
     this->code = code;
 }
@@ -30,14 +30,13 @@ Response::operator std::string() {
     const char *crlf = "\r\n";
     ostringstream resp;
     resp << "HTTP/1.1 " << code << " " << crlf
-         << "Content-Type: " << content_type << crlf
-         << "Content-Length: " << body.length() << crlf
          << "Access-Control-Allow-Origin: *" << crlf;
 
     for (const auto &header : headers) {
         resp << header.first << ": " << header.second << crlf;
     }
 
-    resp << crlf << body;
+    resp << "Content-Length: " << body.length() << crlf << crlf << body;
+
     return resp.str();
 }

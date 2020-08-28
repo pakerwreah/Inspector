@@ -9,29 +9,23 @@
 
 using namespace std;
 
-Params Router::decode(const string &urlencoded) {
-    Params params;
-    auto pieces = util::split(urlencoded, '&');
-    for (const string &piece : pieces) {
-        auto p = util::split(piece, '=');
-        params[p[0]] = p.size() == 2 ? url::decode(p[1]) : "";
-    }
-    return params;
-}
-
 Response Router::handle(const Request &request) const {
+    if (request.method.empty()) {
+        return Response::BadRequest();
+    }
+
     Params params;
     auto pieces = util::split(request.path, '?');
     auto path = pieces[0];
 
     // extract query params
     if (request.method == "GET" && pieces.size() > 1) {
-        util::merge(params, decode(pieces[1]));
+        util::merge(params, url::params(pieces[1]));
     } else {
         // extract body params
         auto type = request.headers.find(Http::ContentType::Key);
         if (type != request.headers.end() && type->second.find(Http::ContentType::URL_ENCODED) != string::npos) {
-            util::merge(params, decode(request.body));
+            util::merge(params, url::params(request.body));
         }
     }
 

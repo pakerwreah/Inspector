@@ -63,7 +63,6 @@ DatabasePlugin::DatabasePlugin(Router *router, DatabaseProvider *_provider) {
     });
 
     router->put("/database/current/{index}", [this](const Request &request, const Params &params) {
-        auto body = request.body;
         auto index = stoi(params.at("index"));
 
         selectDB(index);
