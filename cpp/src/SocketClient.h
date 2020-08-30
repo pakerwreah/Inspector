@@ -7,6 +7,7 @@
 
 #include "Client.h"
 #include "Socket.h"
+#include <memory>
 
 class SocketClient : public Client {
     std::unique_ptr<Socket> socket;
