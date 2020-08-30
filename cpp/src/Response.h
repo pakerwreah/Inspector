@@ -13,7 +13,7 @@
 struct Response {
     Response(const nlohmann::json &data = nullptr, int code = 200, const std::string &content_type = Http::ContentType::JSON);
 
-    operator std::string();
+    operator std::string() const;
 
     int code;
     Headers headers;

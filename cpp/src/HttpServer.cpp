@@ -58,7 +58,7 @@ void HttpServer::process(shared_ptr<Client> client) const {
                 try {
                     Response response = router.handle(request);
 
-                    if (!response.body.empty() && request.headers["Accept-Encoding"].find("gzip") >= 0) {
+                    if (!response.body.empty() && request.headers["Accept-Encoding"].find("gzip") != string::npos) {
                         response.body = gzip::compress(response.body.data(), response.body.size());
                         response.headers["Content-Encoding"] = "gzip";
                     }

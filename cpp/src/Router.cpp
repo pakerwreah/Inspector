@@ -32,25 +32,27 @@ Response Router::handle(const Request &request) const {
     // find handler
     auto path_pieces = util::split(path, '/');
     auto path_size = path_pieces.size();
+    auto it = routes.find(request.method);
 
-    for (const auto &[path, handler] : routes.at(request.method)) {
-        auto route_pieces = util::split(path, '/');
-        if (path_size != route_pieces.size()) continue;
-        Params m_params;
-        for (int i = 0; i < path_size; i++) {
-            auto rp = route_pieces[i];
-            auto pp = path_pieces[i];
-            if (rp.find('{') == 0) {
-                m_params[util::trim(rp, "{}")] = pp;
-            } else if (rp != pp) {
-                break;
-            }
-            if (i == path_size - 1) {
-                util::merge(params, m_params);
-                return handler(request, params);
+    if (it != routes.end())
+        for (const auto &[path, handler] : it->second) {
+            auto route_pieces = util::split(path, '/');
+            if (path_size != route_pieces.size()) continue;
+            Params m_params;
+            for (int i = 0; i < path_size; i++) {
+                auto rp = route_pieces[i];
+                auto pp = path_pieces[i];
+                if (rp.find('{') == 0) {
+                    m_params[util::trim(rp, "{}")] = pp;
+                } else if (rp != pp) {
+                    break;
+                }
+                if (i == path_size - 1) {
+                    util::merge(params, m_params);
+                    return handler(request, params);
+                }
             }
         }
-    }
 
     throw out_of_range("Route not found");
 }

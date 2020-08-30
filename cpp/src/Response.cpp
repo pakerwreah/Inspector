@@ -26,7 +26,7 @@ Response::Response(const json &data, int code, const string &content_type) {
     this->code = code;
 }
 
-Response::operator std::string() {
+Response::operator std::string() const {
     const char *crlf = "\r\n";
     ostringstream resp;
     resp << "HTTP/1.1 " << code << " " << crlf

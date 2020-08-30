@@ -17,6 +17,7 @@
 class HttpServer {
     bool _stop;
 
+protected:
     void process(std::shared_ptr<Client> client) const;
 
 public:
