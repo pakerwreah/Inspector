@@ -4,10 +4,11 @@
 #include "Inspector.h"
 
 using namespace std;
+using json = nlohmann::json;
 
-constexpr const char *LOG_TAG = "JNILog";
-
-struct Log {
+class Log {
+    static constexpr const char *LOG_TAG = "JNILog";
+public:
     static void d(const char *str) { __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, "%s", str); }
 
     static void e(const char *str) { __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "%s", str); }

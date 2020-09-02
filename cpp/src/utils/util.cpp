@@ -5,7 +5,6 @@
 #include "util.h"
 
 using namespace std;
-using namespace nlohmann;
 
 namespace util {
     string uid() {
@@ -26,34 +25,20 @@ namespace util {
         return duration;
     }
 
-    json benchmark(const timeval &start) {
+    map<string, long> benchmark(const timeval &start) {
         auto end = timestamp();
         auto diff = timediff(start, end);
         return {{"sec",  diff.tv_sec},
                 {"usec", diff.tv_usec}};
     }
 
-    template<typename T>
-    string join(const vector<string> &pieces, const T &glue) {
-        ostringstream os;
-        for (const string &piece : pieces) {
-            os << piece;
-            if (&piece != &pieces.back())
-                os << glue;
-        }
-        return os.str();
-    }
-
-    template string join(const vector<string> &pieces, const char &glue);
-
-    template string join(const vector<string> &pieces, const string &glue);
-
     vector<string> split(const string &str, char delim, bool allow_empty) {
         return split(str, string(1, delim), allow_empty);
     }
 
     vector<string> split(const string &str, const string &delim, bool allow_empty) {
-        assert(!delim.empty());
+        if (delim.empty()) return {str};
+
         vector<string> tokens;
         size_t prev = 0, pos = 0;
         do {
@@ -67,6 +52,7 @@ namespace util {
             }
             prev = pos + delim.length();
         } while (pos < str.length() && prev < str.length());
+
         return tokens;
     }
 
@@ -85,15 +71,6 @@ namespace util {
         return ltrim(rtrim(s, t), t);
     }
 
-    template<typename T>
-    vector<T> filter(const vector<T> &container, function<bool(const T &)> predicate) {
-        vector<T> result;
-        copy_if(container.begin(), container.end(), back_inserter(result), predicate);
-        return result;
-    }
-
-    template vector<string> filter(const vector<string> &, function<bool(const string &)>);
-
     bool endsWith(const string &str, const string &suffix) {
         return str.size() >= suffix.size() && 0 == str.compare(str.size() - suffix.size(), suffix.size(), suffix);
     }
@@ -103,7 +80,8 @@ namespace util {
     }
 
     std::string replaceAll(const string &str, const string &needle, const string &replacement) {
-        assert(!needle.empty());
+        if (needle.empty()) return str;
+
         string copy = str;
         auto pos = copy.find(needle);
         while (pos != string::npos) {

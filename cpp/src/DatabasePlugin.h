@@ -10,38 +10,34 @@
 #include <vector>
 #include <memory>
 
-class HttpServer;
-
-class Database;
-
-using namespace std;
+#include "Router.h"
+#include "Database.h"
 
 class DatabaseProvider {
 public:
-    virtual vector<string> databasePathList() = 0;
+    virtual std::vector<std::string> databasePathList() = 0;
 };
 
-struct SQLCipher {
-    string password;
+struct DatabaseMeta {
+    std::string password;
     int version;
 };
 
 class DatabasePlugin {
-    string db_path;
+    int auto_close_token;
+    std::string db_path;
     DatabaseProvider *provider;
-    map<string, SQLCipher> cipher;
-    shared_ptr<Database> db_con;
+    std::map<std::string, DatabaseMeta> db_meta;
+    std::shared_ptr<Database> db_con;
 
-    shared_ptr<Database> open();
-
-    vector<string> databasePathList();
-
+    std::shared_ptr<Database> open();
+    std::vector<std::string> databasePathList();
     void selectDB(int index);
 
 public:
-    DatabasePlugin(HttpServer *server, DatabaseProvider *provider);
+    DatabasePlugin(Router *router, DatabaseProvider *provider);
 
-    void setCipherKey(const string &database, const string &password, int version);
+    void setCipherKey(const std::string &database, const std::string &password, int version);
 };
 
 

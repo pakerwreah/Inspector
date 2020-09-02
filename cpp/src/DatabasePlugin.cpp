@@ -3,39 +3,38 @@
 //
 
 #include "DatabasePlugin.h"
-#include "Database.h"
-#include "HttpServer.h"
 #include "util.h"
 #include <thread>
 #include <unistd.h>
 
-using namespace util;
-
-static int close_token;
+using namespace std;
+using json = nlohmann::json;
 
 shared_ptr<Database> DatabasePlugin::open() {
     if (db_path.empty()) {
         try {
             selectDB(0);
-        } catch (out_of_range &ex) {
+        } catch (const out_of_range &) {
             throw runtime_error("No databases available");
         }
     }
 
     if (!db_con) {
-        auto name = split(db_path, '/').back();
-        if (cipher.count(name)) {
-            SQLCipher config = cipher[name];
+        auto name = util::split(db_path, '/').back();
+        if (db_meta.count(name)) {
+            DatabaseMeta config = db_meta[name];
             db_con = make_shared<Database>(db_path, config.password, config.version);
         } else {
             db_con = make_shared<Database>(db_path);
         }
     }
 
+    // debouncer to auto close db after a while
+    // it won't abort any queries because it uses shared_ptr
     thread([this]() {
-        auto token = ++close_token;
+        auto token = ++auto_close_token;
         sleep(5);
-        if (token == close_token) {
+        if (token == auto_close_token) {
             db_con = nullptr;
         }
     }).detach();
@@ -43,15 +42,15 @@ shared_ptr<Database> DatabasePlugin::open() {
     return db_con;
 }
 
-DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) {
+DatabasePlugin::DatabasePlugin(Router *router, DatabaseProvider *_provider) {
     this->provider = _provider;
 
-    server->get("/database/list", [this](const Request &, const Params &) {
+    router->get("/database/list", [this](const Request &, const Params &) {
         int index = 0;
         auto paths = databasePathList();
         auto names = json::array();
         for (int i = 0; i < paths.size(); i++) {
-            names += split(paths[i], '/').back();
+            names += util::split(paths[i], '/').back();
             if (paths[i] == db_path) {
                 index = i;
             }
@@ -63,33 +62,26 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
         return Response(data);
     });
 
-    server->put("/database/current/{index}", [this](const Request &request, const Params &params) {
-        try {
-            auto body = request.body;
-            auto index = stoi(params.at("index"));
+    router->put("/database/current/{index}", [this](const Request &request, const Params &params) {
+        auto index = stoi(params.at("index"));
 
-            selectDB(index);
+        selectDB(index);
 
-            open();
-        } catch (out_of_range &ex) {
-            return Response(ex.what(), 400);
-        } catch (exception &ex) {
-            return Response(ex.what(), 500);
-        }
+        open();
         return Response(db_path);
     });
 
-    server->post("/database/query", [this](const Request &request, const Params &) {
+    router->post("/database/query", [this](const Request &request, const Params &) {
         auto sql = request.body;
 
         try {
             auto db = open();
 
-            auto start = timestamp();
+            auto start = util::timestamp();
 
             auto res = db->query(sql);
 
-            auto duration = benchmark(start);
+            auto duration = util::benchmark(start);
 
             auto headers = res.headers();
 
@@ -123,34 +115,35 @@ DatabasePlugin::DatabasePlugin(HttpServer *server, DatabaseProvider *_provider) 
                          {"duration", duration}};
 
             return Response(data);
-        } catch (exception &ex) {
+        } catch (const exception &ex) {
             return Response(ex.what(), 400);
         }
     });
 
-    server->post("/database/execute", [this](const Request &request, const Params &) {
+    router->post("/database/execute", [this](const Request &request, const Params &) {
         try {
             auto db = open();
 
-            auto start = timestamp();
+            auto start = util::timestamp();
 
             db->transaction();
             db->execute(request.body);
             db->commit();
 
-            auto duration = benchmark(start);
+            auto duration = util::benchmark(start);
 
             json data = {{"duration", duration}};
 
             return Response(data);
-        } catch (exception &ex) {
+        } catch (const exception &ex) {
             return Response(ex.what(), 400);
         }
     });
 }
 
 vector<string> DatabasePlugin::databasePathList() {
-    return filter<string>(provider->databasePathList(), [](const string &item) { return !endsWith(item, "-journal"); });
+    return util::filter(provider->databasePathList(),
+                        [](const string &item) { return !util::endsWith(item, "-journal"); });
 }
 
 void DatabasePlugin::selectDB(int index) {
@@ -164,5 +157,5 @@ void DatabasePlugin::selectDB(int index) {
 }
 
 void DatabasePlugin::setCipherKey(const string &database, const string &password, int version) {
-    cipher[database] = {password, version};
+    db_meta[database] = {password, version};
 }
