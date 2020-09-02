@@ -15,33 +15,33 @@ Response Router::handle(const Request &request) const {
     }
 
     Params params;
-    auto pieces = util::split(request.path, '?');
-    auto path = pieces[0];
+    const vector<string> &pieces = util::split(request.path, '?');
+    const string &path = pieces[0];
 
     // extract query params
     if (request.method == "GET" && pieces.size() > 1) {
-        util::merge(params, url::params(pieces[1]));
+        params = url::params(pieces[1]);
     } else {
         // extract body params
-        auto type = request.headers.find(Http::ContentType::Key);
-        if (type != request.headers.end() && type->second.find(Http::ContentType::URL_ENCODED) != string::npos) {
-            util::merge(params, url::params(request.body));
+        const auto &it = request.headers.find(Http::ContentType::Key);
+        if (it != request.headers.end() && it->second.find(Http::ContentType::URL_ENCODED) != string::npos) {
+            params = url::params(request.body);
         }
     }
 
     // find handler
-    auto path_pieces = util::split(path, '/');
-    auto path_size = path_pieces.size();
-    auto it = routes.find(request.method);
+    const vector<string> &path_pieces = util::split(path, '/');
+    const int path_size = path_pieces.size();
+    const auto &it = routes.find(request.method);
 
     if (it != routes.end())
         for (const auto &[path, handler] : it->second) {
-            auto route_pieces = util::split(path, '/');
+            const vector<string> &route_pieces = util::split(path, '/');
             if (path_size != route_pieces.size()) continue;
             Params m_params;
             for (int i = 0; i < path_size; i++) {
-                auto rp = route_pieces[i];
-                auto pp = path_pieces[i];
+                const string &rp = route_pieces[i];
+                const string &pp = path_pieces[i];
                 if (rp.find('{') == 0) {
                     m_params[util::trim(rp, "{}")] = pp;
                 } else if (rp != pp) {
