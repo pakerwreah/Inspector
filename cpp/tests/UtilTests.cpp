@@ -107,3 +107,21 @@ TEST_CASE("util::filter") {
         return n % 2;
     }) == expected);
 }
+
+TEST_CASE("util::merge") {
+    map<string, int> target = {
+            {"a", 1},
+            {"b", 1}
+    };
+    map<string, int> source = {
+            {"a", 2},
+            {"c", 2}
+    };
+    map<string, int> expected = {
+            {"a", 2},
+            {"b", 1},
+            {"c", 2}
+    };
+    merge(target, source);
+    CHECK(target == expected);
+}

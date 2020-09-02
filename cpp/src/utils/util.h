@@ -64,7 +64,6 @@ namespace util {
         return os.str();
     }
 
-    //FIXME: unit test this
     template<typename K, typename V>
     void merge(std::map<K, V> &target, const std::map<K, V> &source) {
         for (const auto &[key, val] : source) {
