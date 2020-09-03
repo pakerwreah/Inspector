@@ -15,5 +15,5 @@ public:
     DatabaseProviderAdapter(id<IOSInspectorProtocol> _Nonnull delegate);
     
 protected:
-    vector<string> databasePathList() override;
+    std::vector<std::string> databasePathList() override;
 };

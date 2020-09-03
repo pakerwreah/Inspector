@@ -20,8 +20,11 @@ if (NOT DEFINED ANDROID_NDK)
 
     target_link_libraries(inspector-cpp ${LIBSQLITE} Threads::Threads)
 
-    if (NOT DEFINED UNIT_TEST)
-        add_executable(inspector-demo main.cpp ext/explorer/explorer.cpp)
-        target_link_libraries(inspector-demo inspector-cpp)
-    endif ()
+    add_executable(inspector-demo main.cpp ext/explorer/explorer.cpp)
+    target_link_libraries(inspector-demo inspector-cpp)
+
+    file(GLOB tests tests/*.cpp)
+    add_executable(inspector-tests ${tests})
+    target_link_libraries(inspector-tests inspector-cpp)
+    add_custom_target(test inspector-tests)
 endif ()
