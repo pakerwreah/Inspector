@@ -5,7 +5,7 @@
 #ifndef INSPECTOR_EXPLORER_H
 #define INSPECTOR_EXPLORER_H
 
-#include "../../src/Inspector.h"
+#include "Inspector.h"
 
 class Explorer {
 private:

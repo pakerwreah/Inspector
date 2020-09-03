@@ -3,7 +3,6 @@ name: Unit Tests
 on: [push]
 
 env:
-  BUILD_TYPE: Release
   CXX: clang++
 
 jobs:
@@ -35,12 +34,12 @@ jobs:
 
       - name: Configure CMake
         working-directory: ${{runner.workspace}}/build
-        run: cmake $GITHUB_WORKSPACE/cpp/tests -DCMAKE_BUILD_TYPE=$BUILD_TYPE
+        run: cmake $GITHUB_WORKSPACE/cpp
 
       - name: Build
         working-directory: ${{runner.workspace}}/build
-        run: cmake --build . --config $BUILD_TYPE
+        run: make
 
       - name: Test
         working-directory: ${{runner.workspace}}/build
-        run: ./inspector-tests
+        run: make test
