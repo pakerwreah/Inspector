@@ -31,7 +31,7 @@ jobs:
       id: ndk-cache
       uses: actions/cache@v2
       with:
-        path: ${{env.ANDROID_HOME}}/ndk"
+        path: ${{ANDROID_HOME}}/ndk
         key: ndk-cache-${{env.NDK_VERSION}}
 
     - name: Install NDK
