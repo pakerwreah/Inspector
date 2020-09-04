@@ -1,6 +1,10 @@
 name: Unit Tests
 
-on: [push]
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
 
 env:
   CXX: clang++
@@ -17,7 +21,8 @@ jobs:
         shell: bash
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v2
 
       - name: Install Linux dependencies
         if: matrix.os == 'ubuntu-latest'
