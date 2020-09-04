@@ -15,11 +15,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: CocoaPods
-        working_directory: $GITHUB_WORKSPACE/ios
+        working-directory: $GITHUB_WORKSPACE/ios
         run: pod install
 
       - name: Build
-        working_directory: $GITHUB_WORKSPACE/ios
+        working-directory: $GITHUB_WORKSPACE/ios
         env:
           scheme: Inspector
           platform: iOS Simulator

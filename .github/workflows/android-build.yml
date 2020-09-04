@@ -20,5 +20,5 @@ jobs:
         java-version: 1.7
 
     - name: Build
-      working_directory: $GITHUB_WORKSPACE/android/app
+      working-directory: $GITHUB_WORKSPACE/android/app
       run: ./gradlew assembleLocalDebug
