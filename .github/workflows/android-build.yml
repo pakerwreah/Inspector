@@ -10,8 +10,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-  env:
-    ndk_version: 21.0.6113669
+    env:
+      ndk_version: 21.0.6113669
 
     steps:
     - name: Checkout
