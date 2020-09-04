@@ -15,7 +15,7 @@ add_library(inspector SHARED bridge.cpp)
 # Searches for a specified public NDK library
 find_library(log-lib log)
 
-set(LIBSQLITE ${PROJECT_SOURCE_DIR}/sqlcipher/${ANDROID_ABI}/libsqlcipher.so)
+set(LIBSQLITE ${PROJECT_SOURCE_DIR}/../sqlcipher/${ANDROID_ABI}/libsqlcipher.so)
 
 target_link_libraries(
         inspector
