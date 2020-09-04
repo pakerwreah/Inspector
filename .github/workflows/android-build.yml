@@ -28,11 +28,11 @@ jobs:
         sudo chmod -R a+rwx ${ANDROID_HOME}/ndk
 
     - name: NDK Cache
-        id: ndk-cache
-        uses: actions/cache@v2
-        with:
-          path: ${ANDROID_HOME}/ndk
-          key: ndk-cache-${ndk-version}
+      id: ndk-cache
+      uses: actions/cache@v2
+      with:
+        path: ${ANDROID_HOME}/ndk
+        key: ndk-cache-${ndk-version}
 
     - name: Install NDK
       if: steps.ndk-cache.outputs.cache-hit != 'true'
