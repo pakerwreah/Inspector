@@ -6,12 +6,12 @@ on:
   pull_request:
     branches: [ develop ]
 
-env:
-  ndk-version: 21.0.6113669
-
 jobs:
   build:
     runs-on: ubuntu-latest
+
+  env:
+    ndk_version: 21.0.6113669
 
     steps:
     - name: Checkout
@@ -24,7 +24,6 @@ jobs:
 
     - name: Create NDK folder
       run: |
-        echo ${ANDROID_HOME}
         sudo mkdir ${ANDROID_HOME}/ndk
         sudo chmod -R a+rwx ${ANDROID_HOME}/ndk
 
@@ -33,12 +32,12 @@ jobs:
       uses: actions/cache@v2
       with:
         path: "${ANDROID_HOME}/ndk"
-        key: "ndk-cache-${ndk-version}"
+        key: "ndk-cache-${ndk_version}"
 
     - name: Install NDK
       if: steps.ndk-cache.outputs.cache-hit != 'true'
       run: |
-        echo "y" | sudo ${ANDROID_HOME}/tools/bin/sdkmanager --install "ndk;${ndk-version}" | grep -v = || true
+        echo "y" | sudo ${ANDROID_HOME}/tools/bin/sdkmanager --install "ndk;${ndk_version}" | grep -v = || true
 
     - name: Build
       working-directory: android/app
