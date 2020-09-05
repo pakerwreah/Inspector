@@ -12,6 +12,8 @@ if(CODE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
             -g         # generate debug info
             --coverage # sets all required flags
             -fprofile-exclude-files=\(${coverage_exclude}\)
+            -fprofile-instr-generate
+            -fcoverage-mapping
             )
     if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.13)
         target_link_options(coverage_config INTERFACE --coverage)

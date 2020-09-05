@@ -6,10 +6,6 @@ on:
   pull_request:
     branches: [ develop ]
 
-env:
-  CC: clang
-  CXX: clang++
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -40,4 +36,7 @@ jobs:
 
       - name: Upload Coverage
         working-directory: ${{runner.workspace}}/build
-        run: bash <(curl -s https://codecov.io/bash)
+        run: |
+          llvm-profdata merge -sparse default.profraw -o default.profdata
+          llvm-cov export -instr-profile=default.profdata inspector-tests > coverage.json
+          bash <(curl -s https://codecov.io/bash)
