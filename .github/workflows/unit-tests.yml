@@ -37,6 +37,7 @@ jobs:
       - name: Upload Coverage
         working-directory: ${{runner.workspace}}/build
         run: |
-          llvm-profdata merge -sparse default.profraw -o default.profdata
+          ls -la
+          llvm-profdata merge -sparse *.profraw -o default.profdata
           llvm-cov export -instr-profile=default.profdata inspector-tests > coverage.json
           bash <(curl -s https://codecov.io/bash)
