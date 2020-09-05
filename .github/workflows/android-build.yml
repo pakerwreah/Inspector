@@ -42,6 +42,6 @@ jobs:
       run: |
         echo "y" | sudo ${ANDROID_HOME}/tools/bin/sdkmanager --install "ndk;${NDK_VERSION}" | grep -v = || true
 
-    #- name: Build
-#      working-directory: android/app
-#      run: ./gradlew assembleLocalDebug
+    - name: Build
+      working-directory: android/app
+      run: ./gradlew assembleLocalDebug
