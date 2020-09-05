@@ -2,9 +2,9 @@ name: iOS CI
 
 on:
   push:
-    branches: [ develop-disable ]
+    branches: [ develop ]
   pull_request:
-    branches: [ develop-disable ]
+    branches: [ develop ]
 
 jobs:
   build:

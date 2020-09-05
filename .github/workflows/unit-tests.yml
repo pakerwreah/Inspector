@@ -2,9 +2,9 @@ name: Unit Tests
 
 on:
   push:
-    branches: [ develop-disable ]
+    branches: [ develop ]
   pull_request:
-    branches: [ develop-disable ]
+    branches: [ develop ]
 
 env:
   CXX: clang++
