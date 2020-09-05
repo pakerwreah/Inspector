@@ -77,6 +77,8 @@ static Response handshake(const Request &request) {
     return response;
 }
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wshift-count-overflow"
 static string pack(const string &msg, bool binary) {
     auto length = msg.size();
 
@@ -105,3 +107,4 @@ static string pack(const string &msg, bool binary) {
 
     return wrap.str();
 }
+#pragma clang diagnostic pop
