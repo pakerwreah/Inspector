@@ -17,9 +17,9 @@ void to_json(json &j, const PluginMeta &p) {
 Response CustomPlugin::execute(PluginAction action) {
     string res;
     try {
-        return Response(json::parse(res = action()));
+        return json::parse(res = action());
     } catch (const json::parse_error &) {
-        return Response(res, 200, Http::ContentType::HTML);
+        return {res, 200, Http::ContentType::HTML};
     }
 }
 
@@ -27,7 +27,7 @@ CustomPlugin::CustomPlugin(Router *router) {
     this->router = router;
 
     router->get("/plugins", [this](const Request &, const Params &) {
-        return Response(plugins);
+        return json(plugins);
     });
 }
 

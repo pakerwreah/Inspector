@@ -36,3 +36,7 @@ jobs:
       - name: Test
         working-directory: ${{runner.workspace}}/build
         run: make test
+
+      - name: Upload Coverage
+        working-directory: ${{runner.workspace}}/build
+        run: bash <(curl -s https://codecov.io/bash)
