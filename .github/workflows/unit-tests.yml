@@ -35,5 +35,7 @@ jobs:
         run: make test
 
       - name: Upload Coverage
-        working-directory: ${{runner.workspace}}/build
         uses: codecov/codecov-action@v1
+        with:
+          fail_ci_if_error: true
+          directory: ${{runner.workspace}}/build
