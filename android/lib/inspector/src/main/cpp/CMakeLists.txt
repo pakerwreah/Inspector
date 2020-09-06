@@ -1,16 +1,16 @@
 cmake_minimum_required(VERSION 3.10.2)
 
-set(sources ../../../../../../cpp)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-add_subdirectory(${sources} build)
+set(src ../../../../../../cpp/src)
 
-include_directories(
-        ${sources}/src
-        ${sources}/src/utils
-        ${sources}/src/libs
-)
+include_directories(${src} ${src}/utils ${src}/libs)
 
-add_library(inspector SHARED bridge.cpp)
+file(GLOB_RECURSE sources ${src}/*.cpp ${src}/*.c)
+
+add_library(inspector SHARED bridge.cpp ${sources})
 
 # Searches for a specified public NDK library
 find_library(log-lib log)
@@ -19,7 +19,7 @@ set(LIBSQLITE ${PROJECT_SOURCE_DIR}/../sqlcipher/${ANDROID_ABI}/libsqlcipher-ins
 
 target_link_libraries(
         inspector
-        inspector-cpp
         ${LIBSQLITE}
         ${log-lib}
+        z
 )
