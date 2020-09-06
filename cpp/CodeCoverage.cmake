@@ -12,7 +12,9 @@ if(CODE_COVERAGE)
             -O0        # no optimization
             -g         # generate debug info
             --coverage # sets all required flags
+            -fcoverage-mapping
+            -fprofile-instr-generate
             -fprofile-exclude-files=\(${coverage_exclude}\)
             )
-    target_link_options(coverage_config INTERFACE --coverage)
+    target_link_options(coverage_config INTERFACE -fprofile-instr-generate)
 endif(CODE_COVERAGE)
