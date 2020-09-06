@@ -17,7 +17,7 @@ jobs:
       - name: Install Linux dependencies
         run: |
           sudo apt-get update -y
-          sudo apt-get install -y libsqlcipher-dev llvm
+          sudo apt-get install -y libsqlcipher-dev llvm lcov
 
       - name: Create Build Environment
         run: cmake -E make_directory build
