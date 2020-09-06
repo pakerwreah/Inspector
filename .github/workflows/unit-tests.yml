@@ -37,20 +37,12 @@ jobs:
 
       - name: Generate Coverage
         env:
-          ignored: "(main.cpp|tests/.*|ext/.*|src/libs/.*)$"
+          ignored: "(tests/.*|src/libs/.*)$"
         run: |
           llvm-profdata merge -sparse build/default.profraw -o build/default.profdata
           llvm-cov show -instr-profile=build/default.profdata build/inspector-tests \
           -ignore-filename-regex="${ignored}" > coverage.txt
-          llvm-cov export -format lcov -instr-profile=build/default.profdata build/inspector-tests \
-          -ignore-filename-regex="${ignored}" > coverage.lcov
 
       - name: Upload Coverage
         run: |
           bash <(curl -s https://codecov.io/bash) -X gcov -Z
-
-      - name: Coveralls
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: coverage.lcov
