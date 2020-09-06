@@ -35,7 +35,6 @@ jobs:
         run: make test
 
       - name: Upload Coverage
-        working-directory: build
         run: |
           llvm-profdata merge -sparse build/default.profraw -o build/default.profdata
           llvm-cov export -instr-profile=build/default.profdata build/inspector-tests > coverage.json
