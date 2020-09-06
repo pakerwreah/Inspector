@@ -4,7 +4,7 @@ add_library(coverage_config INTERFACE)
 option(CODE_COVERAGE "Enable coverage reporting" ON)
 
 if(CODE_COVERAGE)
-    file(GLOB coverage_exclude main.cpp tests/* ext/* src/libs/*)
+    file(GLOB coverage_exclude main.cpp tests/main.cpp tests/catch.hpp ext/* src/libs/*)
     string(REPLACE ";" "|" coverage_exclude "${coverage_exclude}")
 
     # Add required flags (GCC & LLVM/Clang)
