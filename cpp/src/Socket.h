@@ -45,7 +45,7 @@ public:
 
     void set_non_blocking(const bool = true);
 
-    bool is_valid() const { return m_sock != -1; }
+    bool is_valid() const;
 };
 
 

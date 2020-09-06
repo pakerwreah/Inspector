@@ -152,3 +152,7 @@ void Socket::set_non_blocking(const bool b) {
 
     fcntl(m_sock, F_SETFL, opts);
 }
+
+bool Socket::is_valid() const {
+    return m_sock != -1;
+}
