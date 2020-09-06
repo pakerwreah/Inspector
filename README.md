@@ -1,4 +1,10 @@
 # Inspector
+![release](https://img.shields.io/github/v/release/pakerwreah/Inspector)
+![c++](https://img.shields.io/badge/C++-17-blue.svg?style=flat&logo=c%2B%2B)
+![android](https://img.shields.io/badge/Android-grey.svg?style=flat&logo=android)
+![ios](https://img.shields.io/badge/iOS-grey.svg?style=flat&logo=apple)
+[![codecov](https://codecov.io/gh/pakerwreah/Inspector/branch/develop/graph/badge.svg)](https://codecov.io/gh/pakerwreah/Inspector)
+
 Tool to inspect SQLite databases and intercept network requests from mobile applications.
 ___
 
@@ -39,7 +45,7 @@ public class Application extends android.app.Application {
 
         // context, port
         Inspector.initializeWith(this, 30000);
-        
+
         // SQLCipher support
         // database name, password, sqlcipher major version
         Inspector.setCipherKey("database_cipher3.db", "123456", 3);
@@ -128,7 +134,7 @@ end
 class AppDelegate: UIResponder, UIApplicationDelegate, IOSInspectorProtocol {
 
     func applicationDidFinishLaunching(_ application: UIApplication) {
-        
+
         IOSInspector.initialize(withDelegate: self, port: 30000)
 
         // SQLCipher support
