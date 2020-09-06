@@ -20,21 +20,20 @@ jobs:
           sudo apt-get install -y libsqlcipher-dev llvm
 
       - name: Create Build Environment
-        run: cmake -E make_directory ${{runner.workspace}}/build
+        run: cmake -E make_directory build
 
       - name: Configure CMake
-        working-directory: ${{runner.workspace}}/build
-        run: cmake $GITHUB_WORKSPACE/cpp
+        working-directory: build
+        run: cmake ../cpp
 
       - name: Build
-        working-directory: ${{runner.workspace}}/build
+        working-directory: build
         run: make
 
       - name: Test
-        working-directory: ${{runner.workspace}}/build
+        working-directory: build
         run: make test
 
       - name: Upload Coverage
-        working-directory: ${{runner.workspace}}/build
         run: |
           bash <(curl -s https://codecov.io/bash) -x "llvm-cov gcov" -X gcovout -Z
