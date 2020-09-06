@@ -18,7 +18,7 @@ jobs:
         run: |
           echo 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic main' | sudo tee -a /etc/apt/sources.list.d/llvm.list
           sudo apt-get update -y
-          sudo apt-get install -y libsqlcipher-dev llvm
+          sudo apt-get install -y libsqlcipher-dev llvm clang
 
       - name: Create Build Environment
         run: cmake -E make_directory build
@@ -35,9 +35,22 @@ jobs:
         working-directory: build
         run: make test
 
-      - name: Upload Coverage
+      - name: Generate Coverage
+        env:
+          ignored: "(main.cpp|tests/.*|ext/.*|src/libs/.*)$"
         run: |
           llvm-profdata merge -sparse build/default.profraw -o build/default.profdata
           llvm-cov show -instr-profile=build/default.profdata build/inspector-tests \
-          -ignore-filename-regex="(main.cpp|tests/.*|ext/.*|src/libs/.*)$" > coverage.txt
+          -ignore-filename-regex="${ignored}" > coverage.txt
+          llvm-cov export -format lcov -instr-profile=build/default.profdata build/inspector-tests \
+          -ignore-filename-regex="${ignored}" > coverage.lcov
+
+      - name: Upload Coverage
+        run: |
           bash <(curl -s https://codecov.io/bash) -X gcov -Z
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: coverage.lcov
