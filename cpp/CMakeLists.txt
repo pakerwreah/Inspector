@@ -1,14 +1,11 @@
-if (DEFINED ANDROID_NDK)
-    cmake_minimum_required(VERSION 3.10.2)
-else ()
-    cmake_minimum_required(VERSION 3.13.0)
-    set(CMAKE_C_COMPILER clang)
-    set(CMAKE_CXX_COMPILER clang++)
-endif ()
+cmake_minimum_required(VERSION 3.13.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+set(CMAKE_C_COMPILER clang)
+set(CMAKE_CXX_COMPILER clang++)
 
 project(inspector)
 
@@ -16,24 +13,24 @@ include_directories(src src/utils src/libs)
 
 file(GLOB_RECURSE sources src/*.cpp src/*.c)
 
-add_library(inspector-cpp STATIC ${sources})
+# Create base object with sources
+add_library(inspector-cpp OBJECT ${sources})
 
-target_link_libraries(inspector-cpp z)
+# Configure code coverage
+include(CodeCoverage.cmake)
+target_link_libraries(inspector-cpp coverage_config)
 
-if (NOT DEFINED ANDROID_NDK)
-    include(CodeCoverage.cmake)
-    target_link_libraries(inspector-cpp coverage_config)
+# Link with system libraries
+find_library(LIBSQLITE sqlcipher)
+find_package(Threads REQUIRED)
+target_link_libraries(inspector-cpp ${LIBSQLITE} Threads::Threads z)
 
-    find_library(LIBSQLITE sqlcipher)
-    find_package(Threads REQUIRED)
+# Create demo application
+add_executable(inspector-demo main.cpp ext/explorer/explorer.cpp)
+target_link_libraries(inspector-demo inspector-cpp)
 
-    target_link_libraries(inspector-cpp ${LIBSQLITE} Threads::Threads)
-
-    add_executable(inspector-demo main.cpp ext/explorer/explorer.cpp)
-    target_link_libraries(inspector-demo inspector-cpp)
-
-    file(GLOB tests tests/*.cpp)
-    add_executable(inspector-tests ${tests})
-    target_link_libraries(inspector-tests inspector-cpp)
-    add_custom_target(test inspector-tests)
-endif ()
+# Create tests runner
+file(GLOB tests tests/*.cpp)
+add_executable(inspector-tests ${tests})
+target_link_libraries(inspector-tests inspector-cpp)
+add_custom_target(test inspector-tests)

@@ -12,5 +12,5 @@ if (CODE_COVERAGE)
             -fprofile-instr-generate
             -fcoverage-mapping
             )
-    target_link_options(coverage_config INTERFACE -fprofile-instr-generate -fcoverage-mapping)
+    target_link_options(coverage_config INTERFACE -fprofile-instr-generate)
 endif (CODE_COVERAGE)
