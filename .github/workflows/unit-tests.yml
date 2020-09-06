@@ -36,5 +36,4 @@ jobs:
 
       - name: Upload Coverage
         working-directory: ${{runner.workspace}}/build
-        run: |
-          bash <(curl -s https://codecov.io/bash)
+        uses: codecov/codecov-action@v1
