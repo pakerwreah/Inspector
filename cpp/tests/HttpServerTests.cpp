@@ -8,11 +8,11 @@ struct MockClient : public Client {
     string request;
     string response;
 
-    string read() override {
+    virtual string read() override {
         return request;
     }
 
-    bool send(const string &data) override {
+    virtual bool send(const string &data) override {
         response = data;
         return true;
     }
