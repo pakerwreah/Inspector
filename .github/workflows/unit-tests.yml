@@ -16,8 +16,9 @@ jobs:
 
       - name: Install Linux dependencies
         run: |
-          sudo apt update -y
-          sudo apt install -y libsqlcipher-dev llvm
+          echo deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic main >> /etc/apt/sources.list.d/llvm.list
+          sudo apt-get update -y
+          sudo apt-get install -y libsqlcipher-dev llvm clang
 
       - name: Create Build Environment
         run: cmake -E make_directory ${{runner.workspace}}/build
@@ -37,7 +38,6 @@ jobs:
       - name: Upload Coverage
         working-directory: ${{runner.workspace}}/build
         run: |
-          ls -la
-          llvm-profdata merge -sparse *.profraw -o default.profdata
+          llvm-profdata merge -sparse default.profraw -o default.profdata
           llvm-cov export -instr-profile=default.profdata inspector-tests > coverage.json
           bash <(curl -s https://codecov.io/bash)
