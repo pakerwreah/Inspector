@@ -1,6 +1,1 @@
 comment: no
-ignore:
-  - "main.cpp"
-  - "tests/*"
-  - "ext/*"
-  - "src/libs/*"

@@ -37,5 +37,6 @@ jobs:
       - name: Upload Coverage
         run: |
           llvm-profdata merge -sparse build/default.profraw -o build/default.profdata
-          llvm-cov show -instr-profile=build/default.profdata build/inspector-tests > coverage.txt
+          llvm-cov show -instr-profile=build/default.profdata build/inspector-tests \
+          -ignore-filename-regex="(main.cpp|tests/.*|ext/.*|src/libs/.*)$" > coverage.txt
           bash <(curl -s https://codecov.io/bash) -X gcov -Z
