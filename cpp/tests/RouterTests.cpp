@@ -28,7 +28,7 @@ TEST_CASE("Router - Match route") {
     Request request;
 
     router.get("/test/path/{param}", [](const Request &, const Params &) {
-        return Response();
+        return "";
     });
 
     SECTION("Found") {
@@ -56,7 +56,7 @@ TEST_CASE("Router - GET") {
 
     router.get("/test/path1/{param1}/path2/{param2}", [&m_params](const Request &, const Params &params) {
         m_params = params;
-        return Response();
+        return "";
     });
 
     REQUIRE(request.parse("GET /test/path1/p_1/path2/p_2?param3=q%201&param4=q%202 HTTP/1.1\r\n\r\n"));
@@ -71,7 +71,7 @@ TEST_CASE("Router - POST") {
 
     router.post("/test/path1/{param1}/path2/{param2}", [&m_params](const Request &, const Params &params) {
         m_params = params;
-        return Response();
+        return "";
     });
 
     SECTION("Should parse body") {
@@ -117,22 +117,22 @@ TEST_CASE("Router - Methods") {
 
     router.get("/test/path", [&get](const Request &, const Params &) {
         get++;
-        return Response();
+        return "";
     });
 
     router.post("/test/path", [&post](const Request &, const Params &) {
         post++;
-        return Response();
+        return "";
     });
 
     router.put("/test/path", [&put](const Request &, const Params &) {
         put++;
-        return Response();
+        return "";
     });
 
     router.route("PATCH", "/test/path", [&patch](const Request &, const Params &) {
         patch++;
-        return Response();
+        return "";
     });
 
     SECTION("GET") {

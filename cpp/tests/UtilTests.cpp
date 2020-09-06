@@ -2,9 +2,36 @@
 #include "util.h"
 
 #include <string>
+#include <unistd.h>
+#include <ctime>
 
 using namespace std;
 using namespace util;
+
+TEST_CASE("util::uid") {
+    string prev;
+    for (int i = 0; i < 10; i++)
+        REQUIRE(prev != uid());
+}
+
+TEST_CASE("util::timediff") {
+    timeval start{5, 1500};
+    timeval end{20, 2000};
+    timeval expected{15, 500};
+    timeval result = timediff(start, end);
+    CHECK(timercmp(&result, &expected, ==));
+}
+
+TEST_CASE("util::benchmark") {
+    timeval start = timestamp();
+    sleep(1);
+    const auto res = benchmark(start);
+    long sec, usec;
+    CHECK_NOTHROW(sec = res.at("sec"));
+    CHECK_NOTHROW(usec = res.at("usec"));
+    CHECK(sec >= 1);
+    CHECK(usec < 10e6);
+}
 
 TEST_CASE("util::join") {
     SECTION("string pieces") {

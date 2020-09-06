@@ -31,6 +31,16 @@ TEST_CASE_METHOD(HttpServer, "HttpServer - Route not found") {
     CHECK(client->response == string(Response::NotFound("Route not found")));
 }
 
+TEST_CASE_METHOD(HttpServer, "HttpServer - Internal error") {
+    router.get("/test/path", [](const Request &, const Params &) {
+        return throw runtime_error("Internal error"), "";
+    });
+    auto client = make_shared<MockClient>();
+    client->request = "GET /test/path HTTP/1.1\r\n\r\n";
+    REQUIRE_NOTHROW(process(client));
+    CHECK(client->response == string(Response::InternalError("Internal error")));
+}
+
 TEST_CASE_METHOD(HttpServer, "HttpServer - Route found") {
     auto client = make_shared<MockClient>();
     Response expected("response data", 200, Http::ContentType::HTML);

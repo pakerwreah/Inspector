@@ -1,8 +1,11 @@
-cmake_minimum_required(VERSION 3.10.2)
+cmake_minimum_required(VERSION 3.13)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+
+set(CMAKE_C_COMPILER clang)
+set(CMAKE_CXX_COMPILER clang++)
 
 project(inspector)
 
@@ -15,6 +18,9 @@ add_library(inspector-cpp STATIC ${sources})
 target_link_libraries(inspector-cpp z)
 
 if (NOT DEFINED ANDROID_NDK)
+    include(CodeCoverage.cmake)
+    target_link_libraries(inspector-cpp coverage_config)
+
     find_library(LIBSQLITE sqlcipher)
     find_package(Threads REQUIRED)
 

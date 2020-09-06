@@ -59,7 +59,7 @@ DatabasePlugin::DatabasePlugin(Router *router, DatabaseProvider *_provider) {
         json data = {{"databases", names},
                      {"current",   index}};
 
-        return Response(data);
+        return data;
     });
 
     router->put("/database/current/{index}", [this](const Request &request, const Params &params) {

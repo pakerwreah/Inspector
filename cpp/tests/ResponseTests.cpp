@@ -2,6 +2,14 @@
 #include "Response.h"
 
 using namespace std;
+using json = nlohmann::json;
+
+TEST_CASE("Response - NULL") {
+    Response response(nullptr);
+    CHECK(response.code == 200);
+    CHECK(response.headers == Headers{{"Content-Type", "application/json"}});
+    CHECK(response.body == R"({"msg":""})");
+}
 
 TEST_CASE("Response - Fail") {
     Headers expected_headers = {
@@ -15,7 +23,7 @@ TEST_CASE("Response - Fail") {
             "\r\n"
             R"({"msg":"This request has failed"})";
 
-    Response response = Response::InternalError("This request has failed");
+    Response response("This request has failed", 500);
     CHECK(response.code == 500);
     CHECK(response.body == R"({"msg":"This request has failed"})");
     CHECK(response.headers == expected_headers);
@@ -34,7 +42,7 @@ TEST_CASE("Response - JSON") {
             "\r\n"
             R"({"ok":true})";
 
-    Response response({{"ok", true}}, 200, Http::ContentType::JSON);
+    Response response(json{{"ok", true}});
     CHECK(response.code == 200);
     CHECK(response.body == R"({"ok":true})");
     CHECK(response.headers == expected_headers);
