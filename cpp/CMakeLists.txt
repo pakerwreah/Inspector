@@ -16,7 +16,7 @@ include_directories(src src/utils src/libs)
 
 file(GLOB_RECURSE sources src/*.cpp src/*.c)
 
-add_library(inspector-cpp STATIC ${sources})
+add_library(inspector-cpp OBJECT ${sources})
 
 target_link_libraries(inspector-cpp z)
 
