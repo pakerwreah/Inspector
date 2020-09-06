@@ -35,7 +35,6 @@ jobs:
         run: make test
 
       - name: Upload Coverage
-        uses: codecov/codecov-action@v1
-        with:
-          fail_ci_if_error: true
-          directory: ${{runner.workspace}}/build
+        working-directory: ${{runner.workspace}}/build
+        run: |
+          bash <(curl -s https://codecov.io/bash) -x "llvm-cov gcov"
