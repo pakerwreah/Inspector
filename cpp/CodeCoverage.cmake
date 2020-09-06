@@ -16,5 +16,5 @@ if(CODE_COVERAGE)
             -fprofile-instr-generate
             -fprofile-exclude-files=\(${coverage_exclude}\)
             )
-    target_link_options(coverage_config INTERFACE -fprofile-instr-generate)
+    target_link_options(coverage_config INTERFACE -fprofile-instr-generate -fcoverage-mapping)
 endif(CODE_COVERAGE)
