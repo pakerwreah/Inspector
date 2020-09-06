@@ -37,3 +37,8 @@ jobs:
       - name: Upload Coverage
         run: |
           bash <(curl -s https://codecov.io/bash) -x "llvm-cov gcov" -X gcovout -Z
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
