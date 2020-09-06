@@ -22,7 +22,6 @@ target_link_libraries(inspector-cpp z)
 
 if (NOT DEFINED ANDROID_NDK)
     include(CodeCoverage.cmake)
-    target_link_libraries(inspector-cpp coverage_config)
 
     find_library(LIBSQLITE sqlcipher)
     find_package(Threads REQUIRED)
