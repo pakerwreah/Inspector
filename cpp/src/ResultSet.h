@@ -16,9 +16,11 @@ class ResultSet {
 
     bool step();
 
-public:
     ResultSet(sqlite3 *db, sqlite3_stmt *stmt);
 
+    friend class Database;
+
+public:
     virtual ~ResultSet();
 
     bool next();

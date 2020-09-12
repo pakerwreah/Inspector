@@ -7,12 +7,15 @@
 
 using namespace std;
 
-Database::Database(const string &path, const string &password, int version) {
+Database::Database(const string &path, const string &password, int version, bool create) {
     if (!path.length()) {
-        throw runtime_error("Database path not selected");
+        throw runtime_error("Invalid database path");
     }
     auto m_path = path.find("file://") == 0 ? path.substr(7) : path;
     auto flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_WAL | SQLITE_OPEN_SHAREDCACHE;
+    if (create) {
+        flags |= SQLITE_OPEN_CREATE;
+    }
     auto err = sqlite3_open_v2(m_path.c_str(), &db, flags, nullptr);
     if (err != SQLITE_OK) {
         throw runtime_error("Error opening database (" + to_string(err) + "): " + m_path);
@@ -35,18 +38,29 @@ Database::~Database() {
 }
 
 void Database::commit() const {
-    execute("commit transaction");
+    if (failed) {
+        rollback();
+    } else {
+        execute("commit transaction");
+    }
 }
 
 void Database::transaction() const {
+    failed = false;
     execute("begin exclusive transaction");
+}
+
+void Database::rollback() const {
+    sqlite3_exec(db, "rollback", nullptr, nullptr, nullptr);
 }
 
 ResultSet Database::query(const string &sql) const {
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr);
     if (rc != SQLITE_OK || stmt == nullptr) {
-        throw runtime_error(string() + "Error executing query: " + sqlite3_errmsg(db));
+        failed = true;
+        const string errmsg = sqlite3_errmsg(db);
+        throw runtime_error("Error executing query: " + errmsg);
     }
 
     return ResultSet(db, stmt);
@@ -57,8 +71,9 @@ void Database::execute(const string &sql) const {
     sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &error);
 
     if (error) {
-        string str = error;
+        failed = true;
+        const string errmsg = error;
         sqlite3_free(error);
-        throw runtime_error("Error executing batch: " + str);
+        throw runtime_error("Error executing script: " + errmsg);
     }
 }
