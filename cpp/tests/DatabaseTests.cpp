@@ -36,27 +36,29 @@ TEST_CASE("Database - SQLCipher") {
     }
 
     SECTION("Open") {
-        const string open_error_msg = "Error executing query: file is not a database";
+        const auto message1 = Catch::Message("Error executing query: file is not a database");
+        const auto message2 = Catch::Message("Error executing query: file is encrypted or is not a database");
+        const auto matcher = message1 || message2;
 
         SECTION("No password") {
             REQUIRE_THROWS_MATCHES([&] {
                 Database db(path, "", 4);
                 db.query("SELECT * FROM tb_test");
-            }(), runtime_error, Catch::Message(open_error_msg));
+            }(), runtime_error, matcher);
         }
 
         SECTION("Wrong password") {
             REQUIRE_THROWS_MATCHES([&] {
                 Database db(path, "111", 4);
                 db.query("SELECT * FROM tb_test");
-            }(), runtime_error, Catch::Message(open_error_msg));
+            }(), runtime_error, matcher);
         }
 
         SECTION("Wrong version") {
             REQUIRE_THROWS_MATCHES([&] {
                 Database db(path, "123", 3);
                 db.query("SELECT * FROM tb_test");
-            }(), runtime_error, Catch::Message(open_error_msg));
+            }(), runtime_error, matcher);
         }
 
         SECTION("Success") {
