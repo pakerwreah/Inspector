@@ -4,9 +4,11 @@
 ![android](https://img.shields.io/badge/Android-grey.svg?style=flat&logo=android)
 ![ios](https://img.shields.io/badge/iOS-grey.svg?style=flat&logo=apple)
 [![codecov](https://codecov.io/gh/pakerwreah/Inspector/branch/develop/graph/badge.svg)](https://codecov.io/gh/pakerwreah/Inspector)
+[![ci](https://github.com/pakerwreah/Inspector/workflows/Unit%20Tests/badge.svg)](https://github.com/pakerwreah/Inspector/actions)
+[![ci](https://github.com/pakerwreah/Inspector/workflows/Android%20CI/badge.svg)](https://github.com/pakerwreah/Inspector/actions)
+[![ci](https://github.com/pakerwreah/Inspector/workflows/iOS%20CI/badge.svg)](https://github.com/pakerwreah/Inspector/actions)
 
-Tool to inspect SQLite databases and intercept network requests from mobile applications.
-___
+### Tool to inspect SQLite databases and intercept network requests from mobile applications.
 
 Project targeting Android, iOS and Web using C/C++, Java, Objective-C, Vue.js, WebSocket, SQLite and IndexedDB.
 The data is shown in a web interface and uses WebSocket to communicate directly with the app via local network.
