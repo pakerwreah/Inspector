@@ -121,8 +121,9 @@ DatabasePlugin::DatabasePlugin(Router *router, DatabaseProvider *_provider) {
     });
 
     router->post("/database/execute", [this](const Request &request, const Params &) {
+        shared_ptr<Database> db;
         try {
-            auto db = open();
+            db = open();
 
             auto start = util::timestamp();
 
@@ -136,7 +137,8 @@ DatabasePlugin::DatabasePlugin(Router *router, DatabaseProvider *_provider) {
 
             return Response(data);
         } catch (const exception &ex) {
-            return Response(ex.what(), 400);
+            db->rollback();
+            return Response::BadRequest(ex.what());
         }
     });
 }
