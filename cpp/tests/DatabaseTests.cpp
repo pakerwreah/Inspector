@@ -36,9 +36,7 @@ TEST_CASE("Database - SQLCipher") {
     }
 
     SECTION("Open") {
-        const auto message1 = Catch::Message("Error executing query: file is not a database");
-        const auto message2 = Catch::Message("Error executing query: file is encrypted or is not a database");
-        const auto matcher = message1 || message2;
+        const auto matcher = Catch::Message("Error executing query: file is not a database");
 
         SECTION("No password") {
             REQUIRE_THROWS_MATCHES([&] {
