@@ -13,14 +13,17 @@
 
 class Database {
     sqlite3 *db;
+    mutable bool failed;
 public:
-    Database(const std::string &path, const std::string &password = "", int version = 0);
+    Database(const std::string &path, const std::string &password = "", int version = 0, bool create = false);
 
     ~Database();
 
     void commit() const;
 
     void transaction() const;
+
+    void rollback() const;
 
     void execute(const std::string &sql) const;
 

@@ -3,10 +3,6 @@
 
 using namespace std;
 
-namespace Matchers {
-    const auto RouteNotFound = Catch::Exception::ExceptionMessageMatcher("Route not found");
-}
-
 TEST_CASE("Router - Invalid header") {
     Router router;
     Request request;
@@ -20,7 +16,7 @@ TEST_CASE("Router - No route defined") {
     Request request;
 
     REQUIRE(request.parse("GET /test/path HTTP/1.1\r\n\r\n"));
-    REQUIRE_THROWS_MATCHES(router.handle(request), out_of_range, Matchers::RouteNotFound);
+    REQUIRE_THROWS_MATCHES(router.handle(request), out_of_range, Catch::Message("Route not found"));
 }
 
 TEST_CASE("Router - Match route") {
@@ -38,7 +34,7 @@ TEST_CASE("Router - Match route") {
 
     SECTION("Not found") {
         REQUIRE(request.parse("GET /test/wrong/p_1 HTTP/1.1\r\n\r\n"));
-        REQUIRE_THROWS_MATCHES(router.handle(request), out_of_range, Matchers::RouteNotFound);
+        REQUIRE_THROWS_MATCHES(router.handle(request), out_of_range, Catch::Message("Route not found"));
     }
 }
 

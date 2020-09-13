@@ -32,7 +32,8 @@ bool ResultSet::step() {
     int rc = sqlite3_step(stmt);
 
     if (rc != SQLITE_ROW && rc != SQLITE_DONE) {
-        throw runtime_error(string() + sqlite3_errmsg(db) + "\nSQL: " + sqlite3_sql(stmt));
+        const string errmsg = sqlite3_errmsg(db);
+        throw runtime_error("Error executing query: " + errmsg);
     }
 
     return rc == SQLITE_ROW;
