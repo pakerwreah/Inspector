@@ -15,9 +15,7 @@ class WebSocket {
 public:
     WebSocket(std::shared_ptr<Client> client);
 
-    std::string read() const;
     bool send(const std::string &data, bool binary) const;
-
     static Response handshake(const Request &request);
     static std::string pack(const std::string &msg, bool binary);
 };

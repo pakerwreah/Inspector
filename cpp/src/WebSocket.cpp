@@ -13,10 +13,6 @@ WebSocket::WebSocket(shared_ptr<Client> client) {
     this->client = client;
 }
 
-string WebSocket::read() const {
-    return client->read();
-}
-
 bool WebSocket::send(const string &data, bool binary) const {
     return client->send(pack(data, binary));
 }
