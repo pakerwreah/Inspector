@@ -24,6 +24,7 @@
 		34595B4824EC460800ECB544 /* UserDefaultsPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34595B4724EC460800ECB544 /* UserDefaultsPlugin.swift */; };
 		34595B4A24EC468600ECB544 /* ExplorerPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34595B4924EC468600ECB544 /* ExplorerPlugin.swift */; };
 		34595B4C24EC47AA00ECB544 /* explorer.html in Resources */ = {isa = PBXBuildFile; fileRef = 34595B4B24EC47AA00ECB544 /* explorer.html */; };
+		34D09762250F16C700F77CCC /* WebSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34D09760250F16C700F77CCC /* WebSocket.cpp */; };
 		34F574E32500B1CA00A7092A /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34F574CD2500B1CA00A7092A /* util.cpp */; };
 		34F574E42500B1CA00A7092A /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34F574CF2500B1CA00A7092A /* base64.cpp */; };
 		34F574E52500B1CA00A7092A /* url.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34F574D02500B1CA00A7092A /* url.cpp */; };
@@ -66,6 +67,8 @@
 		34595B4724EC460800ECB544 /* UserDefaultsPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsPlugin.swift; sourceTree = "<group>"; };
 		34595B4924EC468600ECB544 /* ExplorerPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplorerPlugin.swift; sourceTree = "<group>"; };
 		34595B4B24EC47AA00ECB544 /* explorer.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = explorer.html; path = ../../../cpp/ext/explorer/explorer.html; sourceTree = "<group>"; };
+		34D09760250F16C700F77CCC /* WebSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WebSocket.cpp; sourceTree = "<group>"; };
+		34D09761250F16C700F77CCC /* WebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebSocket.h; sourceTree = "<group>"; };
 		34F574C82500B1C900A7092A /* Http.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Http.h; sourceTree = "<group>"; };
 		34F574C92500B1C900A7092A /* ResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResultSet.h; sourceTree = "<group>"; };
 		34F574CA2500B1C900A7092A /* Response.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Response.h; sourceTree = "<group>"; };
@@ -206,6 +209,8 @@
 				344C1C2E2367E6D000B62594 /* Socket.h */,
 				34F574DC2500B1CA00A7092A /* SocketClient.cpp */,
 				34F574CB2500B1CA00A7092A /* SocketClient.h */,
+				34D09760250F16C700F77CCC /* WebSocket.cpp */,
+				34D09761250F16C700F77CCC /* WebSocket.h */,
 			);
 			name = cpp;
 			path = ../cpp/src;
@@ -248,13 +253,13 @@
 		34F574D32500B1CA00A7092A /* libs */ = {
 			isa = PBXGroup;
 			children = (
-				34F574D42500B1CA00A7092A /* json.hpp */,
 				34F574D52500B1CA00A7092A /* compress.hpp */,
+				34F574D42500B1CA00A7092A /* json.hpp */,
+				34F574DA2500B1CA00A7092A /* picohttpparser.c */,
 				34F574D62500B1CA00A7092A /* picohttpparser.h */,
 				34F574D72500B1CA00A7092A /* sha1.cpp */,
-				34F574D82500B1CA00A7092A /* sqlite3.h */,
 				34F574D92500B1CA00A7092A /* sha1.h */,
-				34F574DA2500B1CA00A7092A /* picohttpparser.c */,
+				34F574D82500B1CA00A7092A /* sqlite3.h */,
 			);
 			path = libs;
 			sourceTree = "<group>";
@@ -453,6 +458,7 @@
 				344C1C3C2367E6D100B62594 /* HttpServer.cpp in Sources */,
 				34F574E92500B1CA00A7092A /* SocketClient.cpp in Sources */,
 				344C1C372367E6D100B62594 /* Inspector.cpp in Sources */,
+				34D09762250F16C700F77CCC /* WebSocket.cpp in Sources */,
 				344C1C0F2367E64C00B62594 /* AppDelegate.swift in Sources */,
 				3436339D2367F8DB002DB8BF /* IOSInspector.mm in Sources */,
 				34595B4824EC460800ECB544 /* UserDefaultsPlugin.swift in Sources */,
