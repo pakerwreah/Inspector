@@ -43,7 +43,7 @@ TEST_CASE_METHOD(HttpServer, "HttpServer - Internal error") {
 
 TEST_CASE_METHOD(HttpServer, "HttpServer - Route found") {
     auto client = make_shared<MockClient>();
-    Response expected("response data", 200, Http::ContentType::HTML);
+    Response expected("response data");
 
     router.get("/test/path", [expected](const Request &, const Params &) {
         return expected;

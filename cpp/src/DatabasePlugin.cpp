@@ -116,7 +116,7 @@ DatabasePlugin::DatabasePlugin(Router *router, DatabaseProvider *_provider) {
 
             return Response(data);
         } catch (const exception &ex) {
-            return Response(ex.what(), 400);
+            return Response::BadRequest(ex.what());
         }
     });
 

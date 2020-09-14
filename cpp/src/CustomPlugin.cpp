@@ -19,7 +19,7 @@ Response CustomPlugin::execute(PluginAction action) {
     try {
         return json::parse(res = action());
     } catch (const json::parse_error &) {
-        return {res, 200, Http::ContentType::HTML};
+        return res;
     }
 }
 

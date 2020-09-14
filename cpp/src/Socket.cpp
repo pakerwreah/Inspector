@@ -68,7 +68,7 @@ bool Socket::send(const std::string &s) const {
 }
 
 
-int Socket::recv(std::string &data, timeval timeout) const {
+int Socket::recv(std::string &data, const timeval timeout) const {
     if (timeout.tv_sec || timeout.tv_usec) {
         setsockopt(m_sock, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout));
     }
@@ -94,7 +94,7 @@ int Socket::recv(std::string &data, timeval timeout) const {
     }
 }
 
-bool Socket::connect(const std::string &host, const int port, int timeout) {
+bool Socket::connect(const std::string &host, const int port, const timeval timeout) {
     if (!is_valid()) return false;
 
     m_addr.sin_family = AF_INET;
@@ -104,23 +104,23 @@ bool Socket::connect(const std::string &host, const int port, int timeout) {
 
     if (errno == EAFNOSUPPORT) return false;
 
-    set_non_blocking(timeout > 0);
+    bool wait = timeout.tv_sec || timeout.tv_usec;
+
+    set_non_blocking(wait);
 
     int status = ::connect(m_sock, (sockaddr *) &m_addr, sizeof(m_addr));
-    return timeout > 0 ? waitTimeout() : status == 0;
+    return wait ? waitTimeout(timeout) : status == 0;
 }
 
-bool Socket::waitTimeout() {
+bool Socket::waitTimeout(timeval tv) {
 
     bool ret = false;
 
     if (errno == EINPROGRESS) {
         FD_ZERO(&fdset);
         FD_SET(m_sock, &fdset);
-        tv.tv_sec = 5;
-        tv.tv_usec = 0;
 
-        if (select(m_sock + 1, nullptr, &fdset, nullptr, &tv) == 1) {
+        if (select(m_sock + 1, &fdset, nullptr, nullptr, &tv) == 1) {
             int so_error;
             socklen_t len = sizeof so_error;
 
@@ -129,8 +129,6 @@ bool Socket::waitTimeout() {
             if (so_error == 0)
                 ret = true;
         }
-    } else {
-        ret = false;
     }
 
     set_non_blocking(false);
