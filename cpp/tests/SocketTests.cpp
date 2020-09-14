@@ -11,7 +11,7 @@ TEST_CASE("Socket - Timeout") {
     Socket *accepted_client = nullptr;
     bool should_accept;
 
-    thread([&] {
+    thread ths([&] {
         Socket server;
         server.create();
         server.bind(port);
@@ -20,7 +20,7 @@ TEST_CASE("Socket - Timeout") {
         if (should_accept) {
             server.accept(accepted_client);
         }
-    }).detach();
+    });
 
     mutex guard;
     guard.lock();
@@ -51,6 +51,8 @@ TEST_CASE("Socket - Timeout") {
         CHECK(accepted_client == nullptr);
         th.join();
     }
+
+    ths.join();
 }
 
 TEST_CASE("SocketClient - IO") {
