@@ -6,9 +6,10 @@
 #define INSPECTOR_NETWORKPLUGIN_H
 
 #include "Router.h"
+#include "WebSocket.h"
 
 class NetworkPlugin {
-    std::shared_ptr<Client> request_client, response_client;
+    std::shared_ptr<WebSocket> request_client, response_client;
 public:
     NetworkPlugin(Router *router);
 

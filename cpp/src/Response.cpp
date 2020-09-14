@@ -8,24 +8,18 @@
 using namespace std;
 using json = nlohmann::json;
 
-Response::Response(const char *data, int code, const string &content_type)
-        : Response(data ? string(data) : "", code, content_type) {
-}
+Response::Response(const char *data, int code) : Response(data ? string(data) : "", code) {}
 
-Response::Response(const string &data, int code, const string &content_type) {
-    headers[Http::ContentType::Key] = content_type;
+Response::Response(const string &data, int code) {
+    headers[Http::ContentType::Key] = Http::ContentType::HTML;
     this->code = code;
-    if (content_type == Http::ContentType::JSON) {
-        body = json{{"msg", data}}.dump();
-    } else {
-        body = data;
-    }
+    this->body = data;
 }
 
 Response::Response(const json &data, int code) {
     headers[Http::ContentType::Key] = Http::ContentType::JSON;
     this->code = code;
-    body = data.is_null() ? "" : data.dump();
+    this->body = data.is_null() ? "" : data.dump();
 }
 
 Response::operator std::string() const {

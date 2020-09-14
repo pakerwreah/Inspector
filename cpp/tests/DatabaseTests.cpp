@@ -161,15 +161,15 @@ TEST_CASE("Database - Transaction") {
         CHECK(db.query("SELECT * FROM tb1").next());
     }
 
-    SECTION("Error") {
-        db.transaction();
+    SECTION("Execute Rollback") {
+        CHECK_NOTHROW(db.transaction());
         CHECK_THROWS(db.execute("INSERT INTO tb1 VALUES (1);NOT A VALID SQL"));
         CHECK_NOTHROW(db.commit());
         CHECK_FALSE(db.query("SELECT * FROM tb1").next());
     }
 
-    SECTION("Rollback") {
-        db.transaction();
+    SECTION("Query Rollback") {
+        CHECK_NOTHROW(db.transaction());
         CHECK_NOTHROW(db.query("INSERT INTO tb1 VALUES (1)"));
         CHECK(db.query("SELECT * FROM tb1").next());
         CHECK_THROWS(db.query("NOT A VALID SQL"));

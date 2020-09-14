@@ -17,7 +17,7 @@ class Socket {
     int m_sock;
     sockaddr_in m_addr;
     fd_set fdset;
-    struct timeval tv;
+    constexpr inline static timeval timezero{0, 0};
 
 public:
     Socket();
@@ -34,14 +34,14 @@ public:
     bool accept(Socket *&) const;
 
     // Client initialization
-    bool connect(const std::string &host, const int port, int timeout = 0);
+    bool connect(const std::string &host, const int port, const timeval timeout = timezero);
 
-    bool waitTimeout();
+    bool waitTimeout(timeval tv);
 
     // Data Transimission
     bool send(const std::string &data) const;
 
-    int recv(std::string &data, timeval timeout = {}) const;
+    int recv(std::string &data, const timeval timeout = timezero) const;
 
     void set_non_blocking(const bool = true);
 

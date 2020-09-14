@@ -11,8 +11,8 @@
 #include "Http.h"
 
 struct Response {
-    Response(const char *data = "", int code = 200, const std::string &content_type = Http::ContentType::JSON);
-    Response(const std::string &data, int code = 200, const std::string &content_type = Http::ContentType::JSON);
+    Response(const char *data = "", int code = 200);
+    Response(const std::string &data, int code = 200);
     Response(const nlohmann::json &data, int code = 200);
 
     operator std::string() const;
@@ -21,16 +21,16 @@ struct Response {
     Headers headers;
     std::string body;
 
-    static Response BadRequest() {
-        return {"Bad Request", 400};
+    static Response BadRequest(const std::string &error = "Bad Request") {
+        return {{{"msg", error}}, 400};
     }
 
-    static Response NotFound(const std::string &error) {
-        return {error, 404};
+    static Response NotFound(const std::string &error = "Not Found") {
+        return {{{"msg", error}}, 404};
     }
 
-    static Response InternalError(const std::string &error) {
-        return {error, 500};
+    static Response InternalError(const std::string &error = "Internal Error") {
+        return {{{"msg", error}}, 500};
     }
 };
 

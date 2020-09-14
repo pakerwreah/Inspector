@@ -7,8 +7,8 @@ using json = nlohmann::json;
 TEST_CASE("Response - NULL") {
     Response response(nullptr);
     CHECK(response.code == 200);
-    CHECK(response.headers == Headers{{"Content-Type", "application/json"}});
-    CHECK(response.body == R"({"msg":""})");
+    CHECK(response.headers == Headers{{"Content-Type", "text/html"}});
+    CHECK(response.body == "");
 }
 
 TEST_CASE("Response - Fail") {
@@ -23,7 +23,7 @@ TEST_CASE("Response - Fail") {
             "\r\n"
             R"({"msg":"This request has failed"})";
 
-    Response response("This request has failed", 500);
+    Response response = Response::InternalError("This request has failed");
     CHECK(response.code == 500);
     CHECK(response.body == R"({"msg":"This request has failed"})");
     CHECK(response.headers == expected_headers);
@@ -61,7 +61,7 @@ TEST_CASE("Response - HTML") {
             "\r\n"
             "this is a body";
 
-    Response response("this is a body", 200, Http::ContentType::HTML);
+    Response response("this is a body");
     CHECK(response.code == 200);
     CHECK(response.body == "this is a body");
     CHECK(response.headers == expected_headers);

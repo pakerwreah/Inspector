@@ -30,7 +30,8 @@ add_executable(inspector-demo main.cpp ext/explorer/explorer.cpp)
 target_link_libraries(inspector-demo inspector-cpp)
 
 # Create tests runner
-file(GLOB tests tests/*.cpp)
+file(GLOB_RECURSE tests tests/*.cpp)
 add_executable(inspector-tests ${tests})
+target_include_directories(inspector-tests PRIVATE tests/utils)
 target_link_libraries(inspector-tests inspector-cpp)
 add_custom_target(test inspector-tests)
