@@ -16,8 +16,6 @@ const int MAXRECV = 500;
 class Socket {
     int m_sock;
     sockaddr_in m_addr;
-    fd_set fdset;
-    constexpr inline static timeval timezero{0, 0};
 
 public:
     Socket();
@@ -33,19 +31,16 @@ public:
 
     bool accept(Socket *&) const;
 
-    // Client initialization
-    bool connect(const std::string &host, const int port, const timeval timeout = timezero);
+    bool connect(const std::string &host, const int port);
 
-    bool waitTimeout(timeval tv);
+    void set_non_blocking(bool non_blocking = true);
+
+    bool is_valid() const;
 
     // Data Transimission
     bool send(const std::string &data) const;
 
-    int recv(std::string &data, const timeval timeout = timezero) const;
-
-    void set_non_blocking(const bool = true);
-
-    bool is_valid() const;
+    int recv(std::string &data, const timeval timeout) const;
 };
 
 

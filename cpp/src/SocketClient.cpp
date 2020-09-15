@@ -14,7 +14,7 @@ SocketClient::SocketClient(unique_ptr<Socket> socket) {
 string SocketClient::read() {
     ostringstream os;
     string buf;
-    while (socket->recv(buf, timeval{0, 10000})) {
+    while (socket->recv(buf, timeval{0, 10000}) > 0) {
         os << buf;
     }
     return os.str();
