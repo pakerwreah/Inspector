@@ -7,9 +7,12 @@
 
 #include "Router.h"
 #include "WebSocket.h"
+#include <shared_mutex>
+#include <set>
 
 class NetworkPlugin {
-    std::shared_ptr<WebSocket> request_client, response_client;
+    std::set<std::shared_ptr<WebSocket>> request_clients, response_clients;
+    std::shared_mutex mutex;
 public:
     NetworkPlugin(Router *router);
 
