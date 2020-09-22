@@ -12,9 +12,13 @@ SocketClient::SocketClient(unique_ptr<Socket> socket) {
 }
 
 string SocketClient::read() {
+    return read({0,10000});
+}
+
+string SocketClient::read(const timeval &timeout) const {
     ostringstream os;
     string buf;
-    while (socket->recv(buf, timeval{0, 10000}) > 0) {
+    while (socket->recv(buf, timeout) > 0) {
         os << buf;
     }
     return os.str();

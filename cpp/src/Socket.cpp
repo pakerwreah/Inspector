@@ -14,9 +14,15 @@ Socket::Socket() : m_sock(-1) {
 }
 
 Socket::~Socket() {
+    close();
+}
+
+bool Socket::close() {
     if (is_valid()) {
-        close(m_sock);
+        shutdown(m_sock, SHUT_RDWR);
+        return ::close(m_sock) == 0;
     }
+    return true;
 }
 
 bool Socket::create() {

@@ -8,33 +8,42 @@
 
 using namespace std;
 
+HttpServer::HttpServer() : _listening(false), _stop(false) {}
+
 HttpServer::~HttpServer() {
     stop();
 }
 
-void HttpServer::stop() {
+bool HttpServer::stop() {
     _stop = true;
+    return server.close();
+}
+
+bool HttpServer::listening() const {
+    return _listening;
 }
 
 thread *HttpServer::start(int port) {
     _stop = false;
     return new thread([this, port] {
-        Socket server;
-        server.create();
-
-        while (!_stop) {
-            if (server.bind(port) && server.listen()) {
-                for (int i = 0; !_stop && i < 3; i++) {
-                    Socket *client;
-                    if (server.accept(client)) {
-                        i = -1;
-                        auto socket_client = make_shared<SocketClient>(unique_ptr<Socket>(client));
-                        thread(&HttpServer::process, this, socket_client).detach();
+        if (server.create())
+            do {
+                if (server.bind(port) && server.listen()) {
+                    for (int i = 0; !_stop && i < 3; i++) {
+                        _listening = true;
+                        Socket *client;
+                        if (server.accept(client)) {
+                            i = -1;
+                            auto socket_client = make_shared<SocketClient>(unique_ptr<Socket>(client));
+                            thread(&HttpServer::process, this, socket_client).detach();
+                        }
                     }
+                    _listening = false;
                 }
-            }
-            sleep(1); // just to avoid an infinite cpu hogging loop
-        }
+                if (!_stop) {
+                    sleep(1); // just to avoid an infinite cpu hogging loop
+                }
+            } while (!_stop);
     });
 }
 
@@ -51,7 +60,7 @@ void HttpServer::process(shared_ptr<Client> client) const {
         if ((valid = request.parse(plain))) {
             if (request.method == "OPTIONS") {
                 Response response;
-                response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT";
+                response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, PATCH, DELETE";
 
                 client->send(response);
             } else {

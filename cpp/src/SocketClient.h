@@ -15,6 +15,7 @@ public:
     SocketClient(std::unique_ptr<Socket> socket);
 
     std::string read() override;
+    std::string read(const timeval &timeout) const;
     bool send(const std::string &data) override;
 };
 
