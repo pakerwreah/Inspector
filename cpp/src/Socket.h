@@ -22,7 +22,8 @@ public:
 
     virtual ~Socket();
 
-    // Server initialization
+    bool close();
+
     bool create();
 
     bool bind(const int port);

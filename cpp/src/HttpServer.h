@@ -5,28 +5,30 @@
 #ifndef INSPECTOR_HTTPSERVER_H
 #define INSPECTOR_HTTPSERVER_H
 
-#include <map>
-#include <string>
 #include <memory>
 #include <thread>
-#include <functional>
 
 #include "Client.h"
+#include "HttpServing.h"
 #include "Router.h"
+#include "Socket.h"
 
-class HttpServer {
+class HttpServer : public HttpServing {
+    Socket server;
     bool _stop;
+    bool _listening;
 
 protected:
-    void process(std::shared_ptr<Client> client) const;
+    void process(std::shared_ptr<Client> client) const override;
 
 public:
     Router router;
 
+    HttpServer();
     virtual ~HttpServer();
 
-    void stop();
-
+    bool stop();
+    bool listening() const;
     std::thread *start(int port);
 };
 
