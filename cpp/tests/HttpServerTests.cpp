@@ -1,11 +1,13 @@
 #include "catch.hpp"
 #include "compress.hpp"
 #include "HttpServer.h"
-#include "MockClient.h"
 #include "SocketClient.h"
+#include "MockClient.h"
 #include "MockHttpServer.h"
 
 using namespace std;
+
+static const int test_port = 50000;
 
 TEST_CASE_METHOD(HttpServer, "HttpServer - Invalid request") {
     shared_ptr client = make_shared<MockClient>();
@@ -56,9 +58,8 @@ TEST_CASE_METHOD(HttpServer, "HttpServer - Route found") {
 }
 
 TEST_CASE("HttpServer - Start/Stop") {
-    const int port = 50000;
     HttpServer server;
-    thread *th = server.start(port);
+    thread *th = server.start(test_port);
     usleep(1000);
     CHECK(server.listening());
     REQUIRE(server.stop());
@@ -67,14 +68,13 @@ TEST_CASE("HttpServer - Start/Stop") {
 }
 
 TEST_CASE("HttpServer - Fail") {
-    const int port = 50000;
-
     Socket rogue;
-    rogue.create();
-    rogue.bind(port);
+    CHECK(rogue.create());
+    CHECK(rogue.bind(test_port));
+    CHECK(rogue.listen());
 
     HttpServer server;
-    thread *th = server.start(port);
+    thread *th = server.start(test_port);
     usleep(1000);
     CHECK_FALSE(server.listening());
     REQUIRE(server.stop());
@@ -82,17 +82,17 @@ TEST_CASE("HttpServer - Fail") {
 }
 
 TEST_CASE("HttpServer - Accept") {
-    const int port = 50000;
-
     MockHttpServer server;
     server.processor = [](shared_ptr<Client> client) {
         client->send("hello");
     };
-    thread *th = server.start(port);
+    thread *th = server.start(test_port);
+    usleep(1000);
+    CHECK(server.listening());
 
     unique_ptr client = make_unique<Socket>();
     CHECK(client->create());
-    CHECK(client->connect("localhost", port));
+    CHECK(client->connect("localhost", test_port));
 
     SocketClient socketClient(move(client));
     CHECK(socketClient.read() == "hello");
@@ -102,14 +102,14 @@ TEST_CASE("HttpServer - Accept") {
 }
 
 TEST_CASE("HttpServer - CORS") {
-    const int port = 50000;
-
     HttpServer server;
-    thread *th = server.start(port);
+    thread *th = server.start(test_port);
+    usleep(1000);
+    CHECK(server.listening());
 
     unique_ptr client = make_unique<Socket>();
     CHECK(client->create());
-    CHECK(client->connect("localhost", port));
+    CHECK(client->connect("localhost", test_port));
 
     SocketClient socketClient(move(client));
     CHECK(socketClient.send("OPTIONS /path HTTP/1.1\r\n\r\n"));
