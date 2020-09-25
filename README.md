@@ -3,7 +3,7 @@
 ![c++](https://img.shields.io/badge/C++-17-blue.svg?style=flat&logo=c%2B%2B)
 ![android](https://img.shields.io/badge/Android-grey.svg?style=flat&logo=android)
 ![ios](https://img.shields.io/badge/iOS-grey.svg?style=flat&logo=apple)
-[![codecov](https://codecov.io/gh/pakerwreah/Inspector/branch/develop/graph/badge.svg)](https://codecov.io/gh/pakerwreah/Inspector)
+[![codecov](https://img.shields.io/codecov/c/gh/pakerwreah/Inspector?label=codecov&logo=codecov)](https://codecov.io/gh/pakerwreah/Inspector)
 [![ci](https://github.com/pakerwreah/Inspector/workflows/Unit%20Tests/badge.svg)](https://github.com/pakerwreah/Inspector/actions)
 [![ci](https://github.com/pakerwreah/Inspector/workflows/Android%20CI/badge.svg)](https://github.com/pakerwreah/Inspector/actions)
 [![ci](https://github.com/pakerwreah/Inspector/workflows/iOS%20CI/badge.svg)](https://github.com/pakerwreah/Inspector/actions)
