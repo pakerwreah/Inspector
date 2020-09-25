@@ -3,11 +3,7 @@
 #include "MockClient.h"
 #include "compress.hpp"
 
-#include <unistd.h>
-
 using namespace std;
-
-static const int test_port = 50000;
 
 TEST_CASE("NetworkPlugin") {
     Router router;
