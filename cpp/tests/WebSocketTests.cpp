@@ -14,32 +14,32 @@ TEST_CASE("WebSocket - Send") {
 
     SECTION("Text") {
         ws.send(data1, false);
-        CHECK(client->response == "\x81\x1A" + data1);
+        CHECK(client->sent == "\x81\x1A" + data1);
 
         ws.send(data2, false);
-        CHECK(util::startsWith(client->response, "\x81"));
-        CHECK(client->response == WebSocket::pack(data2, false));
+        CHECK(util::startsWith(client->sent, "\x81"));
+        CHECK(client->sent == WebSocket::pack(data2, false));
 
         ws.send(data3, false);
-        CHECK(util::startsWith(client->response, "\x81"));
-        CHECK(client->response == WebSocket::pack(data3, false));
+        CHECK(util::startsWith(client->sent, "\x81"));
+        CHECK(client->sent == WebSocket::pack(data3, false));
     }
 
     SECTION("Binary") {
         ws.send(data1, true);
-        CHECK(client->response == "\x82\x1A" + data1);
+        CHECK(client->sent == "\x82\x1A" + data1);
 
         ws.send(data2, true);
-        CHECK(util::startsWith(client->response, "\x82"));
-        CHECK(client->response == WebSocket::pack(data2, true));
+        CHECK(util::startsWith(client->sent, "\x82"));
+        CHECK(client->sent == WebSocket::pack(data2, true));
 
         ws.send(data3, true);
-        CHECK(util::startsWith(client->response, "\x82"));
-        CHECK(client->response == WebSocket::pack(data3, true));
+        CHECK(util::startsWith(client->sent, "\x82"));
+        CHECK(client->sent == WebSocket::pack(data3, true));
     }
 }
 
-TEST_CASE("WebSocket - Handshake") {
+TEST_CASE("WebSocket - Handshake Success") {
     Headers expected_headers = {
             {"Connection",           "Upgrade"},
             {"Upgrade",              "websocket"},
@@ -56,4 +56,11 @@ TEST_CASE("WebSocket - Handshake") {
     CHECK(response.code == 101);
     CHECK(response.headers == expected_headers);
     CHECK(response.body == "");
+}
+
+TEST_CASE("WebSocket - Handshake Fail") {
+    Request request;
+    Response response = WebSocket::handshake(request);
+    Response expected = Response::BadRequest("Sec-WebSocket-Key header not found");
+    CHECK(string(response) == string(expected));
 }

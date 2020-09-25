@@ -18,19 +18,24 @@ bool WebSocket::send(const string &data, bool binary) const {
 }
 
 Response WebSocket::handshake(const Request &request) {
-    auto secKey = request.headers.at("Sec-WebSocket-Key");
-    auto magic = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
-    auto secAccept = base64::encode(sha1::calc(secKey + magic));
+    const auto &it = request.headers.find("Sec-WebSocket-Key");
+    if (it != request.headers.end()) {
+        const string secKey = it->second;
+        const string magic = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+        const string secAccept = base64::encode(sha1::calc(secKey + magic));
 
-    Response response;
-    response.code = 101;
-    response.headers = {
-            {"Connection",           "Upgrade"},
-            {"Upgrade",              "websocket"},
-            {"Sec-WebSocket-Accept", secAccept}
-    };
+        Response response;
+        response.code = 101;
+        response.headers = {
+                {"Connection",           "Upgrade"},
+                {"Upgrade",              "websocket"},
+                {"Sec-WebSocket-Accept", secAccept}
+        };
 
-    return response;
+        return response;
+    } else {
+        return Response::BadRequest("Sec-WebSocket-Key header not found");
+    }
 }
 
 #pragma clang diagnostic push
