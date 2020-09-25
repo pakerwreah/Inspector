@@ -25,11 +25,15 @@ bool Inspector::isConnected() const {
 }
 
 void Inspector::sendRequest(const string &uid, const string &headers, const string &body) {
-    networkPlugin->sendRequest(uid, headers, body);
+    thread([=] {
+        networkPlugin->sendRequest(uid, headers, body);
+    }).detach();
 }
 
 void Inspector::sendResponse(const string &uid, const string &headers, const string &body, bool compressed) {
-    networkPlugin->sendResponse(uid, headers, body, compressed);
+    thread([=] {
+        networkPlugin->sendResponse(uid, headers, body, compressed);
+    }).detach();
 }
 
 void Inspector::addPlugin(const string &key, const string &name, PluginAction action) {

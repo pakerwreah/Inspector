@@ -12,14 +12,14 @@ static const int test_port = 50000;
 TEST_CASE_METHOD(HttpServer, "HttpServer - Invalid request") {
     shared_ptr client = make_shared<MockClient>();
     REQUIRE_NOTHROW(process(client));
-    CHECK(client->response == string(Response::BadRequest()));
+    CHECK(client->sent == string(Response::BadRequest()));
 }
 
 TEST_CASE_METHOD(HttpServer, "HttpServer - Route not found") {
     shared_ptr client = make_shared<MockClient>();
-    client->request = "GET /test/path HTTP/1.1\r\n\r\n";
+    client->recv = "GET /test/path HTTP/1.1\r\n\r\n";
     REQUIRE_NOTHROW(process(client));
-    CHECK(client->response == string(Response::NotFound("Route not found")));
+    CHECK(client->sent == string(Response::NotFound("Route not found")));
 }
 
 TEST_CASE_METHOD(HttpServer, "HttpServer - Internal error") {
@@ -27,9 +27,9 @@ TEST_CASE_METHOD(HttpServer, "HttpServer - Internal error") {
         return throw runtime_error("Internal error"), "";
     });
     shared_ptr client = make_shared<MockClient>();
-    client->request = "GET /test/path HTTP/1.1\r\n\r\n";
+    client->recv = "GET /test/path HTTP/1.1\r\n\r\n";
     REQUIRE_NOTHROW(process(client));
-    CHECK(client->response == string(Response::InternalError("Internal error")));
+    CHECK(client->sent == string(Response::InternalError("Internal error")));
 }
 
 TEST_CASE_METHOD(HttpServer, "HttpServer - Route found") {
@@ -40,20 +40,20 @@ TEST_CASE_METHOD(HttpServer, "HttpServer - Route found") {
         return expected;
     });
 
-    client->request = "GET /test/path HTTP/1.1\r\n";
+    client->recv = "GET /test/path HTTP/1.1\r\n";
 
     SECTION("Response plain") {
-        client->request += "\r\n";
+        client->recv += "\r\n";
         REQUIRE_NOTHROW(process(client));
-        CHECK(client->response == string(expected));
+        CHECK(client->sent == string(expected));
     }
 
     SECTION("Response compressed") {
         expected.headers["Content-Encoding"] = "gzip";
         expected.body = gzip::compress(expected.body.c_str(), expected.body.size());
-        client->request += "Accept-Encoding: gzip, deflate\r\n\r\n";
+        client->recv += "Accept-Encoding: gzip, deflate\r\n\r\n";
         REQUIRE_NOTHROW(process(client));
-        CHECK(client->response == string(expected));
+        CHECK(client->sent == string(expected));
     }
 }
 

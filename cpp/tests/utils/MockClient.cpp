@@ -3,10 +3,10 @@
 using namespace std;
 
 string MockClient::read() {
-    return request;
+    return recv;
 }
 
 bool MockClient::send(const string &data) {
-    response = data;
-    return true;
+    sent = connected ? data : "";
+    return connected;
 }
