@@ -62,8 +62,8 @@ public class Inspector {
         });
     }
 
-    public static void sendMessage(String logcat, String message) {
-        sendMessageJNI(logcat, message);
+    public static void sendMessage(String key, String message) {
+        sendMessageJNI(key, message);
     }
 
     private static Map<String, String> decodeJSON(String json) {
@@ -95,7 +95,7 @@ public class Inspector {
 
     private static native void addPluginAPIJNI(String method, String path, PluginAPIActionJNI action);
 
-    private static native void sendMessageJNI(String logcat, String message);
+    private static native void sendMessageJNI(String key, String message);
 
     private static native void initialize(int port);
 
