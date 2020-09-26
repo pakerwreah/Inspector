@@ -1,7 +1,6 @@
 #include "catch.hpp"
 #include "WebSocketPlugin.h"
 #include "MockClient.h"
-#include "compress.hpp"
 
 using namespace std;
 
