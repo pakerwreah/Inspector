@@ -4,7 +4,6 @@
 
 #include "NetworkPlugin.h"
 #include "compress.hpp"
-#include <thread>
 
 using namespace std;
 

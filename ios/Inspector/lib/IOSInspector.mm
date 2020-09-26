@@ -115,6 +115,10 @@ static string buildHeaders(NSDictionary<NSString *,NSString *> *headers) {
     });
 }
 
++ (void)sendMessageTo:(nonnull NSString *)key message:(nullable NSString *)message {
+    inspector->sendMessage(key.UTF8String, message.UTF8String);
+}
+
 // MARK: - Convenience methods
 
 + (void)addPlugin:(nonnull NSString *)key name:(nonnull NSString *)name plugin:(nonnull id<PluginActionProtocol>)plugin {

@@ -35,6 +35,7 @@ typedef NSData * _Nullable(^PluginAPIActionDataBlock)(NSDictionary<NSString *, N
 + (void)addLivePlugin:(nonnull NSString *)key name:(nonnull NSString *)name action:(nonnull PluginActionBlock)action;
 + (void)addPluginAPIForMethod:(nonnull NSString *)method path:(nonnull NSString *)path action:(nonnull PluginAPIActionBlock)action;
 + (void)addPluginAPIForMethod:(nonnull NSString *)method path:(nonnull NSString *)path data:(nonnull PluginAPIActionDataBlock)action;
++ (void)sendMessageTo:(nonnull NSString *)key message:(nullable NSString *)message;
 
 // MARK: - Convenience methods
 + (void)addPlugin:(nonnull NSString *)key name:(nonnull NSString *)name plugin:(nonnull id<PluginActionProtocol>)plugin;

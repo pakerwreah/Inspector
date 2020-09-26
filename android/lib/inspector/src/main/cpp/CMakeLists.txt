@@ -12,14 +12,6 @@ file(GLOB_RECURSE sources ${src}/*.cpp ${src}/*.c)
 
 add_library(inspector SHARED bridge.cpp ${sources})
 
-# Searches for a specified public NDK library
-find_library(log-lib log)
-
 set(LIBSQLITE ${PROJECT_SOURCE_DIR}/../sqlcipher/${ANDROID_ABI}/libsqlcipher-inspector.so)
 
-target_link_libraries(
-        inspector
-        ${LIBSQLITE}
-        ${log-lib}
-        z
-)
+target_link_libraries(inspector ${LIBSQLITE} z)

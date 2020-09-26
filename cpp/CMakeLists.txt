@@ -26,7 +26,9 @@ find_package(Threads REQUIRED)
 target_link_libraries(inspector-cpp ${LIBSQLITE} Threads::Threads z)
 
 # Create demo application
-add_executable(inspector-demo main.cpp ext/explorer/explorer.cpp)
+file(GLOB_RECURSE ext ext/*.cpp)
+add_executable(inspector-demo main.cpp ${ext})
+target_include_directories(inspector-demo PRIVATE ext/utils)
 target_link_libraries(inspector-demo inspector-cpp)
 
 # Create tests runner

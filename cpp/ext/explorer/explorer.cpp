@@ -3,24 +3,16 @@
 //
 
 #include "explorer.h"
+#include "read_file.h"
 
-#include <sstream>
-#include <fstream>
 #include <filesystem>
 
 using namespace std;
 using json = nlohmann::json;
 
-string Explorer::read_file(const string &path) {
-    ifstream file(path);
-    ostringstream buffer;
-    buffer << file.rdbuf();
-    return buffer.str();
-}
-
 Explorer::Explorer(Inspector &inspector, const string &root) {
 
-    inspector.addLivePlugin("explorer", "Explorer", [this] {
+    inspector.addLivePlugin("explorer", "Explorer", [] {
         return read_file("../ext/explorer/explorer.html");
     });
 

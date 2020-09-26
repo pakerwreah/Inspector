@@ -8,6 +8,7 @@ using namespace std;
 TEST_CASE("NetworkPlugin") {
     Router router;
     Request request;
+    Response response;
     shared_ptr requestClient = make_shared<MockClient>();
     shared_ptr responseClient = make_shared<MockClient>();
 
@@ -20,14 +21,16 @@ TEST_CASE("NetworkPlugin") {
 
     REQUIRE(request.parse("GET /network/request HTTP/1.1\r\n\r\n"));
     request.client = requestClient;
-    REQUIRE_NOTHROW(router.handle(request));
+    REQUIRE_NOTHROW(response = router.handle(request));
+    CHECK(string(response) == string(WebSocket::handshake(request)));
     CHECK(plugin.isRequestConnected());
 
     CHECK_FALSE(plugin.isConnected());
 
     REQUIRE(request.parse("GET /network/response HTTP/1.1\r\n\r\n"));
     request.client = responseClient;
-    REQUIRE_NOTHROW(router.handle(request));
+    REQUIRE_NOTHROW(response = router.handle(request));
+    CHECK(string(response) == string(WebSocket::handshake(request)));
     CHECK(plugin.isResponseConnected());
 
     CHECK(plugin.isConnected());
