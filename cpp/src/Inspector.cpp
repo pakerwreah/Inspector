@@ -51,6 +51,6 @@ void Inspector::addPluginAPI(const string &method, const string &path, PluginAPI
 
 void Inspector::sendMessage(const string &key, const string &message) {
     thread([=] {
-        return webSocketPlugin->sendMessage(key, message);
+        webSocketPlugin->sendMessage(key, message);
     }).detach();
 }
