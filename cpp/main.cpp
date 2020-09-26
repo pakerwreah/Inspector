@@ -11,6 +11,7 @@
 #include "Inspector.h"
 #include "util.h"
 #include "ext/explorer/explorer.h"
+#include "ext/realtime/realtime.h"
 
 using namespace std;
 using json = nlohmann::json;
@@ -91,6 +92,12 @@ static void mockNetwork(Inspector &inspector) {
             inspector.sendResponse(uid, "Status: 301\nContent-Type: text/plain\nContent-Length: 11\n", "Redirected!");
         }
     });
+    new thread([&] {
+        while (true) {
+            rsleep();
+            inspector.sendMessage("realtime", "Message uid: " + util::uid());
+        }
+    });
 }
 
 int main() {
@@ -130,6 +137,8 @@ int main() {
     });
 
     Explorer explorer(inspector, "../../");
+
+    Realtime realtime(inspector);
 
     th->join();
 

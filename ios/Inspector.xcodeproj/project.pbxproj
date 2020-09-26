@@ -15,6 +15,9 @@
 		342B0E542438D0F8001D7227 /* DatabaseProviderAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 342B0E532438D0F8001D7227 /* DatabaseProviderAdapter.mm */; };
 		342B0E572438DA92001D7227 /* CustomPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 342B0E562438DA92001D7227 /* CustomPlugin.cpp */; };
 		3436339D2367F8DB002DB8BF /* IOSInspector.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3436339C2367F8DA002DB8BF /* IOSInspector.mm */; };
+		343EE278251F014500CDF0DD /* WebSocketPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 343EE275251F013400CDF0DD /* WebSocketPlugin.cpp */; };
+		343EE27C251F01DE00CDF0DD /* realtime.html in Resources */ = {isa = PBXBuildFile; fileRef = 343EE27B251F01DE00CDF0DD /* realtime.html */; };
+		343EE280251F020500CDF0DD /* RealtimePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343EE27F251F020500CDF0DD /* RealtimePlugin.swift */; };
 		344AFA15236A857D007B2896 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C0E2367E64C00B62594 /* AppDelegate.swift */; };
 		344C1C0F2367E64C00B62594 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C0E2367E64C00B62594 /* AppDelegate.swift */; };
 		344C1C362367E6D100B62594 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C292367E6D000B62594 /* Database.cpp */; };
@@ -51,6 +54,11 @@
 		342B0E562438DA92001D7227 /* CustomPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CustomPlugin.cpp; sourceTree = "<group>"; };
 		3436339B2367F8DA002DB8BF /* IOSInspector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IOSInspector.h; sourceTree = "<group>"; };
 		3436339C2367F8DA002DB8BF /* IOSInspector.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = IOSInspector.mm; sourceTree = "<group>"; };
+		343EE275251F013400CDF0DD /* WebSocketPlugin.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = WebSocketPlugin.cpp; sourceTree = "<group>"; };
+		343EE276251F013400CDF0DD /* WebSocketPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebSocketPlugin.h; sourceTree = "<group>"; };
+		343EE277251F013400CDF0DD /* HttpServing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HttpServing.h; sourceTree = "<group>"; };
+		343EE27B251F01DE00CDF0DD /* realtime.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = realtime.html; path = ../../../cpp/ext/realtime/realtime.html; sourceTree = "<group>"; };
+		343EE27F251F020500CDF0DD /* RealtimePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimePlugin.swift; sourceTree = "<group>"; };
 		344AFA20236A857D007B2896 /* Inspector-pod.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Inspector-pod.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		344C1C0B2367E64C00B62594 /* Inspector.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inspector.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		344C1C0E2367E64C00B62594 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -193,6 +201,7 @@
 				34F574C82500B1C900A7092A /* Http.h */,
 				344C1C332367E6D000B62594 /* HttpServer.cpp */,
 				344C1C342367E6D000B62594 /* HttpServer.h */,
+				343EE277251F013400CDF0DD /* HttpServing.h */,
 				344C1C2A2367E6D000B62594 /* Inspector.cpp */,
 				344C1C2B2367E6D000B62594 /* Inspector.h */,
 				3405AB6C2377A1EC002FA13A /* NetworkPlugin.cpp */,
@@ -211,6 +220,8 @@
 				34F574CB2500B1CA00A7092A /* SocketClient.h */,
 				34D09760250F16C700F77CCC /* WebSocket.cpp */,
 				34D09761250F16C700F77CCC /* WebSocket.h */,
+				343EE275251F013400CDF0DD /* WebSocketPlugin.cpp */,
+				343EE276251F013400CDF0DD /* WebSocketPlugin.h */,
 			);
 			name = cpp;
 			path = ../cpp/src;
@@ -219,9 +230,11 @@
 		34595B4624EC45CA00ECB544 /* plugins */ = {
 			isa = PBXGroup;
 			children = (
+				343EE27B251F01DE00CDF0DD /* realtime.html */,
 				34595B4B24EC47AA00ECB544 /* explorer.html */,
 				34595B4724EC460800ECB544 /* UserDefaultsPlugin.swift */,
 				34595B4924EC468600ECB544 /* ExplorerPlugin.swift */,
+				343EE27F251F020500CDF0DD /* RealtimePlugin.swift */,
 			);
 			path = plugins;
 			sourceTree = "<group>";
@@ -312,7 +325,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1110;
-				LastUpgradeCheck = 1110;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					344C1C0A2367E64C00B62594 = {
@@ -353,6 +366,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34595B4C24EC47AA00ECB544 /* explorer.html in Resources */,
+				343EE27C251F01DE00CDF0DD /* realtime.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -457,6 +471,7 @@
 				3405AB6723775885002FA13A /* Http.swift in Sources */,
 				344C1C3C2367E6D100B62594 /* HttpServer.cpp in Sources */,
 				34F574E92500B1CA00A7092A /* SocketClient.cpp in Sources */,
+				343EE280251F020500CDF0DD /* RealtimePlugin.swift in Sources */,
 				344C1C372367E6D100B62594 /* Inspector.cpp in Sources */,
 				34D09762250F16C700F77CCC /* WebSocket.cpp in Sources */,
 				344C1C0F2367E64C00B62594 /* AppDelegate.swift in Sources */,
@@ -468,6 +483,7 @@
 				34F574EC2500B1CA00A7092A /* Router.cpp in Sources */,
 				34F574E52500B1CA00A7092A /* url.cpp in Sources */,
 				342B0E542438D0F8001D7227 /* DatabaseProviderAdapter.mm in Sources */,
+				343EE278251F014500CDF0DD /* WebSocketPlugin.cpp in Sources */,
 				344C1C362367E6D100B62594 /* Database.cpp in Sources */,
 				34F574E72500B1CA00A7092A /* picohttpparser.c in Sources */,
 				34F574EB2500B1CA00A7092A /* Request.cpp in Sources */,
@@ -546,6 +562,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -605,6 +622,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;

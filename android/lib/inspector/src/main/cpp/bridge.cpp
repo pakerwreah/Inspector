@@ -1,21 +1,11 @@
 #include <jni.h>
-#include <android/log.h>
 #include <vector>
 #include "Inspector.h"
 
 using namespace std;
 using json = nlohmann::json;
 
-class Log {
-    static constexpr const char *LOG_TAG = "JNILog";
-public:
-    static void d(const char *str) { __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, "%s", str); }
-
-    static void e(const char *str) { __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "%s", str); }
-};
-
 JavaVM *jvm;
-jclass driver;
 
 JNIEnv *attachThread() {
     JNIEnv *env = nullptr;
@@ -42,15 +32,16 @@ string readByteArray(JNIEnv *env, jbyteArray data) {
     return str;
 }
 
-const char *InspectorID = "br/newm/inspector/Inspector";
-
 class AndroidDatabaseProvider : public DatabaseProvider {
+    jclass clazz;
+public:
+    explicit AndroidDatabaseProvider(jclass clazz): clazz(clazz) {}
 protected:
     vector<string> databasePathList() override {
         auto env = attachThread();
 
-        jmethodID methodID = env->GetStaticMethodID(driver, "databasePathList", "()[Ljava/lang/String;");
-        auto res = (jobjectArray) env->CallStaticObjectMethod(driver, methodID);
+        jmethodID methodID = env->GetStaticMethodID(clazz, "databasePathList", "()[Ljava/lang/String;");
+        auto res = (jobjectArray) env->CallStaticObjectMethod(clazz, methodID);
 
         int count = env->GetArrayLength(res);
 
@@ -77,13 +68,14 @@ jint JNI_OnLoad(JavaVM *vm, void *) {
 
     jvm = vm;
 
-    driver = env->FindClass(InspectorID);
-    if (driver == nullptr)
+    jclass clazz = env->FindClass("br/newm/inspector/Inspector");
+
+    if (clazz == nullptr)
         return JNI_ERR;
 
-    driver = (jclass) env->NewGlobalRef(driver);
+    clazz = (jclass) env->NewGlobalRef(clazz);
 
-    inspector = new Inspector(new AndroidDatabaseProvider);
+    inspector = new Inspector(new AndroidDatabaseProvider(clazz));
 
     return JNI_VERSION_1_6;
 }
@@ -168,4 +160,10 @@ Java_br_newm_inspector_NetworkInterceptor_sendRequest(JNIEnv *env, jobject, jstr
 extern "C" JNIEXPORT void JNICALL
 Java_br_newm_inspector_NetworkInterceptor_sendResponse(JNIEnv *env, jobject, jstring uid, jstring headers, jbyteArray data, jboolean compressed) {
     inspector->sendResponse(readString(env, uid), readString(env, headers), readByteArray(env, data), compressed);
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_br_newm_inspector_Inspector_sendMessageJNI(JNIEnv *env, jclass, jstring key, jstring message) {
+    inspector->sendMessage(readString(env, key), readString(env, message));
 }

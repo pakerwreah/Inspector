@@ -62,6 +62,10 @@ public class Inspector {
         });
     }
 
+    public static void sendMessage(String logcat, String message) {
+        sendMessageJNI(logcat, message);
+    }
+
     private static Map<String, String> decodeJSON(String json) {
         HashMap<String, String> map = new HashMap<>();
         try {
@@ -90,6 +94,8 @@ public class Inspector {
     private static native void addLivePluginJNI(String key, String name, PluginAction action);
 
     private static native void addPluginAPIJNI(String method, String path, PluginAPIActionJNI action);
+
+    private static native void sendMessageJNI(String logcat, String message);
 
     private static native void initialize(int port);
 

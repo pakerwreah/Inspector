@@ -9,12 +9,14 @@
 #include "DatabasePlugin.h"
 #include "NetworkPlugin.h"
 #include "CustomPlugin.h"
+#include "WebSocketPlugin.h"
 
 class Inspector {
     HttpServer server;
     std::unique_ptr<NetworkPlugin> networkPlugin;
     std::unique_ptr<DatabasePlugin> databasePlugin;
     std::unique_ptr<CustomPlugin> customPlugin;
+    std::unique_ptr<WebSocketPlugin> webSocketPlugin;
 
 public:
     Inspector(DatabaseProvider *databaseProvider);
@@ -34,6 +36,8 @@ public:
     void addLivePlugin(const std::string &key, const std::string &name, PluginAction action);
 
     void addPluginAPI(const std::string &method, const std::string &path, PluginAPIAction action);
+
+    void sendMessage(const std::string &key, const std::string &message);
 };
 
 

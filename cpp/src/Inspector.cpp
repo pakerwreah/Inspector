@@ -10,6 +10,7 @@ Inspector::Inspector(DatabaseProvider *databaseProvider) {
     databasePlugin = make_unique<DatabasePlugin>(&server.router, databaseProvider);
     networkPlugin = make_unique<NetworkPlugin>(&server.router);
     customPlugin = make_unique<CustomPlugin>(&server.router);
+    webSocketPlugin = make_unique<WebSocketPlugin>(&server.router);
 }
 
 thread *Inspector::bind(int port) {
@@ -46,4 +47,10 @@ void Inspector::addLivePlugin(const string &key, const string &name, PluginActio
 
 void Inspector::addPluginAPI(const string &method, const string &path, PluginAPIAction action) {
     customPlugin->addPluginAPI(method, path, action);
+}
+
+void Inspector::sendMessage(const string &key, const string &message) {
+    thread([=] {
+        return webSocketPlugin->sendMessage(key, message);
+    }).detach();
 }

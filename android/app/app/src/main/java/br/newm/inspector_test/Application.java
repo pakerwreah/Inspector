@@ -16,8 +16,7 @@ public class Application extends android.app.Application {
         Inspector.setCipherKey("database_cipher4.db", "1234567", 4);
 
         Inspector.addPlugin("prefs", "Shared Preferences", new SharedPrefsPlugin(this));
-        Inspector.addPlugin("logcat", "Logcat", new LogcatPlugin(30));
-
+        Inspector.addLivePlugin("logcat", "Logcat", new LogcatPlugin(this));
         Inspector.addLivePlugin("explorer", "Explorer", new ExplorerPlugin(this));
     }
 

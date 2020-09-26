@@ -7,11 +7,7 @@
 
 #include "Inspector.h"
 
-class Explorer {
-private:
-    std::string read_file(const std::string &path);
-
-public:
+struct Explorer {
     Explorer(Inspector &inspector, const std::string &root = ".");
 };
 
