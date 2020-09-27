@@ -5,9 +5,9 @@
 #include "DatabasePlugin.h"
 #include "util.h"
 #include <thread>
-#include <unistd.h>
 
 using namespace std;
+using namespace chrono_literals;
 using json = nlohmann::json;
 
 shared_ptr<Database> DatabasePlugin::open() {
@@ -20,9 +20,10 @@ shared_ptr<Database> DatabasePlugin::open() {
     }
 
     if (!db_con) {
-        auto name = util::split(db_path, '/').back();
-        if (db_meta.count(name)) {
-            DatabaseMeta config = db_meta[name];
+        const string &name = databaseName();
+        const auto &it = db_meta.find(name);
+        if (it != db_meta.end()) {
+            DatabaseMeta config = it->second;
             db_con = make_shared<Database>(db_path, config.password, config.version);
         } else {
             db_con = make_shared<Database>(db_path);
@@ -33,7 +34,7 @@ shared_ptr<Database> DatabasePlugin::open() {
     // it won't abort any queries because it uses shared_ptr
     thread([this]() {
         auto token = ++auto_close_token;
-        sleep(5);
+        this_thread::sleep_for(debounce);
         if (token == auto_close_token) {
             db_con = nullptr;
         }
@@ -42,9 +43,7 @@ shared_ptr<Database> DatabasePlugin::open() {
     return db_con;
 }
 
-DatabasePlugin::DatabasePlugin(Router *router, DatabaseProvider *_provider) {
-    this->provider = _provider;
-
+DatabasePlugin::DatabasePlugin(Router *router, DatabaseProvider *provider) : provider(provider), debounce(5s) {
     router->get("/database/list", [this](const Request &, const Params &) {
         int index = 0;
         auto paths = databasePathList();
@@ -160,4 +159,12 @@ void DatabasePlugin::selectDB(int index) {
 
 void DatabasePlugin::setCipherKey(const string &database, const string &password, int version) {
     db_meta[database] = {password, version};
+}
+
+string DatabasePlugin::databaseName() const {
+    return util::split(db_path, '/').back();
+}
+
+bool DatabasePlugin::isOpen() const {
+    return db_con != nullptr;
 }
