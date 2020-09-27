@@ -28,7 +28,7 @@ TEST_CASE("WebSocketPlugin - Connection") {
     SECTION("Fail") {
         REQUIRE(request.parse("GET /plugins/ws/path/test HTTP/1.1\r\n\r\n"));
         request.client = client;
-        REQUIRE_THROWS_MATCHES(router.handle(request), out_of_range, Catch::Message("Route not found"));
+        CHECK_THROWS_MATCHES(router.handle(request), out_of_range, Catch::Message("Route not found"));
         CHECK_FALSE(plugin.isConnected());
     }
 }

@@ -11,7 +11,7 @@ using namespace std;
 
 Response Router::handle(const Request &request) const {
     if (request.method.empty()) {
-        return Response::BadRequest();
+        throw runtime_error("Bad Request");
     }
 
     Params params;

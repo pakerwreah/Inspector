@@ -8,7 +8,7 @@ TEST_CASE("Router - Invalid header") {
     Request request;
 
     REQUIRE_FALSE(request.parse("GET /test/path HTTP/1.1\r\n"));
-    REQUIRE(string(router.handle(request)) == string(Response::BadRequest()));
+    CHECK_THROWS_MATCHES(router.handle(request), runtime_error, Catch::Message("Bad Request"));
 }
 
 TEST_CASE("Router - No route defined") {
@@ -16,7 +16,7 @@ TEST_CASE("Router - No route defined") {
     Request request;
 
     REQUIRE(request.parse("GET /test/path HTTP/1.1\r\n\r\n"));
-    REQUIRE_THROWS_MATCHES(router.handle(request), out_of_range, Catch::Message("Route not found"));
+    CHECK_THROWS_MATCHES(router.handle(request), out_of_range, Catch::Message("Route not found"));
 }
 
 TEST_CASE("Router - Match route") {
@@ -34,7 +34,7 @@ TEST_CASE("Router - Match route") {
 
     SECTION("Not found") {
         REQUIRE(request.parse("GET /test/wrong/p_1 HTTP/1.1\r\n\r\n"));
-        REQUIRE_THROWS_MATCHES(router.handle(request), out_of_range, Catch::Message("Route not found"));
+        CHECK_THROWS_MATCHES(router.handle(request), out_of_range, Catch::Message("Route not found"));
     }
 }
 
