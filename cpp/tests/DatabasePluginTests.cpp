@@ -170,10 +170,6 @@ TEST_CASE("DatabasePlugin - Query") {
     }());
 
     REQUIRE(request.parse("POST /database/query HTTP/1.1\r\n\r\n"));
-    request.body = "SELECT * FROM tb_test";
-    REQUIRE_NOTHROW(response = router.handle(request));
-
-    REQUIRE(request.parse("POST /database/query HTTP/1.1\r\n\r\n"));
     request.body = "SELECT *, id/10.0 as 'decimal', "
                    "CASE WHEN id = 2 THEN 'text' ELSE NULL END as 'null' "
                    "FROM tb_test";
