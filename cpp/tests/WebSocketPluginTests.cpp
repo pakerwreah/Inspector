@@ -7,18 +7,14 @@ using namespace std;
 TEST_CASE("WebSocketPlugin - Connection") {
     Router router;
     Request request;
+    Headers headers{{"Sec-WebSocket-Key", "secret"}};
     shared_ptr client = make_shared<MockClient>();
-
-    request.headers = {
-            {"Sec-WebSocket-Key", "secret"}
-    };
 
     WebSocketPlugin plugin(&router);
     CHECK_FALSE(plugin.isConnected());
 
     SECTION("Success") {
-        REQUIRE(request.parse("GET /plugins/ws/test HTTP/1.1\r\n\r\n"));
-        request.client = client;
+        request = {"GET", "/plugins/ws/test", client, headers};
         Response response;
         REQUIRE_NOTHROW(response = router.handle(request));
         CHECK(plugin.isConnected());
@@ -26,8 +22,7 @@ TEST_CASE("WebSocketPlugin - Connection") {
     }
 
     SECTION("Fail") {
-        REQUIRE(request.parse("GET /plugins/ws/path/test HTTP/1.1\r\n\r\n"));
-        request.client = client;
+        request = {"GET", "/plugins/ws/path/test", client, headers};
         CHECK_THROWS_MATCHES(router.handle(request), out_of_range, Catch::Message("Route not found"));
         CHECK_FALSE(plugin.isConnected());
     }
@@ -37,17 +32,14 @@ TEST_CASE("WebSocketPlugin - Send message") {
     Router router;
     Request request;
     Response response;
+    Headers headers;
     shared_ptr client = make_shared<MockClient>();
-
-    request.headers = {
-            {"Sec-WebSocket-Key", "secret"}
-    };
 
     WebSocketPlugin plugin(&router);
     CHECK_FALSE(plugin.isConnected());
 
-    REQUIRE(request.parse("GET /plugins/ws/test HTTP/1.1\r\n\r\n"));
-    request.client = client;
+    headers = {{"Sec-WebSocket-Key", "secret"}};
+    request = {"GET", "/plugins/ws/test", client, headers};
     REQUIRE_NOTHROW(response = router.handle(request));
 
     CHECK(plugin.isConnected());

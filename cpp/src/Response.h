@@ -11,15 +11,15 @@
 #include "Http.h"
 
 struct Response {
+    int code;
+    Headers headers;
+    std::string body;
+
     Response(const char *data = "", int code = 200);
     Response(const std::string &data, int code = 200);
     Response(const nlohmann::json &data, int code = 200);
 
     operator std::string() const;
-
-    int code;
-    Headers headers;
-    std::string body;
 
     static Response BadRequest(const std::string &error = "Bad Request") {
         return {{{"msg", error}}, 400};

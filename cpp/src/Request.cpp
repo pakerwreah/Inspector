@@ -4,10 +4,18 @@
 
 #include "Request.h"
 #include "picohttpparser.h"
+#include <sstream>
 
 using namespace std;
 
-Request::Request(shared_ptr<Client> client) : client(client) {}
+Request::Request(shared_ptr<Client> client)
+        : client(client) {}
+
+Request::Request(const string &method, const string &path, const string &body)
+        : method(method), path(path), body(body) {}
+
+Request::Request(const string &method, const string &path, std::shared_ptr<Client> client, const Headers &headers)
+        : method(method), path(path), client(client), headers(headers) {}
 
 bool Request::parse(const string &plain) {
     const char *method, *path;
@@ -41,4 +49,18 @@ bool Request::parse(const string &plain) {
     }
 
     return false;
+}
+
+Request::operator std::string() const {
+    const char *crlf = "\r\n";
+    ostringstream resp;
+    resp << method << " " << path << " HTTP/1.1" << crlf;
+
+    for (const auto &header : headers) {
+        resp << header.first << ": " << header.second << crlf;
+    }
+
+    resp << "Content-Length: " << body.length() << crlf << crlf << body;
+
+    return resp.str();
 }
