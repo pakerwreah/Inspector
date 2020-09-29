@@ -48,14 +48,13 @@ thread *HttpServer::start(int port) {
 }
 
 void HttpServer::process(shared_ptr<Client> client) const {
+    Request request(client);
     string plain, buf;
     bool valid;
     int tries = 3;
 
     do {
         plain += client->read();
-
-        Request request(client);
 
         if ((valid = request.parse(plain))) {
             if (request.method == "OPTIONS") {

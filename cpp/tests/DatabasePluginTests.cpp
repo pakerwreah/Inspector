@@ -22,9 +22,11 @@ TEST_CASE("DatabasePlugin - Open") {
     MockDatabaseProvider databaseProvider;
     MockDatabasePlugin plugin(&router, &databaseProvider);
 
-    const string path = "database1.db";
-    filesystem::remove(path);
-    REQUIRE_NOTHROW(Database(path, "", 0, true));
+    REQUIRE_NOTHROW([] {
+        const string path = "database1.db";
+        filesystem::remove(path);
+        Database(path, "", 0, true);
+    }());
 
     SECTION("No database") {
         CHECK_THROWS_MATCHES(plugin.open(), runtime_error, Catch::Message("No databases available"));
@@ -84,11 +86,14 @@ TEST_CASE("DatabasePlugin - Select database") {
 
         databaseProvider.databases = {"database1.db", "database2.db"};
 
-        const string path = "database2.db";
-        filesystem::remove(path);
-        REQUIRE_NOTHROW(Database(path, "", 0, true));
+        REQUIRE_NOTHROW([] {
+            const string path = "database2.db";
+            filesystem::remove(path);
+            Database(path, "", 0, true);
+        }());
 
-        REQUIRE(request.parse("PUT /database/current/1 HTTP/1.1\r\n\r\n"));
+        request = {"PUT", "/database/current/1"};
+
         REQUIRE_NOTHROW(response = router.handle(request));
         CHECK(response.code == 200);
         CHECK(response.headers[Http::ContentType::Key] == Http::ContentType::HTML);
@@ -108,7 +113,8 @@ TEST_CASE("DatabasePlugin - List") {
     json expected = {{"databases", {"database1.db", "database2.db"}},
                      {"current",   1}};
 
-    REQUIRE(request.parse("GET /database/list HTTP/1.1\r\n\r\n"));
+    request = {"GET", "/database/list"};
+
     REQUIRE_NOTHROW(response = router.handle(request));
     CHECK(response.code == 200);
     CHECK(response.headers[Http::ContentType::Key] == Http::ContentType::JSON);
@@ -130,8 +136,7 @@ TEST_CASE("DatabasePlugin - Encryption") {
         db.execute("CREATE TABLE tb_test (id INT, name TEXT)");
     }());
 
-    REQUIRE(request.parse("POST /database/query HTTP/1.1\r\n\r\n"));
-    request.body = "SELECT * FROM tb_test";
+    request = {"POST", "/database/query", "SELECT * FROM tb_test"};
 
     SECTION("Fail") {
         REQUIRE_NOTHROW(response = router.handle(request));
@@ -144,8 +149,6 @@ TEST_CASE("DatabasePlugin - Encryption") {
         string expected = json{{"databases", {"database1.db", "database2.db"}},
                                {"current",   1}}.dump();
 
-        REQUIRE(request.parse("POST /database/query HTTP/1.1\r\n\r\n"));
-        request.body = "SELECT * FROM tb_test";
         REQUIRE_NOTHROW(response = router.handle(request));
         CHECK(response.code == 200);
         CHECK(response.headers[Http::ContentType::Key] == Http::ContentType::JSON);
@@ -169,10 +172,12 @@ TEST_CASE("DatabasePlugin - Query") {
                    "INSERT INTO tb_test VALUES (1, 'tuple 1'), (2, 'tuple 2')");
     }());
 
-    REQUIRE(request.parse("POST /database/query HTTP/1.1\r\n\r\n"));
-    request.body = "SELECT *, id/10.0 as 'decimal', "
-                   "CASE WHEN id = 2 THEN 'text' ELSE NULL END as 'null' "
-                   "FROM tb_test";
+    request = {"POST",
+               "/database/query",
+               "SELECT *, id/10.0 as 'decimal', "
+               "CASE WHEN id = 2 THEN 'text' ELSE NULL END as 'null' "
+               "FROM tb_test"};
+
     REQUIRE_NOTHROW(response = router.handle(request));
     CHECK(response.code == 200);
     CHECK(response.headers[Http::ContentType::Key] == Http::ContentType::JSON);
@@ -197,15 +202,17 @@ TEST_CASE("DatabasePlugin - Execute") {
     Response response;
     MockDatabaseProvider databaseProvider;
     DatabasePlugin plugin(&router, &databaseProvider);
+
     const string path = "database1.db";
     databaseProvider.databases = {path};
     filesystem::remove(path);
     Database db(path, "", 0, true);
 
-    REQUIRE(request.parse("POST /database/execute HTTP/1.1\r\n\r\n"));
-    request.body = "CREATE TABLE tb_test (id INT, name TEXT);"
-                   "INSERT INTO tb_test VALUES (1, 'tuple 1');"
-                   "INSERT INTO tb_test VALUES (2, 'tuple 2')";
+    request = {"POST",
+               "/database/execute",
+               "CREATE TABLE tb_test (id INT, name TEXT);"
+               "INSERT INTO tb_test VALUES (1, 'tuple 1');"
+               "INSERT INTO tb_test VALUES (2, 'tuple 2')"};
 
     SECTION("Success") {
         REQUIRE_NOTHROW(response = router.handle(request));

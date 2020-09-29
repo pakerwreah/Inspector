@@ -47,10 +47,7 @@ TEST_CASE("WebSocket - Handshake Success") {
     };
 
     Request request;
-    request.headers = {
-            {"Sec-WebSocket-Key", "secret"}
-    };
-
+    request.headers = {{"Sec-WebSocket-Key", "secret"}};
     Response response = WebSocket::handshake(request);
 
     CHECK(response.code == 101);
