@@ -20,13 +20,16 @@ struct PluginMeta {
     bool live;
 };
 
+void to_json(nlohmann::json &j, const PluginMeta &p);
+
 class CustomPlugin {
     Router *router;
     std::vector<PluginMeta> plugins;
     std::map<std::string, PluginAction> actions;
 
+protected:
+    CustomPlugin() = default;
     Response execute(PluginAction executor);
-
     void addPlugin(const std::string &key, const std::string &name, PluginAction action, bool live);
 
 public:
