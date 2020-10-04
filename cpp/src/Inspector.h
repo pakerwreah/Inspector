@@ -10,18 +10,22 @@
 #include "NetworkPlugin.h"
 #include "CustomPlugin.h"
 #include "WebSocketPlugin.h"
+#include "Broadcaster.h"
 
 class Inspector {
+    DeviceInfo info;
     HttpServer server;
+    Broadcaster broadcaster;
+    std::vector<std::thread*> threads;
     std::unique_ptr<NetworkPlugin> networkPlugin;
     std::unique_ptr<DatabasePlugin> databasePlugin;
     std::unique_ptr<CustomPlugin> customPlugin;
     std::unique_ptr<WebSocketPlugin> webSocketPlugin;
 
 public:
-    Inspector(DatabaseProvider *databaseProvider);
+    Inspector(DatabaseProvider *databaseProvider, const DeviceInfo &info);
 
-    std::thread *bind(int port);
+    void bind(int port);
 
     void setCipherKey(const std::string &database, const std::string &password, int version);
 
@@ -38,6 +42,8 @@ public:
     void addPluginAPI(const std::string &method, const std::string &path, PluginAPIAction action);
 
     void sendMessage(const std::string &key, const std::string &message);
+
+    void stop();
 };
 
 

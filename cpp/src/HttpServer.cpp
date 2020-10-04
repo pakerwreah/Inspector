@@ -41,7 +41,7 @@ thread *HttpServer::start(int port) {
                     _listening = false;
                 }
                 if (!_stop) {
-                    sleep(1); // just to avoid an infinite cpu hogging loop
+                    this_thread::sleep_for(1s);
                 }
             } while (!_stop);
     });

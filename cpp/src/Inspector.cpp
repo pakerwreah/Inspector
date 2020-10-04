@@ -6,15 +6,24 @@
 
 using namespace std;
 
-Inspector::Inspector(DatabaseProvider *databaseProvider) {
+Inspector::Inspector(DatabaseProvider *databaseProvider, const DeviceInfo &info) : info(info) {
     databasePlugin = make_unique<DatabasePlugin>(&server.router, databaseProvider);
     networkPlugin = make_unique<NetworkPlugin>(&server.router);
     customPlugin = make_unique<CustomPlugin>(&server.router);
     webSocketPlugin = make_unique<WebSocketPlugin>(&server.router);
 }
 
-thread *Inspector::bind(int port) {
-    return server.start(port);
+void Inspector::bind(int port) {
+    threads.push_back(server.start(port));
+    threads.push_back(broadcaster.start(port, info));
+}
+
+void Inspector::stop() {
+    broadcaster.stop();
+    server.stop();
+    for (thread *th : threads) {
+        th->join();
+    }
 }
 
 void Inspector::setCipherKey(const string &database, const string &password, int version) {

@@ -1,12 +1,20 @@
 #include "Socket.h"
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <cstring>
 #include <fcntl.h>
 #include <signal.h>
+
+// MSG_NOSIGNAL does not exists on OS X
+#if defined(__APPLE__) || defined(__MACH__)
+# ifndef MSG_NOSIGNAL
+#   define MSG_NOSIGNAL SO_NOSIGPIPE
+# endif
+#endif
+
+#define MAXRECV 500
 
 Socket::Socket() : m_sock(-1) {
     signal(SIGPIPE, SIG_IGN);
@@ -33,12 +41,12 @@ bool Socket::create() {
     return setsockopt(m_sock, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) != -1;
 }
 
-bool Socket::bind(const int port) {
+bool Socket::bind(int port) {
     if (!is_valid()) return false;
 
     m_addr.sin_family = AF_INET;
     m_addr.sin_addr.s_addr = INADDR_ANY;
-    m_addr.sin_port = htons (port);
+    m_addr.sin_port = htons(port);
 
     return ::bind(m_sock, (struct sockaddr *) &m_addr, sizeof(m_addr)) != -1;
 }
@@ -55,7 +63,7 @@ bool Socket::accept(Socket *&socket) const {
     return socket->is_valid();
 }
 
-bool Socket::connect(const std::string &host, const int port) {
+bool Socket::connect(const std::string &host, int port) {
     if (!is_valid()) return false;
 
     m_addr.sin_family = AF_INET;
@@ -80,8 +88,8 @@ bool Socket::is_valid() const {
     return m_sock != -1;
 }
 
-bool Socket::send(const std::string &s) const {
-    return ::send(m_sock, s.c_str(), s.size(), MSG_NOSIGNAL) != -1;
+bool Socket::send(const std::string &data) const {
+    return ::send(m_sock, data.c_str(), data.size(), MSG_NOSIGNAL) != -1;
 }
 
 int Socket::recv(std::string &data, const timeval timeout) const {

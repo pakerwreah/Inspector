@@ -4,15 +4,6 @@
 #include <netinet/in.h>
 #include <string>
 
-// MSG_NOSIGNAL does not exists on OS X
-#if defined(__APPLE__) || defined(__MACH__)
-# ifndef MSG_NOSIGNAL
-#   define MSG_NOSIGNAL SO_NOSIGPIPE
-# endif
-#endif
-
-const int MAXRECV = 500;
-
 class Socket {
     int m_sock;
     sockaddr_in m_addr;
@@ -26,13 +17,13 @@ public:
 
     bool create();
 
-    bool bind(const int port);
+    bool bind(int port);
 
     bool listen() const;
 
     bool accept(Socket *&) const;
 
-    bool connect(const std::string &host, const int port);
+    bool connect(const std::string &host, int port);
 
     void set_non_blocking(bool non_blocking = true);
 

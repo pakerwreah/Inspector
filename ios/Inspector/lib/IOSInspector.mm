@@ -5,6 +5,7 @@
 //  Created by Paker on 29/10/19.
 //
 
+#import <UIKit/UIKit.h>
 #import "IOSInspector.h"
 #import "DatabaseProviderAdapter.h"
 
@@ -48,11 +49,19 @@ static string buildHeaders(NSDictionary<NSString *,NSString *> *headers) {
 // MARK: - Initializer
 
 + (void)initializeWithDelegate:(nonnull id <IOSInspectorProtocol>)delegate port:(int)port {
-    inspector = new Inspector(new DatabaseProviderAdapter(delegate));
+    NSString *name = [[UIDevice currentDevice] name];
+    inspector = new Inspector(new DatabaseProviderAdapter(delegate), {"ios", name.UTF8String});
     inspector->bind(port);
 }
 
 // MARK: - Database
++ (void)createDatabase:(nonnull NSString *)path {
+    Database(path.UTF8String, @"".UTF8String, 0, true);
+}
+
++ (void)createDatabase:(nonnull NSString *)path password:(nonnull NSString *)password version:(int)version {
+    Database(path.UTF8String, password.UTF8String, version, true);
+}
 
 + (void)setCipherKey:(nonnull NSString *)database password:(nonnull NSString *)password version:(int)version {
     inspector->setCipherKey(database.UTF8String, password.UTF8String, version);

@@ -24,6 +24,9 @@ typedef NSData * _Nullable(^PluginAPIActionDataBlock)(NSDictionary<NSString *, N
 + (void)initializeWithDelegate:(nonnull id <IOSInspectorProtocol>)delegate port:(int)port;
 
 // MARK: - Database
++ (void)createDatabase:(nonnull NSString *)path;
++ (void)createDatabase:(nonnull NSString *)path password:(nonnull NSString *)password version:(int)version;
+
 + (void)setCipherKey:(nonnull NSString *)database password:(nonnull NSString *)password version:(int)version;
 
 // MARK: - Network

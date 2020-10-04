@@ -22,8 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IOSInspectorProtocol {
 
         mockNetwork()
         mockMessages()
+        mockDatabases()
     }
-
+    
     func mockNetwork() {
         DispatchQueue.global().async {
             let urls = [
@@ -50,6 +51,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IOSInspectorProtocol {
                 IOSInspector.sendMessage(to: "realtime", message: "Message \(uid)")
             }
         }
+    }
+    
+    func mockDatabases() {
+        func path(_ database: String) -> String {
+            documentDirectory.appendingPathComponent(database).absoluteString
+        }
+        IOSInspector.createDatabase(path("database.db"))
+        IOSInspector.createDatabase(path("database_cipher3.db"), password: "123456", version: 3)
+        IOSInspector.createDatabase(path("database_cipher4.db"), password: "1234567", version: 4)
     }
 
     lazy var documentDirectory: URL = {
