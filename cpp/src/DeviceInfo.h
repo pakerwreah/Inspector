@@ -6,9 +6,6 @@
 #define INSPECTOR_DEVICEINFO_H
 
 #include <string>
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <ifaddrs.h>
 #include "json.hpp"
 
 struct IPAddress {

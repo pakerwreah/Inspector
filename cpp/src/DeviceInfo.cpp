@@ -4,7 +4,10 @@
 
 #include "DeviceInfo.h"
 #include "json.hpp"
-#include "util.h"
+
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include <ifaddrs.h>
 
 using namespace std;
 using json = nlohmann::json;
@@ -23,7 +26,6 @@ vector<IPAddress> getIPAddress() {
     ifaddrs *ifap, *ifa;
     sockaddr_in *sa;
     vector<IPAddress> addresses;
-    auto sw = util::startsWith;
 
     getifaddrs(&ifap);
     for (ifa = ifap; ifa; ifa = ifa->ifa_next) {
@@ -31,10 +33,7 @@ vector<IPAddress> getIPAddress() {
             sa = (sockaddr_in *) ifa->ifa_addr;
             string adp = ifa->ifa_name;
             string addr = inet_ntoa(sa->sin_addr);
-
-            if (!sw(adp, "lo") && !sw(adp, "vbox") && !sw(adp, "pdp_ip")) {
-                addresses.push_back({adp, addr});
-            }
+            addresses.push_back({adp, addr});
         }
     }
     freeifaddrs(ifap);
