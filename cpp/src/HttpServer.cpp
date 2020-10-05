@@ -26,24 +26,24 @@ bool HttpServer::listening() const {
 thread *HttpServer::start(int port) {
     _stop = false;
     return new thread([this, port] {
-        if (server.create())
-            do {
-                if (server.bind(port) && server.listen()) {
-                    for (int i = 0; !_stop && i < 3; i++) {
-                        _listening = true;
-                        Socket *client;
-                        if (server.accept(client)) {
-                            i = -1;
-                            auto socket_client = make_shared<SocketClient>(unique_ptr<Socket>(client));
-                            thread(&HttpServer::process, this, socket_client).detach();
-                        }
+        do {
+            if (server.create() && server.bind(port) && server.listen()) {
+                for (int i = 0; !_stop && i < 3; i++) {
+                    _listening = true;
+                    Socket *client;
+                    if (server.accept(client)) {
+                        i = -1;
+                        auto socket_client = make_shared<SocketClient>(unique_ptr<Socket>(client));
+                        thread(&HttpServer::process, this, socket_client).detach();
                     }
-                    _listening = false;
                 }
-                if (!_stop) {
-                    this_thread::sleep_for(1s);
-                }
-            } while (!_stop);
+                server.close();
+                _listening = false;
+            }
+            if (!_stop) {
+                this_thread::sleep_for(1s);
+            }
+        } while (!_stop);
     });
 }
 

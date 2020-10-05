@@ -21,6 +21,7 @@ bool Broadcaster::broadcasting() const {
 }
 
 thread *Broadcaster::start(int port, const DeviceInfo &info) {
+    _stop = false;
     return new thread([=] {
         vector<IPAddress> addresses;
         for (const IPAddress &addr : getIPAddress()) {
@@ -30,20 +31,25 @@ thread *Broadcaster::start(int port, const DeviceInfo &info) {
         jdatagram["addresses"] = addresses;
         string datagram = jdatagram.dump();
 
-        UDPSocket socket;
-        if (socket.create() && socket.bind(port)) {
-            _broadcasting = true;
-            const int max_tries = 3;
-            for (int i = 0; !_stop; i++) {
-                if (i == max_tries) {
-                    printf("broadcast error %d\n", errno);
-                    stop();
-                } else if (socket.broadcast(datagram)) {
-                    i = -1;
+        do {
+            UDPSocket socket;
+            if (socket.create() && socket.bind(port)) {
+                _broadcasting = true;
+                // for some reason the first broadcast always fails on iOS
+                socket.broadcast(datagram);
+                do {
+                    if (!socket.broadcast(datagram)) {
+                        printf("broadcast error %d\n", errno);
+                        this_thread::sleep_for(1s);
+                        break;
+                    }
                     this_thread::sleep_for(5s);
-                }
+                } while (!_stop);
+                _broadcasting = false;
+            } else {
+                printf("broadcast create/bind error %d\n", errno);
+                stop();
             }
-            _broadcasting = false;
-        }
+        } while (!_stop);
     });
 }
