@@ -25,11 +25,29 @@ string readString(JNIEnv *env, jstring data) {
 }
 
 string readByteArray(JNIEnv *env, jbyteArray data) {
-    int size = env->GetArrayLength(data);
-    auto bytes = env->GetByteArrayElements(data, nullptr);
-    auto str = string(reinterpret_cast<const char *>(bytes), static_cast<unsigned int>(size));
+    jsize size = env->GetArrayLength(data);
+    jbyte *bytes = env->GetByteArrayElements(data, nullptr);
+    auto str = string(reinterpret_cast<const char *>(bytes), static_cast<size_t>(size));
     env->ReleaseByteArrayElements(data, bytes, 0);
     return str;
+}
+
+string getDeviceName(JNIEnv *env) {
+    jclass build_class = env->FindClass("android/os/Build");
+
+    jfieldID manufacturer_id = env->GetStaticFieldID(build_class, "MANUFACTURER", "Ljava/lang/String;");
+    jfieldID model_id = env->GetStaticFieldID(build_class, "MODEL", "Ljava/lang/String;");
+
+    auto jmanufacturer = (jstring) env->GetStaticObjectField(build_class, manufacturer_id);
+    auto jmodel = (jstring) env->GetStaticObjectField(build_class, model_id);
+
+    string manufacturer = readString(env, jmanufacturer);
+    string model = readString(env, jmodel);
+    if (manufacturer != "unknown") {
+        return manufacturer + " " + model;
+    } else {
+        return model;
+    }
 }
 
 class AndroidDatabaseProvider : public DatabaseProvider {
@@ -75,7 +93,7 @@ jint JNI_OnLoad(JavaVM *vm, void *) {
 
     clazz = (jclass) env->NewGlobalRef(clazz);
 
-    inspector = new Inspector(new AndroidDatabaseProvider(clazz));
+    inspector = new Inspector(new AndroidDatabaseProvider(clazz), {"android", getDeviceName(env)});
 
     return JNI_VERSION_1_6;
 }
