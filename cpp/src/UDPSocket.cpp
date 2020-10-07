@@ -1,6 +1,8 @@
 #include "UDPSocket.h"
 #include <sys/socket.h>
+#include <signal.h>
 #include <unistd.h>
+#include <cstring>
 
 // MSG_NOSIGNAL does not exists on OS X
 #if defined(__APPLE__) || defined(__MACH__)
