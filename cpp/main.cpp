@@ -139,7 +139,7 @@ int main() {
 
     Realtime realtime(inspector);
 
-    this_thread::sleep_for(chrono::hours::max());
+    this_thread::sleep_for(100h);
 
     return 0;
 }
