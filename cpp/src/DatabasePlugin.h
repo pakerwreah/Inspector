@@ -34,6 +34,7 @@ protected:
     std::chrono::nanoseconds debounce;
 public:
     DatabasePlugin(Router *router, DatabaseProvider *provider);
+    virtual ~DatabasePlugin();
 
     std::vector<std::string> databasePathList();
     void setCipherKey(const std::string &database, const std::string &password, int version);

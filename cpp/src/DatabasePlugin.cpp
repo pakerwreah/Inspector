@@ -10,6 +10,10 @@ using namespace std;
 using namespace chrono_literals;
 using json = nlohmann::json;
 
+DatabasePlugin::~DatabasePlugin() {
+    db_con = nullptr;
+}
+
 shared_ptr<Database> DatabasePlugin::open() {
     if (db_path.empty()) {
         try {
