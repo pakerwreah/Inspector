@@ -148,9 +148,6 @@ TEST_CASE("DatabasePlugin - Encryption") {
     SECTION("Success") {
         CHECK_NOTHROW(plugin.setCipherKey("database1.db", "123", 4));
 
-        string expected = json{{"databases", {"database1.db", "database2.db"}},
-                               {"current",   1}}.dump();
-
         REQUIRE_NOTHROW(response = router.handle(request));
         CHECK(response.code == 200);
         CHECK(response.headers[Http::ContentType::Key] == Http::ContentType::JSON);
