@@ -48,7 +48,7 @@ bool Socket::bind(int port) {
     m_addr.sin_addr.s_addr = INADDR_ANY;
     m_addr.sin_port = htons(port);
 
-    return ::bind(m_sock, (struct sockaddr *) &m_addr, sizeof(m_addr)) != -1;
+    return ::bind(m_sock, (sockaddr *) &m_addr, sizeof(m_addr)) != -1;
 }
 
 bool Socket::listen() const {
