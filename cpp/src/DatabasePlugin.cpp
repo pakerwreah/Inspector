@@ -36,8 +36,8 @@ shared_ptr<Database> DatabasePlugin::open() {
 
     // debouncer to auto close db after a while
     // it won't abort any queries because it uses shared_ptr
-    thread([this]() {
-        auto token = ++auto_close_token;
+    int token = ++auto_close_token;
+    thread([this, token]() {
         this_thread::sleep_for(debounce);
         if (token == auto_close_token) {
             db_con = nullptr;
