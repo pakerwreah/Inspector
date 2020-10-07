@@ -34,8 +34,10 @@ TEST_CASE("DatabasePlugin - Open") {
     }
 
     SECTION("Database does not exist") {
-        databaseProvider.databases = {"no_database.db"};
-        const auto matcher = Catch::Message("Error opening database (14): no_database.db");
+        const string path = "no_database.db";
+        filesystem::remove(path);
+        databaseProvider.databases = {path};
+        const auto matcher = Catch::Message("Error opening database (14): " + path);
         CHECK_THROWS_MATCHES(plugin.open(), runtime_error, matcher);
     }
 
