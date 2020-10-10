@@ -10,7 +10,7 @@
 using namespace std;
 using json = nlohmann::json;
 
-Broadcaster::Broadcaster() : _stop(false), _error(0), interval(5s) {}
+Broadcaster::Broadcaster() : _stop(false), _broadcasting(false), _error(0), interval(5s) {}
 
 int Broadcaster::error() const {
     return _error;

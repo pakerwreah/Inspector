@@ -25,7 +25,7 @@ TEST_CASE("Broadcaster - Fail") {
     broadcaster.stop();
     th->join();
     CHECK_FALSE(broadcaster.broadcasting());
-    CHECK(broadcaster.error() == EADDRNOTAVAIL);
+    CHECK((broadcaster.error() == EADDRNOTAVAIL || broadcaster.error() == EINVAL));
 }
 
 TEST_CASE("Broadcaster - Invalid port") {
