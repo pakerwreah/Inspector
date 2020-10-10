@@ -45,8 +45,7 @@ public class Application extends android.app.Application {
     public void onCreate() {
         super.onCreate();
 
-        // context, port
-        Inspector.initializeWith(this, 30000);
+        Inspector.initializeWith(this);
 
         // SQLCipher support
         // database name, password, sqlcipher major version
@@ -113,6 +112,15 @@ Inspector.addPluginAPI("GET", "filesystem/open", new PluginAPIActionBinary() {
 });
 ```
 
+#### Websockets
+Send messages to your live plugins
+```javascript
+new WebSocket(`ws://${location.hostname}:${location.port}/plugins/ws/mykey`)
+```
+```java
+Inspector.sendMessage("mykey", "Hello world!");
+```
+
 #### :warning: Attention
 You should run this command to work with emulators
 ```bash
@@ -137,7 +145,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IOSInspectorProtocol {
 
     func applicationDidFinishLaunching(_ application: UIApplication) {
 
-        IOSInspector.initialize(withDelegate: self, port: 30000)
+        IOSInspector.initialize(withDelegate: self)
 
         // SQLCipher support
         IOSInspector.setCipherKey("database_cipher3.db", password: "123456", version: 3)
@@ -209,4 +217,13 @@ IOSInspector.addPluginAPI(forMethod: "GET", path: "filesystem/list") { params ->
 IOSInspector.addPluginAPI(forMethod: "GET", path: "filesystem/open") { params -> Data? in
     // return file contents
 }
+```
+
+#### Websockets
+Send messages to your live plugins
+```javascript
+new WebSocket(`ws://${location.hostname}:${location.port}/plugins/ws/mykey`)
+```
+```swift
+IOSInspector.sendMessage(to: "mykey", message: "Hello world!")
 ```
