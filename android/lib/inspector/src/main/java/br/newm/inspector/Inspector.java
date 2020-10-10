@@ -1,6 +1,7 @@
 package br.newm.inspector;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,19 +10,32 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+@SuppressWarnings({"unused", "RedundantSuppression"})
 public class Inspector {
     static {
         System.loadLibrary("inspector");
     }
 
     private static DatabaseProvider databaseProvider;
+    private static String packageName, versionName;
 
-    public static void initializeWith(Context context, int port) {
-        initializeWith(new DefaultDatabaseProvider(context), port);
+    public static void initializeWith(Context context) {
+        initializeWith(context, 30000);
     }
 
-    public static void initializeWith(DatabaseProvider databaseProvider, int port) {
+    public static void initializeWith(Context context, int port) {
+        initializeWith(context, new DefaultDatabaseProvider(context), port);
+    }
+
+    public static void initializeWith(Context context, DatabaseProvider databaseProvider, int port) {
         Inspector.databaseProvider = databaseProvider;
+
+        try {
+            packageName = context.getPackageName();
+            versionName = context.getPackageManager().getPackageInfo(packageName, 0).versionName;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         initialize(port);
     }
@@ -79,6 +93,14 @@ public class Inspector {
             e.printStackTrace();
         }
         return map;
+    }
+
+    private static String getPackageName() {
+        return packageName;
+    }
+
+    private static String getVersionName() {
+        return versionName;
     }
 
     // Native methods

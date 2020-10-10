@@ -72,12 +72,14 @@ TEST_CASE_METHOD(HttpServer, "HttpServer - CORS") {
 
 TEST_CASE("HttpServer - Start/Stop") {
     HttpServer server;
+    CHECK_FALSE(server.listening());
     thread *th = server.start(test_port);
-    usleep(1000);
+    this_thread::sleep_for(1ms);
     CHECK(server.listening());
     REQUIRE(server.stop());
     th->join();
     CHECK_FALSE(server.listening());
+    CHECK_FALSE(server.error());
 }
 
 TEST_CASE("HttpServer - Fail") {
@@ -87,20 +89,22 @@ TEST_CASE("HttpServer - Fail") {
     CHECK(rogue.listen());
 
     HttpServer server;
+    server.setReconnectInterval(10ms);
     thread *th = server.start(test_port);
-    usleep(1000);
+    this_thread::sleep_for(1ms);
     CHECK_FALSE(server.listening());
     REQUIRE(server.stop());
     th->join();
+    CHECK(server.error() == EADDRINUSE);
 }
 
-TEST_CASE("HttpServer - Accept") {
+TEST_CASE("HttpServer - Accept Success") {
     MockHttpServer server;
     server.processor = [](shared_ptr<Client> client) {
         client->send("hello");
     };
     thread *th = server.start(test_port);
-    usleep(1000);
+    this_thread::sleep_for(1ms);
     CHECK(server.listening());
 
     unique_ptr client = make_unique<Socket>();
@@ -112,4 +116,21 @@ TEST_CASE("HttpServer - Accept") {
 
     REQUIRE(server.stop());
     th->join();
+    CHECK_FALSE(server.error());
+}
+
+TEST_CASE_METHOD(HttpServer, "HttpServer - Accept Fail") {
+    setReconnectInterval(10ms);
+    thread *th = start(test_port);
+    this_thread::sleep_for(1ms);
+
+    // simulate network failure
+    int m_sock = server.fd();
+    shutdown(m_sock, SHUT_RDWR);
+    close(m_sock);
+    this_thread::sleep_for(1ms);
+
+    stop();
+    th->join();
+    CHECK(error() == EBADF);
 }

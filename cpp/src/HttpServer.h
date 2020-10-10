@@ -14,11 +14,14 @@
 #include "Socket.h"
 
 class HttpServer : public HttpServing {
-    Socket server;
     bool _stop;
     bool _listening;
+    int _error;
+    std::chrono::nanoseconds interval;
 
 protected:
+    Socket server;
+
     void process(std::shared_ptr<Client> client) const override;
 
 public:
@@ -27,9 +30,11 @@ public:
     HttpServer();
     virtual ~HttpServer();
 
+    int error() const;
     bool stop();
     bool listening() const;
     std::thread *start(int port);
+    void setReconnectInterval(std::chrono::nanoseconds interval);
 };
 
 

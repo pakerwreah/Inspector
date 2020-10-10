@@ -6,7 +6,6 @@
 #include <thread>
 #include <vector>
 #include <sys/time.h>
-#include <sstream>
 
 #include "Inspector.h"
 #include "util.h"
@@ -101,13 +100,13 @@ static void mockNetwork(Inspector &inspector) {
 }
 
 int main() {
-
-    Inspector inspector(new TestDatabaseProvider);
+    DeviceInfo info = {"desktop", "Demo Application", "com.demo.app", "v1.0.0"};
+    Inspector inspector(new TestDatabaseProvider, info);
 
     inspector.setCipherKey("database_cipher3.db", "123456", 3);
     inspector.setCipherKey("database_cipher4.db", "1234567", 4);
 
-    thread *th = inspector.bind(30000);
+    inspector.bind(30000);
 
     mockNetwork(inspector);
 
@@ -140,7 +139,7 @@ int main() {
 
     Realtime realtime(inspector);
 
-    th->join();
+    this_thread::sleep_for(100h);
 
     return 0;
 }

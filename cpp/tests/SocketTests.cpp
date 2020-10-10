@@ -1,16 +1,17 @@
 #include "catch.hpp"
 #include "SocketClient.h"
+#include "UDPSocket.h"
 #include <thread>
 #include <mutex>
 
 using namespace std;
 
-TEST_CASE("SocketClient") {
-    const int port = 50000;
+const int test_port = 50000;
 
+TEST_CASE("TCP Socket") {
     Socket server;
     REQUIRE(server.create());
-    REQUIRE(server.bind(port));
+    REQUIRE(server.bind(test_port));
     REQUIRE(server.listen());
     server.set_non_blocking();
 
@@ -23,7 +24,7 @@ TEST_CASE("SocketClient") {
     thread th([&] {
         unique_ptr client = make_unique<Socket>();
         CHECK(client->create());
-        CHECK(client->connect("localhost", port));
+        CHECK(client->connect("localhost", test_port));
         m_connect.unlock();
         SocketClient socketClient(move(client));
         m_read.lock(); // wait for server signal
@@ -44,4 +45,12 @@ TEST_CASE("SocketClient") {
     CHECK(response == msg);
 
     th.join();
+}
+
+TEST_CASE("UDP Socket") {
+    UDPSocket socket;
+    CHECK(socket.create());
+    CHECK(socket.bind(test_port));
+    CHECK(socket.broadcast("hello world!"));
+    CHECK(socket.close());
 }

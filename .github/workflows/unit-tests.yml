@@ -16,6 +16,7 @@ jobs:
 
       - name: Install Linux dependencies
         run: |
+          wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
           echo 'deb http://apt.llvm.org/bionic/ llvm-toolchain-bionic main' | sudo tee -a /etc/apt/sources.list.d/llvm.list
           sudo add-apt-repository ppa:linuxgndu/sqlcipher -y
 

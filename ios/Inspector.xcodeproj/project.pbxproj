@@ -14,6 +14,9 @@
 		34232AF42374C06000E45BCA /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 34232AF32374C03E00E45BCA /* libz.tbd */; };
 		342B0E542438D0F8001D7227 /* DatabaseProviderAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 342B0E532438D0F8001D7227 /* DatabaseProviderAdapter.mm */; };
 		342B0E572438DA92001D7227 /* CustomPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 342B0E562438DA92001D7227 /* CustomPlugin.cpp */; };
+		342FD487252965C3006B2C03 /* Broadcaster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 342FD483252965C2006B2C03 /* Broadcaster.cpp */; };
+		342FD488252965C3006B2C03 /* UDPSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 342FD486252965C3006B2C03 /* UDPSocket.cpp */; };
+		342FD48D25297AEA006B2C03 /* DeviceInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 342FD48B25297AEA006B2C03 /* DeviceInfo.cpp */; };
 		3436339D2367F8DB002DB8BF /* IOSInspector.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3436339C2367F8DA002DB8BF /* IOSInspector.mm */; };
 		343EE278251F014500CDF0DD /* WebSocketPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 343EE275251F013400CDF0DD /* WebSocketPlugin.cpp */; };
 		343EE27C251F01DE00CDF0DD /* realtime.html in Resources */ = {isa = PBXBuildFile; fileRef = 343EE27B251F01DE00CDF0DD /* realtime.html */; };
@@ -52,6 +55,12 @@
 		342B0E532438D0F8001D7227 /* DatabaseProviderAdapter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = DatabaseProviderAdapter.mm; sourceTree = "<group>"; };
 		342B0E552438DA92001D7227 /* CustomPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomPlugin.h; sourceTree = "<group>"; };
 		342B0E562438DA92001D7227 /* CustomPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CustomPlugin.cpp; sourceTree = "<group>"; };
+		342FD483252965C2006B2C03 /* Broadcaster.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Broadcaster.cpp; sourceTree = "<group>"; };
+		342FD484252965C2006B2C03 /* UDPSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPSocket.h; sourceTree = "<group>"; };
+		342FD485252965C2006B2C03 /* Broadcaster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Broadcaster.h; sourceTree = "<group>"; };
+		342FD486252965C3006B2C03 /* UDPSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UDPSocket.cpp; sourceTree = "<group>"; };
+		342FD48B25297AEA006B2C03 /* DeviceInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DeviceInfo.cpp; sourceTree = "<group>"; };
+		342FD48C25297AEA006B2C03 /* DeviceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceInfo.h; sourceTree = "<group>"; };
 		3436339B2367F8DA002DB8BF /* IOSInspector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IOSInspector.h; sourceTree = "<group>"; };
 		3436339C2367F8DA002DB8BF /* IOSInspector.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = IOSInspector.mm; sourceTree = "<group>"; };
 		343EE275251F013400CDF0DD /* WebSocketPlugin.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = WebSocketPlugin.cpp; sourceTree = "<group>"; };
@@ -191,6 +200,8 @@
 			children = (
 				34F574D32500B1CA00A7092A /* libs */,
 				34F574CC2500B1CA00A7092A /* utils */,
+				342FD483252965C2006B2C03 /* Broadcaster.cpp */,
+				342FD485252965C2006B2C03 /* Broadcaster.h */,
 				34F574DE2500B1CA00A7092A /* Client.h */,
 				342B0E562438DA92001D7227 /* CustomPlugin.cpp */,
 				342B0E552438DA92001D7227 /* CustomPlugin.h */,
@@ -198,6 +209,8 @@
 				344C1C272367E6D000B62594 /* Database.h */,
 				657FE7265DB0ABE839354EDE /* DatabasePlugin.cpp */,
 				657FEFA39983E8F73462861B /* DatabasePlugin.h */,
+				342FD48B25297AEA006B2C03 /* DeviceInfo.cpp */,
+				342FD48C25297AEA006B2C03 /* DeviceInfo.h */,
 				34F574C82500B1C900A7092A /* Http.h */,
 				344C1C332367E6D000B62594 /* HttpServer.cpp */,
 				344C1C342367E6D000B62594 /* HttpServer.h */,
@@ -218,6 +231,8 @@
 				344C1C2E2367E6D000B62594 /* Socket.h */,
 				34F574DC2500B1CA00A7092A /* SocketClient.cpp */,
 				34F574CB2500B1CA00A7092A /* SocketClient.h */,
+				342FD486252965C3006B2C03 /* UDPSocket.cpp */,
+				342FD484252965C2006B2C03 /* UDPSocket.h */,
 				34D09760250F16C700F77CCC /* WebSocket.cpp */,
 				34D09761250F16C700F77CCC /* WebSocket.h */,
 				343EE275251F013400CDF0DD /* WebSocketPlugin.cpp */,
@@ -467,6 +482,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				342FD487252965C3006B2C03 /* Broadcaster.cpp in Sources */,
 				344C1C382367E6D100B62594 /* Socket.cpp in Sources */,
 				3405AB6723775885002FA13A /* Http.swift in Sources */,
 				344C1C3C2367E6D100B62594 /* HttpServer.cpp in Sources */,
@@ -474,6 +490,7 @@
 				343EE280251F020500CDF0DD /* RealtimePlugin.swift in Sources */,
 				344C1C372367E6D100B62594 /* Inspector.cpp in Sources */,
 				34D09762250F16C700F77CCC /* WebSocket.cpp in Sources */,
+				342FD488252965C3006B2C03 /* UDPSocket.cpp in Sources */,
 				344C1C0F2367E64C00B62594 /* AppDelegate.swift in Sources */,
 				3436339D2367F8DB002DB8BF /* IOSInspector.mm in Sources */,
 				34595B4824EC460800ECB544 /* UserDefaultsPlugin.swift in Sources */,
@@ -483,6 +500,7 @@
 				34F574EC2500B1CA00A7092A /* Router.cpp in Sources */,
 				34F574E52500B1CA00A7092A /* url.cpp in Sources */,
 				342B0E542438D0F8001D7227 /* DatabaseProviderAdapter.mm in Sources */,
+				342FD48D25297AEA006B2C03 /* DeviceInfo.cpp in Sources */,
 				343EE278251F014500CDF0DD /* WebSocketPlugin.cpp in Sources */,
 				344C1C362367E6D100B62594 /* Database.cpp in Sources */,
 				34F574E72500B1CA00A7092A /* picohttpparser.c in Sources */,
@@ -660,6 +678,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 32973VC289;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -680,6 +699,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 32973VC289;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

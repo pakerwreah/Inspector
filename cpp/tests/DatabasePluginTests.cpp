@@ -1,7 +1,6 @@
 #include "catch.hpp"
 #include "DatabasePlugin.h"
 #include "MockDatabaseProvider.h"
-#include "MockDatabasePlugin.h"
 #include <filesystem>
 #include <thread>
 
@@ -20,7 +19,7 @@ TEST_CASE("DatabasePlugin - Provider") {
 TEST_CASE("DatabasePlugin - Open") {
     Router router;
     MockDatabaseProvider databaseProvider;
-    MockDatabasePlugin plugin(&router, &databaseProvider);
+    DatabasePlugin plugin(&router, &databaseProvider);
 
     REQUIRE_NOTHROW([] {
         const string path = "database1.db";
@@ -34,8 +33,10 @@ TEST_CASE("DatabasePlugin - Open") {
     }
 
     SECTION("Database does not exist") {
-        databaseProvider.databases = {"no_database.db"};
-        const auto matcher = Catch::Message("Error opening database (14): no_database.db");
+        const string path = "no_database.db";
+        filesystem::remove(path);
+        databaseProvider.databases = {path};
+        const auto matcher = Catch::Message("Error opening database (14): " + path);
         CHECK_THROWS_MATCHES(plugin.open(), runtime_error, matcher);
     }
 
@@ -145,9 +146,6 @@ TEST_CASE("DatabasePlugin - Encryption") {
 
     SECTION("Success") {
         CHECK_NOTHROW(plugin.setCipherKey("database1.db", "123", 4));
-
-        string expected = json{{"databases", {"database1.db", "database2.db"}},
-                               {"current",   1}}.dump();
 
         REQUIRE_NOTHROW(response = router.handle(request));
         CHECK(response.code == 200);
