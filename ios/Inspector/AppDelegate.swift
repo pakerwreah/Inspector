@@ -11,7 +11,7 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate, IOSInspectorProtocol {
 
     func applicationDidFinishLaunching(_ application: UIApplication) {
-        IOSInspector.initialize(withDelegate: self, port: 30000)
+        IOSInspector.initialize(withDelegate: self)
 
         IOSInspector.setCipherKey("database_cipher3.db", password: "123456", version: 3)
         IOSInspector.setCipherKey("database_cipher4.db", password: "1234567", version: 4)

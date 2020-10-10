@@ -32,22 +32,27 @@ string readByteArray(JNIEnv *env, jbyteArray data) {
     return str;
 }
 
-string getDeviceName(JNIEnv *env) {
+DeviceInfo getDeviceInfo(JNIEnv *env, jclass clazz) {
     jclass build_class = env->FindClass("android/os/Build");
 
     jfieldID manufacturer_id = env->GetStaticFieldID(build_class, "MANUFACTURER", "Ljava/lang/String;");
     jfieldID model_id = env->GetStaticFieldID(build_class, "MODEL", "Ljava/lang/String;");
+    jmethodID getPackageName_id = env->GetStaticMethodID(clazz, "getPackageName", "()Ljava/lang/String;");
+    jmethodID getVersionName_id = env->GetStaticMethodID(clazz, "getVersionName", "()Ljava/lang/String;");
 
     auto jmanufacturer = (jstring) env->GetStaticObjectField(build_class, manufacturer_id);
     auto jmodel = (jstring) env->GetStaticObjectField(build_class, model_id);
+    auto jpackageName = (jstring) env->CallStaticObjectMethod(clazz, getPackageName_id);
+    auto jversionName = (jstring) env->CallStaticObjectMethod(clazz, getVersionName_id);
 
     string manufacturer = readString(env, jmanufacturer);
     string model = readString(env, jmodel);
-    if (manufacturer != "unknown") {
-        return manufacturer + " " + model;
-    } else {
-        return model;
-    }
+    string name = manufacturer != "unknown" ? manufacturer + " " + model : model;
+
+    string packageName = readString(env, jpackageName);
+    string versionName = readString(env, jversionName);
+
+    return {"android", name, packageName, versionName};
 }
 
 class AndroidDatabaseProvider : public DatabaseProvider {
@@ -86,20 +91,16 @@ jint JNI_OnLoad(JavaVM *vm, void *) {
 
     jvm = vm;
 
-    jclass clazz = env->FindClass("br/newm/inspector/Inspector");
-
-    if (clazz == nullptr)
+    if (!env->FindClass("br/newm/inspector/Inspector"))
         return JNI_ERR;
-
-    clazz = (jclass) env->NewGlobalRef(clazz);
-
-    inspector = new Inspector(new AndroidDatabaseProvider(clazz), {"android", getDeviceName(env)});
 
     return JNI_VERSION_1_6;
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_br_newm_inspector_Inspector_initialize(JNIEnv *, jclass, jint port) {
+Java_br_newm_inspector_Inspector_initialize(JNIEnv *env, jclass clazz, jint port) {
+    clazz = (jclass) env->NewGlobalRef(clazz);
+    inspector = new Inspector(new AndroidDatabaseProvider(clazz), getDeviceInfo(env, clazz));
     // Emulator: ./adb forward tcp:30000 tcp:30000
     inspector->bind(port);
 }

@@ -21,6 +21,7 @@ typedef NSData * _Nullable(^PluginAPIActionDataBlock)(NSDictionary<NSString *, N
 
 @interface IOSInspector : NSObject
 
++ (void)initializeWithDelegate:(nonnull id <IOSInspectorProtocol>)delegate;
 + (void)initializeWithDelegate:(nonnull id <IOSInspectorProtocol>)delegate port:(int)port;
 
 // MARK: - Database

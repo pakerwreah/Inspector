@@ -10,7 +10,7 @@ public class Application extends android.app.Application {
     public void onCreate() {
         super.onCreate();
 
-        Inspector.initializeWith(this, 30000);
+        Inspector.initializeWith(this);
 
         Inspector.setCipherKey("database_cipher3.db", "123456", 3);
         Inspector.setCipherKey("database_cipher4.db", "1234567", 4);

@@ -100,8 +100,8 @@ static void mockNetwork(Inspector &inspector) {
 }
 
 int main() {
-
-    Inspector inspector(new TestDatabaseProvider, {"desktop", "Demo Application"});
+    DeviceInfo info = {"desktop", "Demo Application", "com.demo.app", "v1.0.0"};
+    Inspector inspector(new TestDatabaseProvider, info);
 
     inspector.setCipherKey("database_cipher3.db", "123456", 3);
     inspector.setCipherKey("database_cipher4.db", "1234567", 4);

@@ -48,9 +48,16 @@ static string buildHeaders(NSDictionary<NSString *,NSString *> *headers) {
 
 // MARK: - Initializer
 
++ (void)initializeWithDelegate:(nonnull id <IOSInspectorProtocol>)delegate {
+    [self initializeWithDelegate:delegate port:30000];
+}
+
 + (void)initializeWithDelegate:(nonnull id <IOSInspectorProtocol>)delegate port:(int)port {
-    NSString *name = [[UIDevice currentDevice] name];
-    inspector = new Inspector(new DatabaseProviderAdapter(delegate), {"ios", name.UTF8String});
+    UIDevice *device = [UIDevice currentDevice];
+    NSBundle *bundle = [NSBundle mainBundle];
+    NSString *version = bundle.infoDictionary[@"CFBundleShortVersionString"];
+    DeviceInfo info = {"ios", device.name.UTF8String, bundle.bundleIdentifier.UTF8String, version.UTF8String};
+    inspector = new Inspector(new DatabaseProviderAdapter(delegate), info);
     inspector->bind(port);
 }
 

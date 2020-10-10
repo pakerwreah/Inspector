@@ -13,8 +13,10 @@ using namespace std;
 using json = nlohmann::json;
 
 void to_json(json &j, const DeviceInfo &i) {
-    j = {{"type", i.type},
-         {"name", i.name}};
+    j = {{"type",    i.type},
+         {"name",    i.name},
+         {"appId",   i.appId},
+         {"version", i.version}};
 }
 
 void to_json(json &j, const IPAddress &i) {

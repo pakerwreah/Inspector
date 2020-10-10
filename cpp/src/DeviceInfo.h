@@ -16,6 +16,8 @@ struct IPAddress {
 struct DeviceInfo {
     std::string type;
     std::string name;
+    std::string appId;
+    std::string version;
 };
 
 void to_json(nlohmann::json &j, const DeviceInfo &i);
