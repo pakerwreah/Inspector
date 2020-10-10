@@ -11,13 +11,17 @@
 class Broadcaster {
     bool _stop;
     bool _broadcasting;
+    int _error;
+    std::chrono::nanoseconds interval;
 
 public:
     Broadcaster();
 
+    int error() const;
     void stop();
     bool broadcasting() const;
     std::thread *start(int port, const DeviceInfo &info);
+    void setInterval(std::chrono::nanoseconds interval);
 };
 
 

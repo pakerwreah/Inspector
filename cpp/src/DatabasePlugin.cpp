@@ -172,3 +172,7 @@ string DatabasePlugin::databaseName() const {
 bool DatabasePlugin::isOpen() const {
     return db_con != nullptr;
 }
+
+void DatabasePlugin::setDebounce(chrono::nanoseconds debounce) {
+    this->debounce = debounce;
+}

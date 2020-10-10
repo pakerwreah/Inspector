@@ -28,7 +28,9 @@ Socket::~Socket() {
 bool Socket::close() {
     if (is_valid()) {
         shutdown(m_sock, SHUT_RDWR);
-        return ::close(m_sock) == 0;
+        int sock = m_sock;
+        m_sock = -1;
+        return ::close(sock) == 0;
     }
     return true;
 }
@@ -43,6 +45,7 @@ bool Socket::create() {
 
 bool Socket::bind(int port) {
     if (!is_valid()) return false;
+    if (port < 0 || port > 65535) return false;
 
     m_addr.sin_family = AF_INET;
     m_addr.sin_addr.s_addr = INADDR_ANY;
@@ -110,4 +113,8 @@ int Socket::recv(std::string &data, const timeval timeout) const {
     }
 
     return status;
+}
+
+int Socket::fd() const {
+    return m_sock;
 }

@@ -13,6 +13,8 @@ public:
 
     virtual ~UDPSocket();
 
+    bool close();
+
     bool create();
 
     bool bind(int port);

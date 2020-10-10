@@ -1,7 +1,6 @@
 #include "catch.hpp"
 #include "DatabasePlugin.h"
 #include "MockDatabaseProvider.h"
-#include "MockDatabasePlugin.h"
 #include <filesystem>
 #include <thread>
 
@@ -20,7 +19,7 @@ TEST_CASE("DatabasePlugin - Provider") {
 TEST_CASE("DatabasePlugin - Open") {
     Router router;
     MockDatabaseProvider databaseProvider;
-    MockDatabasePlugin plugin(&router, &databaseProvider);
+    DatabasePlugin plugin(&router, &databaseProvider);
 
     REQUIRE_NOTHROW([] {
         const string path = "database1.db";

@@ -29,9 +29,6 @@ TEST_CASE_METHOD(CustomPlugin, "CustomPlugin - Execute") {
 
     SECTION("Fail") {
         struct MyException : public exception {
-            const char *what() const throw() {
-                return "My Exception";
-            }
         };
         CHECK_THROWS_AS(execute([] {
             return throw MyException(), "";

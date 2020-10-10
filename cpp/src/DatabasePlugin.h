@@ -42,6 +42,7 @@ public:
     void selectDB(int index);
     std::string databaseName() const;
     bool isOpen() const;
+    void setDebounce(std::chrono::nanoseconds debounce);
 };
 
 

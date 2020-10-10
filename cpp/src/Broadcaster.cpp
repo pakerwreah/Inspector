@@ -10,7 +10,11 @@
 using namespace std;
 using json = nlohmann::json;
 
-Broadcaster::Broadcaster() : _stop(false) {}
+Broadcaster::Broadcaster() : _stop(false), _error(0), interval(5s) {}
+
+int Broadcaster::error() const {
+    return _error;
+}
 
 void Broadcaster::stop() {
     _stop = true;
@@ -39,17 +43,22 @@ thread *Broadcaster::start(int port, const DeviceInfo &info) {
                 socket.broadcast(datagram);
                 do {
                     if (!socket.broadcast(datagram)) {
-                        printf("broadcast error %d\n", errno);
-                        this_thread::sleep_for(1s);
+                        _error = errno;
                         break;
                     }
-                    this_thread::sleep_for(5s);
+                    if(!_stop) {
+                        this_thread::sleep_for(interval);
+                    }
                 } while (!_stop);
                 _broadcasting = false;
             } else {
-                printf("broadcast create/bind error %d\n", errno);
+                _error = errno;
                 stop();
             }
         } while (!_stop);
     });
+}
+
+void Broadcaster::setInterval(std::chrono::nanoseconds interval) {
+    this->interval = interval;
 }

@@ -33,6 +33,8 @@ public:
     bool send(const std::string &data) const;
 
     int recv(std::string &data, const timeval timeout) const;
+
+    int fd() const;
 };
 
 

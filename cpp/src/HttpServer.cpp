@@ -8,10 +8,14 @@
 
 using namespace std;
 
-HttpServer::HttpServer() : _listening(false), _stop(false) {}
+HttpServer::HttpServer() : _listening(false), _stop(false), _error(0), interval(1s) {}
 
 HttpServer::~HttpServer() {
     stop();
+}
+
+int HttpServer::error() const {
+    return _error;
 }
 
 bool HttpServer::stop() {
@@ -35,13 +39,17 @@ thread *HttpServer::start(int port) {
                         i = -1;
                         auto socket_client = make_shared<SocketClient>(unique_ptr<Socket>(client));
                         thread(&HttpServer::process, this, socket_client).detach();
+                    } else if (server.is_valid()) {
+                        _error = errno;
                     }
                 }
                 server.close();
                 _listening = false;
+            } else {
+                _error = errno;
             }
             if (!_stop) {
-                this_thread::sleep_for(1s);
+                this_thread::sleep_for(interval);
             }
         } while (!_stop);
     });
@@ -85,4 +93,8 @@ void HttpServer::process(shared_ptr<Client> client) const {
     if (!valid) {
         client->send(Response::BadRequest());
     }
+}
+
+void HttpServer::setReconnectInterval(std::chrono::nanoseconds interval) {
+    this->interval = interval;
 }
