@@ -1,55 +1,39 @@
-# For more information about using CMake with Android Studio, read the
-# documentation: https://d.android.com/studio/projects/add-native-code.html
-
-cmake_minimum_required(VERSION 3.10.2)
+cmake_minimum_required(VERSION 3.13.0)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(CMAKE_C_COMPILER clang)
+set(CMAKE_CXX_COMPILER clang++)
+
 project(inspector)
 
-set(
-        sources
-        src/libs/picohttpparser.c
-        src/libs/base64.cpp
-        src/libs/sha1.cpp
-        src/libs/url.cpp
-        src/util.cpp
-        src/Socket.cpp
-        src/HttpServer.cpp
-        src/Inspector.cpp
-        src/Database.cpp
-        src/DatabasePlugin.cpp
-        src/NetworkPlugin.cpp
-        src/CustomPlugin.cpp)
+include_directories(src src/utils src/libs)
 
-# Creates and names a library, sets it as either STATIC
-# or SHARED, and provides the relative paths to its source code.
-# You can define multiple libraries, and CMake builds them for you.
-# Gradle automatically packages shared libraries with your APK.
+file(GLOB_RECURSE sources src/*.cpp src/*.c)
 
-add_library( # Sets the name of the library.
-        inspector-cpp
+# Create base object with sources
+add_library(inspector-cpp OBJECT ${sources})
 
-        # Sets the library as a static library.
-        STATIC
+# Configure code coverage
+include(CodeCoverage.cmake)
+target_link_libraries(inspector-cpp coverage_config)
 
-        # Provides a relative path to your source file(s).
-        ${sources})
+# Link with system libraries
+find_library(LIBSQLITE sqlcipher)
+find_package(Threads REQUIRED)
+target_link_libraries(inspector-cpp ${LIBSQLITE} Threads::Threads z)
 
-target_link_libraries(inspector-cpp z)
+# Create demo application
+file(GLOB_RECURSE ext ext/*.cpp)
+add_executable(inspector-demo main.cpp ${ext})
+target_include_directories(inspector-demo PRIVATE ext/utils)
+target_link_libraries(inspector-demo inspector-cpp)
 
-# Specifies libraries CMake should link to your target library. You
-# can link multiple libraries, such as libraries you define in this
-# build script, prebuilt third-party libraries, or system libraries.
-
-if (NOT DEFINED ANDROID_NDK)
-    find_library(LIBSQLITE sqlcipher)
-
-    target_link_libraries(inspector-cpp ${LIBSQLITE})
-
-    add_executable(inspector-test src/main.cpp)
-
-    target_link_libraries(inspector-test inspector-cpp)
-endif ()
+# Create tests runner
+file(GLOB_RECURSE tests tests/*.cpp)
+add_executable(inspector-tests ${tests})
+target_include_directories(inspector-tests PRIVATE tests/utils)
+target_link_libraries(inspector-tests inspector-cpp)
+add_custom_target(test inspector-tests)

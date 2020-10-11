@@ -5,24 +5,23 @@
 #ifndef INSPECTOR_NETWORKPLUGIN_H
 #define INSPECTOR_NETWORKPLUGIN_H
 
-#include <iostream>
-
-class HttpServer;
-
-class Socket;
-
-using namespace std;
+#include "Router.h"
+#include "WebSocket.h"
+#include <mutex>
+#include <set>
 
 class NetworkPlugin {
-    shared_ptr<Socket> request_socket, response_socket;
+    std::set<std::shared_ptr<WebSocket>> request_clients, response_clients;
+    std::mutex mutex;
 public:
-    NetworkPlugin(HttpServer *server);
+    NetworkPlugin(Router *router);
 
+    bool isRequestConnected() const;
+    bool isResponseConnected() const;
     bool isConnected() const;
 
-    void sendRequest(const string &uid, const string &headers, const string &body);
-
-    void sendResponse(const string &uid, const string &headers, const string &body, bool compressed = false);
+    void sendRequest(const std::string &uid, const std::string &headers, const std::string &body);
+    void sendResponse(const std::string &uid, const std::string &headers, const std::string &body, bool compressed = false);
 };
 
 

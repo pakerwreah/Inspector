@@ -17,7 +17,7 @@ class Http {
     class func request(url: String) {
         assert(!Thread.isMainThread, "Network on main thread!")
 
-        let request = URLRequest(url: URL(string: url)!, cachePolicy: .reloadIgnoringCacheData)
+        let request = URLRequest(url: URL(string: url)!, cachePolicy: .reloadIgnoringCacheData, timeoutInterval: 3)
 
         let uid = UUID().uuidString
 
@@ -28,8 +28,9 @@ class Http {
         IOSInspector.sendRequest(withUID: uid, request: request)
 
         session.dataTask(with: request) { (data: Data?, response: URLResponse?, error: Error?) in
-            if let error = error {
-                print(error.localizedDescription)
+            if let error = error, let data = error.localizedDescription.data(using: .utf8) {
+                let response = HTTPURLResponse(url: request.url!, statusCode: 500, httpVersion: nil, headerFields: nil)
+                IOSInspector.sendResponse(withUID: uid, response: response, body: data)
             }
             else if let data = data, let response = response as? HTTPURLResponse {
                 IOSInspector.sendResponse(withUID: uid, response: response, body: data)

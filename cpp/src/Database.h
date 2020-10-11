@@ -5,18 +5,17 @@
 #ifndef INSPECTOR_DATABASE_H
 #define INSPECTOR_DATABASE_H
 
-#include "libs/sqlite3.h"
+#include "sqlite3.h"
 #include <string>
 #include <vector>
 
-using namespace std;
-
-class ResultSet;
+#include "ResultSet.h"
 
 class Database {
     sqlite3 *db;
+    mutable bool failed;
 public:
-    Database(const string &path, const string &password = "", int version = 0);
+    Database(const std::string &path, const std::string &password = "", int version = 0, bool create = false);
 
     ~Database();
 
@@ -24,34 +23,11 @@ public:
 
     void transaction() const;
 
-    void execute(const string &sql) const;
+    void rollback() const;
 
-    ResultSet query(const string &sql) const;
-};
+    void execute(const std::string &sql) const;
 
-class ResultSet {
-    sqlite3 *db;
-    sqlite3_stmt *stmt;
-    int index = -1, first_step = -1;
-
-    bool step();
-
-public:
-    ResultSet(sqlite3 *db, sqlite3_stmt *stmt);
-
-    virtual ~ResultSet();
-
-    bool next();
-
-    vector<string> headers() const;
-
-    int type(int column) const;
-
-    string text(int column) const;
-
-    int integer(int column) const;
-
-    double decimal(int column) const;
+    ResultSet query(const std::string &sql) const;
 };
 
 #endif //INSPECTOR_DATABASE_H

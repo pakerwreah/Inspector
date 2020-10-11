@@ -5,79 +5,36 @@
 #ifndef INSPECTOR_HTTPSERVER_H
 #define INSPECTOR_HTTPSERVER_H
 
-#include <map>
-#include <string>
+#include <memory>
 #include <thread>
-#include <functional>
-#include "libs/json.hpp"
 
-using json = nlohmann::json;
+#include "Client.h"
+#include "HttpServing.h"
+#include "Router.h"
+#include "Socket.h"
 
-using namespace std;
+class HttpServer : public HttpServing {
+    bool _stop;
+    bool _listening;
+    int _error;
+    std::chrono::nanoseconds interval;
 
-class Socket;
+protected:
+    Socket server;
 
-typedef string Method;
-typedef string Path;
-
-namespace ContentType {
-    const string HTML = "text/html";
-    const string JSON = "application/json";
-    const string URL_ENCODED = "application/x-www-form-urlencoded";
-}
-
-struct Request {
-    shared_ptr<Socket> socket;
-    map<string, string> headers;
-    string method, path, body;
-
-    Request(const string &plain, shared_ptr<Socket> client);
-
-    bool valid();
-};
-
-struct Response {
-    Response(const json &data = nullptr, int code = 200, const string &content_type = ContentType::JSON);
-
-    operator string();
-
-    map<string, string> headers;
-    int code;
-    string content_type;
-    string body;
-
-    static Response NotFound() {
-        return Response("Route not found", 404);
-    }
-
-    static Response InternalError() {
-        return Response("Internal Error", 500);
-    }
-};
-
-typedef map<string, string> Params;
-typedef function<Response(const Request &, const Params &)> Handler;
-
-class HttpServer {
-    bool _stop = false;
-
-    map<Method, map<Path, Handler>> routes;
-
-    void request(const string &method, const string &path, Handler handler);
-
-    Handler find_handler(const Request &request, Params *params) const;
-
-    void process(shared_ptr<Socket> client) const;
+    void process(std::shared_ptr<Client> client) const override;
 
 public:
-    void get(const string &path, Handler handler);
-    void post(const string &path, Handler handler);
-    void put(const string &path, Handler handler);
-    void request(const string &path, Handler handler);
+    Router router;
 
-    void stop();
+    HttpServer();
+    virtual ~HttpServer();
 
-    thread *start(int port);
+    int error() const;
+    bool stop();
+    bool listening() const;
+    std::thread *start(int port);
+    void setReconnectInterval(std::chrono::nanoseconds interval);
 };
 
 

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Logcat</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11"></script>
+</head>
+<body>
+<div id="app" :style="cssProps">
+    <div v-for="message in messages" class="message">
+        {{ message }}
+    </div>
+</div>
+</body>
+</html>
+
+<!--suppress JSUnresolvedFunction, JSUnusedGlobalSymbols -->
+<script>
+    new Vue({
+        el: '#app',
+        data: () => ({
+            colors: null,
+            connected: false,
+            interval: null,
+            ws: null,
+            messages: []
+        }),
+        computed: {
+            cssProps() {
+                if (this.colors) {
+                    let styles = {}
+                    for (const [key, color] of Object.entries(this.colors)) {
+                        styles[`--${key}`] = color
+                    }
+                    return styles
+                }
+            }
+        },
+        methods: {
+            close() {
+                if (this.ws) {
+                    this.ws.onclose = null
+                    this.ws.close()
+                }
+            },
+            reconnect() {
+                clearTimeout(this.interval)
+                this.interval = setTimeout(this.connect.bind(this), 1000)
+            },
+            connect() {
+                this.close()
+                const {hostname, port} = location
+                const ws = this.ws = new WebSocket(`ws://${hostname}:${port}/plugins/ws/logcat`)
+                ws.onopen = () => {
+                    console.log("Logcat connected")
+                }
+                ws.onmessage = ({data}) => {
+                    this.messages.push(data)
+                    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+                        this.$nextTick(() => {
+                            window.scrollTo(0, document.body.scrollHeight);
+                        })
+                    }
+                }
+                ws.onclose = () => {
+                    this.connected = false
+                    this.reconnect()
+                }
+            }
+        },
+        beforeDestroy() {
+            clearTimeout(this.interval)
+            this.close()
+        },
+        mounted() {
+            if (window.self !== window.top) {
+                window.addEventListener('message', ({data}) => {
+                    this.colors = data.colors
+                })
+            }
+            this.connect()
+        }
+    })
+</script>
+
+<!--suppress CssUnresolvedCustomProperty -->
+<style>
+    #app {
+        padding: 1rem;
+    }
+
+    .message {
+        color: var(--accent);
+    }
+</style>

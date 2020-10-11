@@ -8,42 +8,45 @@
 
 /* Begin PBXBuildFile section */
 		2AEE959994C19A40FC1C32AA /* Pods_Inspector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DBA2507A0A176526438EB33 /* Pods_Inspector.framework */; };
-		3405AB622377584C002FA13A /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB582377584B002FA13A /* base64.cpp */; };
-		3405AB632377584C002FA13A /* sha1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB5B2377584C002FA13A /* sha1.cpp */; };
-		3405AB652377584C002FA13A /* picohttpparser.c in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB602377584C002FA13A /* picohttpparser.c */; };
 		3405AB6723775885002FA13A /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB6623775885002FA13A /* Http.swift */; };
 		3405AB6B237794B4002FA13A /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB6623775885002FA13A /* Http.swift */; };
 		3405AB6E2377A1EC002FA13A /* NetworkPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB6C2377A1EC002FA13A /* NetworkPlugin.cpp */; };
 		34232AF42374C06000E45BCA /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 34232AF32374C03E00E45BCA /* libz.tbd */; };
 		342B0E542438D0F8001D7227 /* DatabaseProviderAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 342B0E532438D0F8001D7227 /* DatabaseProviderAdapter.mm */; };
 		342B0E572438DA92001D7227 /* CustomPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 342B0E562438DA92001D7227 /* CustomPlugin.cpp */; };
+		342FD487252965C3006B2C03 /* Broadcaster.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 342FD483252965C2006B2C03 /* Broadcaster.cpp */; };
+		342FD488252965C3006B2C03 /* UDPSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 342FD486252965C3006B2C03 /* UDPSocket.cpp */; };
+		342FD48D25297AEA006B2C03 /* DeviceInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 342FD48B25297AEA006B2C03 /* DeviceInfo.cpp */; };
 		3436339D2367F8DB002DB8BF /* IOSInspector.mm in Sources */ = {isa = PBXBuildFile; fileRef = 3436339C2367F8DA002DB8BF /* IOSInspector.mm */; };
+		343EE278251F014500CDF0DD /* WebSocketPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 343EE275251F013400CDF0DD /* WebSocketPlugin.cpp */; };
+		343EE27C251F01DE00CDF0DD /* realtime.html in Resources */ = {isa = PBXBuildFile; fileRef = 343EE27B251F01DE00CDF0DD /* realtime.html */; };
+		343EE280251F020500CDF0DD /* RealtimePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343EE27F251F020500CDF0DD /* RealtimePlugin.swift */; };
 		344AFA15236A857D007B2896 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C0E2367E64C00B62594 /* AppDelegate.swift */; };
 		344C1C0F2367E64C00B62594 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C0E2367E64C00B62594 /* AppDelegate.swift */; };
 		344C1C362367E6D100B62594 /* Database.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C292367E6D000B62594 /* Database.cpp */; };
 		344C1C372367E6D100B62594 /* Inspector.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C2A2367E6D000B62594 /* Inspector.cpp */; };
 		344C1C382367E6D100B62594 /* Socket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C2D2367E6D000B62594 /* Socket.cpp */; };
-		344C1C392367E6D100B62594 /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C2F2367E6D000B62594 /* util.cpp */; };
 		344C1C3C2367E6D100B62594 /* HttpServer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C332367E6D000B62594 /* HttpServer.cpp */; };
-		34595B4524EC42C100ECB544 /* url.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34595B4324EC42C100ECB544 /* url.cpp */; };
 		34595B4824EC460800ECB544 /* UserDefaultsPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34595B4724EC460800ECB544 /* UserDefaultsPlugin.swift */; };
 		34595B4A24EC468600ECB544 /* ExplorerPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34595B4924EC468600ECB544 /* ExplorerPlugin.swift */; };
 		34595B4C24EC47AA00ECB544 /* explorer.html in Resources */ = {isa = PBXBuildFile; fileRef = 34595B4B24EC47AA00ECB544 /* explorer.html */; };
+		34D09762250F16C700F77CCC /* WebSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34D09760250F16C700F77CCC /* WebSocket.cpp */; };
+		34F574E32500B1CA00A7092A /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34F574CD2500B1CA00A7092A /* util.cpp */; };
+		34F574E42500B1CA00A7092A /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34F574CF2500B1CA00A7092A /* base64.cpp */; };
+		34F574E52500B1CA00A7092A /* url.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34F574D02500B1CA00A7092A /* url.cpp */; };
+		34F574E62500B1CA00A7092A /* sha1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34F574D72500B1CA00A7092A /* sha1.cpp */; };
+		34F574E72500B1CA00A7092A /* picohttpparser.c in Sources */ = {isa = PBXBuildFile; fileRef = 34F574DA2500B1CA00A7092A /* picohttpparser.c */; };
+		34F574E82500B1CA00A7092A /* ResultSet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34F574DB2500B1CA00A7092A /* ResultSet.cpp */; };
+		34F574E92500B1CA00A7092A /* SocketClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34F574DC2500B1CA00A7092A /* SocketClient.cpp */; };
+		34F574EA2500B1CA00A7092A /* Response.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34F574DF2500B1CA00A7092A /* Response.cpp */; };
+		34F574EB2500B1CA00A7092A /* Request.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34F574E12500B1CA00A7092A /* Request.cpp */; };
+		34F574EC2500B1CA00A7092A /* Router.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34F574E22500B1CA00A7092A /* Router.cpp */; };
 		657FEFFEB9C578D7E05EEB11 /* DatabasePlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657FE7265DB0ABE839354EDE /* DatabasePlugin.cpp */; };
 		B3D63DCAC9BC2984740C724A /* Pods_Inspector_pod.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF6E007F7005D4507CED6AC2 /* Pods_Inspector_pod.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		04D00EA7C5B28B5EB7DB4359 /* Pods-Inspector-pod.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Inspector-pod.debug.xcconfig"; path = "Target Support Files/Pods-Inspector-pod/Pods-Inspector-pod.debug.xcconfig"; sourceTree = "<group>"; };
-		3405AB582377584B002FA13A /* base64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = base64.cpp; sourceTree = "<group>"; };
-		3405AB592377584B002FA13A /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
-		3405AB5A2377584C002FA13A /* json.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = json.hpp; sourceTree = "<group>"; };
-		3405AB5B2377584C002FA13A /* sha1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sha1.cpp; sourceTree = "<group>"; };
-		3405AB5D2377584C002FA13A /* compress.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = compress.hpp; sourceTree = "<group>"; };
-		3405AB5E2377584C002FA13A /* picohttpparser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = picohttpparser.h; sourceTree = "<group>"; };
-		3405AB5F2377584C002FA13A /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha1.h; sourceTree = "<group>"; };
-		3405AB602377584C002FA13A /* picohttpparser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = picohttpparser.c; sourceTree = "<group>"; };
-		3405AB612377584C002FA13A /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base64.h; sourceTree = "<group>"; };
 		3405AB6623775885002FA13A /* Http.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Http.swift; sourceTree = "<group>"; };
 		3405AB6C2377A1EC002FA13A /* NetworkPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NetworkPlugin.cpp; sourceTree = "<group>"; };
 		3405AB6D2377A1EC002FA13A /* NetworkPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkPlugin.h; sourceTree = "<group>"; };
@@ -52,28 +55,62 @@
 		342B0E532438D0F8001D7227 /* DatabaseProviderAdapter.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = DatabaseProviderAdapter.mm; sourceTree = "<group>"; };
 		342B0E552438DA92001D7227 /* CustomPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomPlugin.h; sourceTree = "<group>"; };
 		342B0E562438DA92001D7227 /* CustomPlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CustomPlugin.cpp; sourceTree = "<group>"; };
+		342FD483252965C2006B2C03 /* Broadcaster.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Broadcaster.cpp; sourceTree = "<group>"; };
+		342FD484252965C2006B2C03 /* UDPSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UDPSocket.h; sourceTree = "<group>"; };
+		342FD485252965C2006B2C03 /* Broadcaster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Broadcaster.h; sourceTree = "<group>"; };
+		342FD486252965C3006B2C03 /* UDPSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = UDPSocket.cpp; sourceTree = "<group>"; };
+		342FD48B25297AEA006B2C03 /* DeviceInfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DeviceInfo.cpp; sourceTree = "<group>"; };
+		342FD48C25297AEA006B2C03 /* DeviceInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DeviceInfo.h; sourceTree = "<group>"; };
 		3436339B2367F8DA002DB8BF /* IOSInspector.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IOSInspector.h; sourceTree = "<group>"; };
 		3436339C2367F8DA002DB8BF /* IOSInspector.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = IOSInspector.mm; sourceTree = "<group>"; };
+		343EE275251F013400CDF0DD /* WebSocketPlugin.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = WebSocketPlugin.cpp; sourceTree = "<group>"; };
+		343EE276251F013400CDF0DD /* WebSocketPlugin.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebSocketPlugin.h; sourceTree = "<group>"; };
+		343EE277251F013400CDF0DD /* HttpServing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = HttpServing.h; sourceTree = "<group>"; };
+		343EE27B251F01DE00CDF0DD /* realtime.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = realtime.html; path = ../../../cpp/ext/realtime/realtime.html; sourceTree = "<group>"; };
+		343EE27F251F020500CDF0DD /* RealtimePlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealtimePlugin.swift; sourceTree = "<group>"; };
 		344AFA20236A857D007B2896 /* Inspector-pod.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Inspector-pod.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		344C1C0B2367E64C00B62594 /* Inspector.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Inspector.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		344C1C0E2367E64C00B62594 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		344C1C1C2367E64F00B62594 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		344C1C242367E6CF00B62594 /* Inspector-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Inspector-Bridging-Header.h"; sourceTree = "<group>"; };
-		344C1C252367E6D000B62594 /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
 		344C1C272367E6D000B62594 /* Database.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Database.h; sourceTree = "<group>"; };
 		344C1C292367E6D000B62594 /* Database.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Database.cpp; sourceTree = "<group>"; };
 		344C1C2A2367E6D000B62594 /* Inspector.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Inspector.cpp; sourceTree = "<group>"; };
 		344C1C2B2367E6D000B62594 /* Inspector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Inspector.h; sourceTree = "<group>"; };
 		344C1C2D2367E6D000B62594 /* Socket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Socket.cpp; sourceTree = "<group>"; };
 		344C1C2E2367E6D000B62594 /* Socket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Socket.h; sourceTree = "<group>"; };
-		344C1C2F2367E6D000B62594 /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = util.cpp; sourceTree = "<group>"; };
 		344C1C332367E6D000B62594 /* HttpServer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HttpServer.cpp; sourceTree = "<group>"; };
 		344C1C342367E6D000B62594 /* HttpServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HttpServer.h; sourceTree = "<group>"; };
-		34595B4324EC42C100ECB544 /* url.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = url.cpp; sourceTree = "<group>"; };
-		34595B4424EC42C100ECB544 /* url.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = url.h; sourceTree = "<group>"; };
 		34595B4724EC460800ECB544 /* UserDefaultsPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsPlugin.swift; sourceTree = "<group>"; };
 		34595B4924EC468600ECB544 /* ExplorerPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplorerPlugin.swift; sourceTree = "<group>"; };
 		34595B4B24EC47AA00ECB544 /* explorer.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = explorer.html; path = ../../../cpp/ext/explorer/explorer.html; sourceTree = "<group>"; };
+		34D09760250F16C700F77CCC /* WebSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WebSocket.cpp; sourceTree = "<group>"; };
+		34D09761250F16C700F77CCC /* WebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebSocket.h; sourceTree = "<group>"; };
+		34F574C82500B1C900A7092A /* Http.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Http.h; sourceTree = "<group>"; };
+		34F574C92500B1C900A7092A /* ResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResultSet.h; sourceTree = "<group>"; };
+		34F574CA2500B1C900A7092A /* Response.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Response.h; sourceTree = "<group>"; };
+		34F574CB2500B1CA00A7092A /* SocketClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SocketClient.h; sourceTree = "<group>"; };
+		34F574CD2500B1CA00A7092A /* util.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = util.cpp; sourceTree = "<group>"; };
+		34F574CE2500B1CA00A7092A /* base64.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = base64.h; sourceTree = "<group>"; };
+		34F574CF2500B1CA00A7092A /* base64.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = base64.cpp; sourceTree = "<group>"; };
+		34F574D02500B1CA00A7092A /* url.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = url.cpp; sourceTree = "<group>"; };
+		34F574D12500B1CA00A7092A /* url.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = url.h; sourceTree = "<group>"; };
+		34F574D22500B1CA00A7092A /* util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = util.h; sourceTree = "<group>"; };
+		34F574D42500B1CA00A7092A /* json.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = json.hpp; sourceTree = "<group>"; };
+		34F574D52500B1CA00A7092A /* compress.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = compress.hpp; sourceTree = "<group>"; };
+		34F574D62500B1CA00A7092A /* picohttpparser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = picohttpparser.h; sourceTree = "<group>"; };
+		34F574D72500B1CA00A7092A /* sha1.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sha1.cpp; sourceTree = "<group>"; };
+		34F574D82500B1CA00A7092A /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
+		34F574D92500B1CA00A7092A /* sha1.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sha1.h; sourceTree = "<group>"; };
+		34F574DA2500B1CA00A7092A /* picohttpparser.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = picohttpparser.c; sourceTree = "<group>"; };
+		34F574DB2500B1CA00A7092A /* ResultSet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ResultSet.cpp; sourceTree = "<group>"; };
+		34F574DC2500B1CA00A7092A /* SocketClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SocketClient.cpp; sourceTree = "<group>"; };
+		34F574DD2500B1CA00A7092A /* Request.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Request.h; sourceTree = "<group>"; };
+		34F574DE2500B1CA00A7092A /* Client.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Client.h; sourceTree = "<group>"; };
+		34F574DF2500B1CA00A7092A /* Response.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Response.cpp; sourceTree = "<group>"; };
+		34F574E02500B1CA00A7092A /* Router.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Router.h; sourceTree = "<group>"; };
+		34F574E12500B1CA00A7092A /* Request.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Request.cpp; sourceTree = "<group>"; };
+		34F574E22500B1CA00A7092A /* Router.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Router.cpp; sourceTree = "<group>"; };
 		657FE7265DB0ABE839354EDE /* DatabasePlugin.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = DatabasePlugin.cpp; sourceTree = "<group>"; };
 		657FEFA39983E8F73462861B /* DatabasePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DatabasePlugin.h; sourceTree = "<group>"; };
 		844F3BE5E9B4686C70407E17 /* Pods-Inspector.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Inspector.release.xcconfig"; path = "Target Support Files/Pods-Inspector/Pods-Inspector.release.xcconfig"; sourceTree = "<group>"; };
@@ -161,23 +198,45 @@
 		344C1C232367E6B100B62594 /* cpp */ = {
 			isa = PBXGroup;
 			children = (
+				34F574D32500B1CA00A7092A /* libs */,
+				34F574CC2500B1CA00A7092A /* utils */,
+				342FD483252965C2006B2C03 /* Broadcaster.cpp */,
+				342FD485252965C2006B2C03 /* Broadcaster.h */,
+				34F574DE2500B1CA00A7092A /* Client.h */,
 				342B0E562438DA92001D7227 /* CustomPlugin.cpp */,
-				344C1C292367E6D000B62594 /* Database.cpp */,
-				657FE7265DB0ABE839354EDE /* DatabasePlugin.cpp */,
-				344C1C332367E6D000B62594 /* HttpServer.cpp */,
-				344C1C2A2367E6D000B62594 /* Inspector.cpp */,
-				3405AB6C2377A1EC002FA13A /* NetworkPlugin.cpp */,
-				344C1C2D2367E6D000B62594 /* Socket.cpp */,
-				344C1C2F2367E6D000B62594 /* util.cpp */,
 				342B0E552438DA92001D7227 /* CustomPlugin.h */,
+				344C1C292367E6D000B62594 /* Database.cpp */,
 				344C1C272367E6D000B62594 /* Database.h */,
+				657FE7265DB0ABE839354EDE /* DatabasePlugin.cpp */,
 				657FEFA39983E8F73462861B /* DatabasePlugin.h */,
+				342FD48B25297AEA006B2C03 /* DeviceInfo.cpp */,
+				342FD48C25297AEA006B2C03 /* DeviceInfo.h */,
+				34F574C82500B1C900A7092A /* Http.h */,
+				344C1C332367E6D000B62594 /* HttpServer.cpp */,
 				344C1C342367E6D000B62594 /* HttpServer.h */,
+				343EE277251F013400CDF0DD /* HttpServing.h */,
+				344C1C2A2367E6D000B62594 /* Inspector.cpp */,
 				344C1C2B2367E6D000B62594 /* Inspector.h */,
+				3405AB6C2377A1EC002FA13A /* NetworkPlugin.cpp */,
 				3405AB6D2377A1EC002FA13A /* NetworkPlugin.h */,
+				34F574E12500B1CA00A7092A /* Request.cpp */,
+				34F574DD2500B1CA00A7092A /* Request.h */,
+				34F574DF2500B1CA00A7092A /* Response.cpp */,
+				34F574CA2500B1C900A7092A /* Response.h */,
+				34F574DB2500B1CA00A7092A /* ResultSet.cpp */,
+				34F574C92500B1C900A7092A /* ResultSet.h */,
+				34F574E22500B1CA00A7092A /* Router.cpp */,
+				34F574E02500B1CA00A7092A /* Router.h */,
+				344C1C2D2367E6D000B62594 /* Socket.cpp */,
 				344C1C2E2367E6D000B62594 /* Socket.h */,
-				344C1C252367E6D000B62594 /* util.h */,
-				657FE5492190C5D1D11F3C51 /* libs */,
+				34F574DC2500B1CA00A7092A /* SocketClient.cpp */,
+				34F574CB2500B1CA00A7092A /* SocketClient.h */,
+				342FD486252965C3006B2C03 /* UDPSocket.cpp */,
+				342FD484252965C2006B2C03 /* UDPSocket.h */,
+				34D09760250F16C700F77CCC /* WebSocket.cpp */,
+				34D09761250F16C700F77CCC /* WebSocket.h */,
+				343EE275251F013400CDF0DD /* WebSocketPlugin.cpp */,
+				343EE276251F013400CDF0DD /* WebSocketPlugin.h */,
 			);
 			name = cpp;
 			path = ../cpp/src;
@@ -186,9 +245,11 @@
 		34595B4624EC45CA00ECB544 /* plugins */ = {
 			isa = PBXGroup;
 			children = (
+				343EE27B251F01DE00CDF0DD /* realtime.html */,
 				34595B4B24EC47AA00ECB544 /* explorer.html */,
 				34595B4724EC460800ECB544 /* UserDefaultsPlugin.swift */,
 				34595B4924EC468600ECB544 /* ExplorerPlugin.swift */,
+				343EE27F251F020500CDF0DD /* RealtimePlugin.swift */,
 			);
 			path = plugins;
 			sourceTree = "<group>";
@@ -204,20 +265,29 @@
 			path = lib;
 			sourceTree = "<group>";
 		};
-		657FE5492190C5D1D11F3C51 /* libs */ = {
+		34F574CC2500B1CA00A7092A /* utils */ = {
 			isa = PBXGroup;
 			children = (
-				34595B4324EC42C100ECB544 /* url.cpp */,
-				34595B4424EC42C100ECB544 /* url.h */,
-				3405AB582377584B002FA13A /* base64.cpp */,
-				3405AB612377584C002FA13A /* base64.h */,
-				3405AB5D2377584C002FA13A /* compress.hpp */,
-				3405AB5A2377584C002FA13A /* json.hpp */,
-				3405AB602377584C002FA13A /* picohttpparser.c */,
-				3405AB5E2377584C002FA13A /* picohttpparser.h */,
-				3405AB5B2377584C002FA13A /* sha1.cpp */,
-				3405AB5F2377584C002FA13A /* sha1.h */,
-				3405AB592377584B002FA13A /* sqlite3.h */,
+				34F574CF2500B1CA00A7092A /* base64.cpp */,
+				34F574CE2500B1CA00A7092A /* base64.h */,
+				34F574D02500B1CA00A7092A /* url.cpp */,
+				34F574D12500B1CA00A7092A /* url.h */,
+				34F574CD2500B1CA00A7092A /* util.cpp */,
+				34F574D22500B1CA00A7092A /* util.h */,
+			);
+			path = utils;
+			sourceTree = "<group>";
+		};
+		34F574D32500B1CA00A7092A /* libs */ = {
+			isa = PBXGroup;
+			children = (
+				34F574D52500B1CA00A7092A /* compress.hpp */,
+				34F574D42500B1CA00A7092A /* json.hpp */,
+				34F574DA2500B1CA00A7092A /* picohttpparser.c */,
+				34F574D62500B1CA00A7092A /* picohttpparser.h */,
+				34F574D72500B1CA00A7092A /* sha1.cpp */,
+				34F574D92500B1CA00A7092A /* sha1.h */,
+				34F574D82500B1CA00A7092A /* sqlite3.h */,
 			);
 			path = libs;
 			sourceTree = "<group>";
@@ -270,7 +340,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1110;
-				LastUpgradeCheck = 1110;
+				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					344C1C0A2367E64C00B62594 = {
@@ -311,6 +381,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34595B4C24EC47AA00ECB544 /* explorer.html in Resources */,
+				343EE27C251F01DE00CDF0DD /* realtime.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -411,23 +482,34 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				342FD487252965C3006B2C03 /* Broadcaster.cpp in Sources */,
 				344C1C382367E6D100B62594 /* Socket.cpp in Sources */,
 				3405AB6723775885002FA13A /* Http.swift in Sources */,
 				344C1C3C2367E6D100B62594 /* HttpServer.cpp in Sources */,
+				34F574E92500B1CA00A7092A /* SocketClient.cpp in Sources */,
+				343EE280251F020500CDF0DD /* RealtimePlugin.swift in Sources */,
 				344C1C372367E6D100B62594 /* Inspector.cpp in Sources */,
+				34D09762250F16C700F77CCC /* WebSocket.cpp in Sources */,
+				342FD488252965C3006B2C03 /* UDPSocket.cpp in Sources */,
 				344C1C0F2367E64C00B62594 /* AppDelegate.swift in Sources */,
 				3436339D2367F8DB002DB8BF /* IOSInspector.mm in Sources */,
 				34595B4824EC460800ECB544 /* UserDefaultsPlugin.swift in Sources */,
-				3405AB622377584C002FA13A /* base64.cpp in Sources */,
+				34F574EA2500B1CA00A7092A /* Response.cpp in Sources */,
+				34F574E42500B1CA00A7092A /* base64.cpp in Sources */,
+				34F574E82500B1CA00A7092A /* ResultSet.cpp in Sources */,
+				34F574EC2500B1CA00A7092A /* Router.cpp in Sources */,
+				34F574E52500B1CA00A7092A /* url.cpp in Sources */,
 				342B0E542438D0F8001D7227 /* DatabaseProviderAdapter.mm in Sources */,
+				342FD48D25297AEA006B2C03 /* DeviceInfo.cpp in Sources */,
+				343EE278251F014500CDF0DD /* WebSocketPlugin.cpp in Sources */,
 				344C1C362367E6D100B62594 /* Database.cpp in Sources */,
-				344C1C392367E6D100B62594 /* util.cpp in Sources */,
-				3405AB632377584C002FA13A /* sha1.cpp in Sources */,
-				34595B4524EC42C100ECB544 /* url.cpp in Sources */,
+				34F574E72500B1CA00A7092A /* picohttpparser.c in Sources */,
+				34F574EB2500B1CA00A7092A /* Request.cpp in Sources */,
+				34F574E32500B1CA00A7092A /* util.cpp in Sources */,
 				34595B4A24EC468600ECB544 /* ExplorerPlugin.swift in Sources */,
 				342B0E572438DA92001D7227 /* CustomPlugin.cpp in Sources */,
-				3405AB652377584C002FA13A /* picohttpparser.c in Sources */,
 				3405AB6E2377A1EC002FA13A /* NetworkPlugin.cpp in Sources */,
+				34F574E62500B1CA00A7092A /* sha1.cpp in Sources */,
 				657FEFFEB9C578D7E05EEB11 /* DatabasePlugin.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -498,6 +580,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -557,6 +640,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -594,6 +678,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 32973VC289;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -614,6 +699,7 @@
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 32973VC289;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

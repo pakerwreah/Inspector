@@ -1,0 +1,29 @@
+name: iOS CI
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: CocoaPods
+        working-directory: ios
+        run: pod install
+
+      - name: Build
+        working-directory: ios
+        env:
+          scheme: Inspector
+          platform: iOS Simulator
+          workspace: Inspector.xcworkspace
+        run: |
+          device=`instruments -s -devices | grep -oE 'iPhone.*?[^\(]+' | head -1 | awk '{$1=$1;print}'`
+          xcodebuild build -scheme "$scheme" -workspace "$workspace" -destination "platform=$platform,name=$device"

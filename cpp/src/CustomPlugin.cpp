@@ -3,8 +3,10 @@
 //
 
 #include "CustomPlugin.h"
-#include "HttpServer.h"
 #include "util.h"
+
+using namespace std;
+using json = nlohmann::json;
 
 void to_json(json &j, const PluginMeta &p) {
     j = {{"key",  p.key},
@@ -12,9 +14,30 @@ void to_json(json &j, const PluginMeta &p) {
          {"live", p.live}};
 }
 
+Response CustomPlugin::execute(PluginAction action) {
+    string res;
+    try {
+        return json::parse(res = action());
+    } catch (const json::parse_error &) {
+        return res;
+    }
+}
+
+CustomPlugin::CustomPlugin(Router *router) {
+    this->router = router;
+
+    router->get("/plugins", [this](const Request &, const Params &) {
+        return json(plugins);
+    });
+}
+
 void CustomPlugin::addPlugin(const string &key, const string &name, PluginAction action, bool live) {
     plugins.push_back({key, name, live});
-    actions[key] = action;
+    router->get("/plugins/" + key, [this, action](const Request &, const Params &) {
+        return execute([action] {
+            return action();
+        });
+    });
 }
 
 void CustomPlugin::addPlugin(const string &key, const string &name, PluginAction action) {
@@ -26,40 +49,10 @@ void CustomPlugin::addLivePlugin(const string &key, const string &name, PluginAc
 }
 
 void CustomPlugin::addPluginAPI(const string &method, const string &path, PluginAPIAction action) {
-    api[method][util::replaceAll(path, "/", "-")] = action;
-}
-
-Response CustomPlugin::execute(PluginAction action) noexcept {
-    string res;
-    try {
-        return Response(json::parse(res = action()));
-    } catch (json::parse_error &ex) {
-        return Response(res, 200, ContentType::HTML);
-    } catch (out_of_range &ex) {
-        return Response(ex.what(), 400);
-    } catch (exception &ex) {
-        return Response(ex.what(), 500);
-    }
-}
-
-CustomPlugin::CustomPlugin(HttpServer *server) {
-    server->get("/plugins", [this](const Request &, const Params &) {
-        return Response(plugins);
-    });
-
-    server->get("/plugins/{:key:}", [this](const Request &request, const Params &params) {
-        return execute([&] {
-            string key = params.at(":key:");
-            PluginAction action = actions.at(key);
-            return action();
-        });
-    });
-
-    server->request("/plugins/api/{:path:}", [this](const Request &request, const Params &params) {
-        return execute([&] {
-            string path = params.at(":path:");
-            PluginAPIAction action = api.at(request.method).at(path);
-            return action(params);
-        });
-    });
+    router->route(method, "/plugins/api/" + util::ltrim(path, "/"),
+                  [this, action](const Request &, const Params &params) {
+                      return execute([action, &params] {
+                          return action(params);
+                      });
+                  });
 }

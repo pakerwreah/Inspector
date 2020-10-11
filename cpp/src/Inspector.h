@@ -9,31 +9,41 @@
 #include "DatabasePlugin.h"
 #include "NetworkPlugin.h"
 #include "CustomPlugin.h"
+#include "WebSocketPlugin.h"
+#include "Broadcaster.h"
 
 class Inspector {
-    HttpServer *server;
-    NetworkPlugin *networkPlugin;
-    DatabasePlugin *databasePlugin;
-    CustomPlugin *customPlugin;
+    DeviceInfo info;
+    HttpServer server;
+    Broadcaster broadcaster;
+    std::vector<std::thread*> threads;
+    std::unique_ptr<NetworkPlugin> networkPlugin;
+    std::unique_ptr<DatabasePlugin> databasePlugin;
+    std::unique_ptr<CustomPlugin> customPlugin;
+    std::unique_ptr<WebSocketPlugin> webSocketPlugin;
 
 public:
-    Inspector(DatabaseProvider *databaseProvider);
+    Inspector(DatabaseProvider *databaseProvider, const DeviceInfo &info);
 
-    thread *bind(int port);
+    void bind(int port);
 
-    void setCipherKey(const string &database, const string &password, int version);
+    void setCipherKey(const std::string &database, const std::string &password, int version);
 
     bool isConnected() const;
 
-    void sendRequest(const string &uid, const string &headers, const string &body);
+    void sendRequest(const std::string &uid, const std::string &headers, const std::string &body);
 
-    void sendResponse(const string &uid, const string &headers, const string &body, bool compressed = false);
+    void sendResponse(const std::string &uid, const std::string &headers, const std::string &body, bool compressed = false);
 
-    void addPlugin(const string &key, const string &name, PluginAction action);
+    void addPlugin(const std::string &key, const std::string &name, PluginAction action);
 
-    void addLivePlugin(const string &key, const string &name, PluginAction action);
+    void addLivePlugin(const std::string &key, const std::string &name, PluginAction action);
 
-    void addPluginAPI(const string &method, const string &path, PluginAPIAction action);
+    void addPluginAPI(const std::string &method, const std::string &path, PluginAPIAction action);
+
+    void sendMessage(const std::string &key, const std::string &message);
+
+    void stop();
 };
 
 

@@ -8,36 +8,36 @@
 #include <map>
 #include <string>
 #include <vector>
-#include "HttpServer.h"
+#include <functional>
 
-using namespace std;
+#include "Router.h"
 
-typedef string PluginKey;
-typedef function<string()> PluginAction;
-typedef function<string(const Params &)> PluginAPIAction;
+typedef std::function<std::string()> PluginAction;
+typedef std::function<std::string(const Params &)> PluginAPIAction;
 
 struct PluginMeta {
-    string key, name;
+    std::string key, name;
     bool live;
 };
 
+void to_json(nlohmann::json &j, const PluginMeta &p);
+
 class CustomPlugin {
-    vector<PluginMeta> plugins;
-    map<PluginKey, PluginAction> actions;
-    map<Method, map<Path, PluginAPIAction>> api;
+    Router *router;
+    std::vector<PluginMeta> plugins;
+    std::map<std::string, PluginAction> actions;
 
-    Response execute(PluginAction executor) noexcept;
-
-    void addPlugin(const string &key, const string &name, PluginAction action, bool live);
+protected:
+    CustomPlugin() = default;
+    Response execute(PluginAction executor);
+    void addPlugin(const std::string &key, const std::string &name, PluginAction action, bool live);
 
 public:
-    CustomPlugin(HttpServer *server);
+    CustomPlugin(Router *router);
 
-    void addPlugin(const string &key, const string &name, PluginAction action);
-
-    void addPluginAPI(const string &method, const string &path, PluginAPIAction action);
-
-    void addLivePlugin(const string &key, const string &name, PluginAction action);
+    void addPlugin(const std::string &key, const std::string &name, PluginAction action);
+    void addPluginAPI(const std::string &method, const std::string &path, PluginAPIAction action);
+    void addLivePlugin(const std::string &key, const std::string &name, PluginAction action);
 };
 
 

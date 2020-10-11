@@ -2,17 +2,18 @@
 // Created by Paker on 26/10/19.
 //
 
-#include "Inspector.h"
-#include "util.h"
 #include <unistd.h>
 #include <thread>
 #include <vector>
 #include <sys/time.h>
-#include <sstream>
 
-#include "../ext/explorer/explorer.h"
+#include "Inspector.h"
+#include "util.h"
+#include "ext/explorer/explorer.h"
+#include "ext/realtime/realtime.h"
 
 using namespace std;
+using json = nlohmann::json;
 
 class TestDatabaseProvider : public DatabaseProvider {
 protected:
@@ -90,16 +91,22 @@ static void mockNetwork(Inspector &inspector) {
             inspector.sendResponse(uid, "Status: 301\nContent-Type: text/plain\nContent-Length: 11\n", "Redirected!");
         }
     });
+    new thread([&] {
+        while (true) {
+            rsleep();
+            inspector.sendMessage("realtime", "Message uid: " + util::uid());
+        }
+    });
 }
 
 int main() {
-
-    Inspector inspector(new TestDatabaseProvider);
+    DeviceInfo info = {"desktop", "Demo Application", "com.demo.app", "v1.0.0"};
+    Inspector inspector(new TestDatabaseProvider, info);
 
     inspector.setCipherKey("database_cipher3.db", "123456", 3);
     inspector.setCipherKey("database_cipher4.db", "1234567", 4);
 
-    thread *th = inspector.bind(30000);
+    inspector.bind(30000);
 
     mockNetwork(inspector);
 
@@ -130,7 +137,9 @@ int main() {
 
     Explorer explorer(inspector, "../../");
 
-    th->join();
+    Realtime realtime(inspector);
+
+    this_thread::sleep_for(100h);
 
     return 0;
 }

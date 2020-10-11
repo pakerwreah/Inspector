@@ -11,30 +11,57 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate, IOSInspectorProtocol {
 
     func applicationDidFinishLaunching(_ application: UIApplication) {
-        IOSInspector.initialize(withDelegate: self, port: 30000)
+        IOSInspector.initialize(withDelegate: self)
 
         IOSInspector.setCipherKey("database_cipher3.db", password: "123456", version: 3)
         IOSInspector.setCipherKey("database_cipher4.db", password: "1234567", version: 4)
 
         IOSInspector.addPlugin("prefs", name: "User Defaults", plugin: UserDefaultsPlugin())
-        
+        IOSInspector.addLivePlugin("realtime", name: "Realtime", plugin: RealtimePlugin())
         IOSInspector.addLivePlugin("explorer", name: "Explorer", plugin: ExplorerPlugin())
 
         mockNetwork()
+        mockMessages()
+        mockDatabases()
     }
-
+    
     func mockNetwork() {
         DispatchQueue.global().async {
+            let urls = [
+                "https://google.com.br",
+                "https://viacep.com.br/ws/01001000/json",
+                "https://viacep.com.br/ws/15020035/json",
+                "https://viacep.com.br/ws/1020035/json"
+            ]
+            var i = 0
             while(true) {
-                Http.request(url: "https://viacep.com.br/ws/01001000/json")
-                Http.request(url: "https://viacep.com.br/ws/15020035/json")
-                sleep(1)
-                Http.request(url: "https://viacep.com.br/ws/1020035/json")
-                sleep(5)
+                let url = urls[i % urls.count]
+                sleep(UInt32.random(in: 0...3))
+                Http.request(url: url)
+                i += 1
+            }
+        }
+    }
+
+    func mockMessages() {
+        DispatchQueue.global().async {
+            while(true) {
+                sleep(UInt32.random(in: 0...3))
+                let uid = UUID().uuidString
+                IOSInspector.sendMessage(to: "realtime", message: "Message \(uid)")
             }
         }
     }
     
+    func mockDatabases() {
+        func path(_ database: String) -> String {
+            documentDirectory.appendingPathComponent(database).absoluteString
+        }
+        IOSInspector.createDatabase(path("database.db"))
+        IOSInspector.createDatabase(path("database_cipher3.db"), password: "123456", version: 3)
+        IOSInspector.createDatabase(path("database_cipher4.db"), password: "1234567", version: 4)
+    }
+
     lazy var documentDirectory: URL = {
         let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
         print(url.absoluteString)

@@ -10,14 +10,13 @@ public class Application extends android.app.Application {
     public void onCreate() {
         super.onCreate();
 
-        Inspector.initializeWith(this, 30000);
+        Inspector.initializeWith(this);
 
         Inspector.setCipherKey("database_cipher3.db", "123456", 3);
         Inspector.setCipherKey("database_cipher4.db", "1234567", 4);
 
         Inspector.addPlugin("prefs", "Shared Preferences", new SharedPrefsPlugin(this));
-        Inspector.addPlugin("logcat", "Logcat", new LogcatPlugin(30));
-
+        Inspector.addLivePlugin("logcat", "Logcat", new LogcatPlugin(this));
         Inspector.addLivePlugin("explorer", "Explorer", new ExplorerPlugin(this));
     }
 

@@ -1,47 +1,51 @@
 package br.newm.inspector_test.plugins;
 
-import android.text.TextUtils;
+import android.content.Context;
+
+import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
+import br.newm.inspector.Inspector;
 import br.newm.inspector.PluginAction;
-import br.newm.inspector_test.BuildConfig;
 
 public class LogcatPlugin implements PluginAction {
+    private String frontend = null;
 
-    private final int lines;
-
-    public LogcatPlugin(int lines) {
-        this.lines = lines;
+    public LogcatPlugin(Context context) {
+        try {
+            this.frontend = IOUtils.toString(context.getAssets().open("logcat.html"), StandardCharsets.UTF_8);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    logcat();
+                }
+            }).start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    @Override
-    public String action() {
-        Process logcat;
-        final StringBuilder log = new StringBuilder();
-
-        log.append("<div style='font-size: 12px'>");
-
+    private void logcat() {
         try {
-            logcat = Runtime.getRuntime().exec(new String[]{
-                    "logcat",
-                    "-v", "time",
-                    "-t", String.valueOf(lines),
-                    BuildConfig.APPLICATION_ID + ":I"
+            Process logcat = Runtime.getRuntime().exec(new String[]{
+                    "logcat", "-v", "time", "-T", "0"
             });
-            BufferedReader br = new BufferedReader(new InputStreamReader(logcat.getInputStream()));
+            BufferedReader buffer = new BufferedReader(new InputStreamReader(logcat.getInputStream()));
             String line;
-            br.readLine(); // skip header
-            while ((line = br.readLine()) != null) {
-                log.append(TextUtils.htmlEncode(line)).append("<br />");
+            while ((line = buffer.readLine()) != null) {
+                Inspector.sendMessage("logcat", line);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
-        log.append("</div>");
-
-        return log.toString();
+    @Override
+    public String action() {
+        return frontend;
     }
 }

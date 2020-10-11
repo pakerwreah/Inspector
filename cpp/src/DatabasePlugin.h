@@ -7,39 +7,42 @@
 
 #include <map>
 #include <string>
+#include <vector>
+#include <memory>
+#include <chrono>
 
-class HttpServer;
-
-class Database;
-
-using namespace std;
+#include "Router.h"
+#include "Database.h"
 
 class DatabaseProvider {
 public:
-    virtual vector<string> databasePathList() = 0;
+    virtual std::vector<std::string> databasePathList() = 0;
 };
 
-struct SQLCipher {
-    string password;
+struct DatabaseMeta {
+    std::string password;
     int version;
 };
 
 class DatabasePlugin {
-    string db_path;
+    int auto_close_token;
+    std::string db_path;
     DatabaseProvider *provider;
-    map<string, SQLCipher> cipher;
-    shared_ptr<Database> db_con;
-
-    shared_ptr<Database> open();
-
-    vector<string> databasePathList();
-
-    void selectDB(int index);
-
+    std::map<std::string, DatabaseMeta> db_meta;
+    std::shared_ptr<Database> db_con;
+protected:
+    std::chrono::nanoseconds debounce;
 public:
-    DatabasePlugin(HttpServer *server, DatabaseProvider *provider);
+    DatabasePlugin(Router *router, DatabaseProvider *provider);
+    virtual ~DatabasePlugin();
 
-    void setCipherKey(const string &database, const string &password, int version);
+    std::vector<std::string> databasePathList();
+    void setCipherKey(const std::string &database, const std::string &password, int version);
+    std::shared_ptr<Database> open();
+    void selectDB(int index);
+    std::string databaseName() const;
+    bool isOpen() const;
+    void setDebounce(std::chrono::nanoseconds debounce);
 };
 
 
