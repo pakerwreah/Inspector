@@ -108,7 +108,7 @@ TEST_CASE("DatabasePlugin - List") {
     Response response;
     MockDatabaseProvider databaseProvider;
     DatabasePlugin plugin(&router, &databaseProvider);
-    databaseProvider.databases = {"file://path/database1.db", "file://path/database2.db"};
+    databaseProvider.databases = {"file://path/database1.db", "database2.db", "database2.db-shm", "database2.db-wal"};
     CHECK_NOTHROW(plugin.selectDB(1));
 
     json expected = {{"databases", {"database1.db", "database2.db"}},

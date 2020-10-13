@@ -147,8 +147,12 @@ DatabasePlugin::DatabasePlugin(Router *router, DatabaseProvider *provider) : pro
 }
 
 vector<string> DatabasePlugin::databasePathList() {
-    return util::filter(provider->databasePathList(),
-                        [](const string &item) { return !util::endsWith(item, "-journal"); });
+    const array<string, 3> arr = {"-journal", "-shm", "-wal"};
+    return util::filter(provider->databasePathList(), [&arr](const string &item) {
+        return none_of(arr.begin(), arr.end(), [&item](const string &suffix) {
+            return util::endsWith(item, suffix);
+        });
+    });
 }
 
 void DatabasePlugin::selectDB(int index) {
