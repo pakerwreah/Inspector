@@ -6,11 +6,11 @@
 
 using namespace std;
 
-Inspector::Inspector(DatabaseProvider *databaseProvider, const DeviceInfo &info) : info(info) {
-    databasePlugin = make_unique<DatabasePlugin>(&server.router, databaseProvider);
-    networkPlugin = make_unique<NetworkPlugin>(&server.router);
-    customPlugin = make_unique<CustomPlugin>(&server.router);
-    webSocketPlugin = make_unique<WebSocketPlugin>(&server.router);
+Inspector::Inspector(shared_ptr<DatabaseProvider> databaseProvider, const DeviceInfo &info) : info(info) {
+    databasePlugin = make_unique<DatabasePlugin>(server.router, databaseProvider);
+    networkPlugin = make_unique<NetworkPlugin>(server.router);
+    customPlugin = make_unique<CustomPlugin>(server.router);
+    webSocketPlugin = make_unique<WebSocketPlugin>(server.router);
 }
 
 void Inspector::bind(int port) {

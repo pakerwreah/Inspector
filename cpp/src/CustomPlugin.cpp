@@ -23,17 +23,15 @@ Response CustomPlugin::execute(PluginAction action) {
     }
 }
 
-CustomPlugin::CustomPlugin(Router *router) {
-    this->router = router;
-
-    router->get("/plugins", [this](const Request &, const Params &) {
+CustomPlugin::CustomPlugin(Router &router) : router(router) {
+    router.get("/plugins", [this](const Request &, const Params &) {
         return json(plugins);
     });
 }
 
 void CustomPlugin::addPlugin(const string &key, const string &name, PluginAction action, bool live) {
     plugins.push_back({key, name, live});
-    router->get("/plugins/" + key, [this, action](const Request &, const Params &) {
+    router.get("/plugins/" + key, [this, action](const Request &, const Params &) {
         return execute([action] {
             return action();
         });
@@ -49,10 +47,10 @@ void CustomPlugin::addLivePlugin(const string &key, const string &name, PluginAc
 }
 
 void CustomPlugin::addPluginAPI(const string &method, const string &path, PluginAPIAction action) {
-    router->route(method, "/plugins/api/" + util::ltrim(path, "/"),
-                  [this, action](const Request &, const Params &params) {
-                      return execute([action, &params] {
-                          return action(params);
-                      });
-                  });
+    router.route(method, "/plugins/api/" + util::ltrim(path, "/"),
+                 [this, action](const Request &, const Params &params) {
+                     return execute([action, &params] {
+                         return action(params);
+                     });
+                 });
 }

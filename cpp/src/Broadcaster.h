@@ -9,6 +9,7 @@
 #include <thread>
 
 class Broadcaster {
+private:
     bool _stop;
     bool _broadcasting;
     int _error;
@@ -23,6 +24,5 @@ public:
     std::thread *start(int port, const DeviceInfo &info);
     void setInterval(std::chrono::nanoseconds interval);
 };
-
 
 #endif //INSPECTOR_BROADCASTER_H

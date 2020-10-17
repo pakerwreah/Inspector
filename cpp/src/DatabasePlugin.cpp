@@ -47,8 +47,8 @@ shared_ptr<Database> DatabasePlugin::open() {
     return db_con;
 }
 
-DatabasePlugin::DatabasePlugin(Router *router, DatabaseProvider *provider) : provider(provider), debounce(5s) {
-    router->get("/database/list", [this](const Request &, const Params &) {
+DatabasePlugin::DatabasePlugin(Router &router, shared_ptr<DatabaseProvider> provider) : provider(provider), debounce(5s) {
+    router.get("/database/list", [this](const Request &, const Params &) {
         int index = 0;
         auto paths = databasePathList();
         auto names = json::array();
@@ -65,7 +65,7 @@ DatabasePlugin::DatabasePlugin(Router *router, DatabaseProvider *provider) : pro
         return data;
     });
 
-    router->put("/database/current/{index}", [this](const Request &request, const Params &params) {
+    router.put("/database/current/{index}", [this](const Request &request, const Params &params) {
         auto index = stoi(params.at("index"));
 
         selectDB(index);
@@ -74,7 +74,7 @@ DatabasePlugin::DatabasePlugin(Router *router, DatabaseProvider *provider) : pro
         return Response(db_path);
     });
 
-    router->post("/database/query", [this](const Request &request, const Params &) {
+    router.post("/database/query", [this](const Request &request, const Params &) {
         auto sql = request.body;
 
         try {
@@ -123,7 +123,7 @@ DatabasePlugin::DatabasePlugin(Router *router, DatabaseProvider *provider) : pro
         }
     });
 
-    router->post("/database/execute", [this](const Request &request, const Params &) {
+    router.post("/database/execute", [this](const Request &request, const Params &) {
         shared_ptr<Database> db;
         try {
             db = open();

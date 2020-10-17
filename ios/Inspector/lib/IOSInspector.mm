@@ -11,7 +11,7 @@
 
 using namespace std;
 
-static Inspector *inspector;
+static unique_ptr<Inspector> inspector;
 
 @implementation IOSInspector
 
@@ -57,7 +57,7 @@ static string buildHeaders(NSDictionary<NSString *,NSString *> *headers) {
     NSBundle *bundle = [NSBundle mainBundle];
     NSString *version = bundle.infoDictionary[@"CFBundleShortVersionString"];
     DeviceInfo info = {"ios", device.name.UTF8String, bundle.bundleIdentifier.UTF8String, version.UTF8String};
-    inspector = new Inspector(new DatabaseProviderAdapter(delegate), info);
+    inspector = make_unique<Inspector>(make_shared<DatabaseProviderAdapter>(delegate), info);
     inspector->bind(port);
 }
 

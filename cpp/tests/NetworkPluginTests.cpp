@@ -13,7 +13,7 @@ TEST_CASE("NetworkPlugin") {
     shared_ptr requestClient = make_shared<MockClient>();
     shared_ptr responseClient = make_shared<MockClient>();
 
-    NetworkPlugin plugin(&router);
+    NetworkPlugin plugin(router);
     CHECK_FALSE(plugin.isConnected());
 
     request = {"GET", "/network/request", requestClient, headers};
