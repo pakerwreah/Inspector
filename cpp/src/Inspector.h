@@ -13,6 +13,7 @@
 #include "Broadcaster.h"
 
 class Inspector {
+private:
     DeviceInfo info;
     HttpServer server;
     Broadcaster broadcaster;
@@ -23,7 +24,7 @@ class Inspector {
     std::unique_ptr<WebSocketPlugin> webSocketPlugin;
 
 public:
-    Inspector(DatabaseProvider *databaseProvider, const DeviceInfo &info);
+    Inspector(std::shared_ptr<DatabaseProvider> databaseProvider, const DeviceInfo &info);
 
     void bind(int port);
 
@@ -45,6 +46,5 @@ public:
 
     void stop();
 };
-
 
 #endif //INSPECTOR_INSPECTOR_H

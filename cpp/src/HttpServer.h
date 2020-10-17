@@ -14,6 +14,7 @@
 #include "Socket.h"
 
 class HttpServer : public HttpServing {
+private:
     bool _stop;
     bool _listening;
     int _error;
@@ -36,6 +37,5 @@ public:
     std::thread *start(int port);
     void setReconnectInterval(std::chrono::nanoseconds interval);
 };
-
 
 #endif //INSPECTOR_HTTPSERVER_H

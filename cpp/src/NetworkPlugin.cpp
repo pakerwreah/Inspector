@@ -7,8 +7,8 @@
 
 using namespace std;
 
-NetworkPlugin::NetworkPlugin(Router *router) {
-    router->get("/network/request", [this](const Request &request, const Params &) {
+NetworkPlugin::NetworkPlugin(Router &router) {
+    router.get("/network/request", [this](const Request &request, const Params &) {
         Response response = WebSocket::handshake(request);
         if (response.code == 101) {
             lock_guard guard(mutex);
@@ -17,7 +17,7 @@ NetworkPlugin::NetworkPlugin(Router *router) {
         return response;
     });
 
-    router->get("/network/response", [this](const Request &request, const Params &) {
+    router.get("/network/response", [this](const Request &request, const Params &) {
         Response response = WebSocket::handshake(request);
         if (response.code == 101) {
             lock_guard guard(mutex);

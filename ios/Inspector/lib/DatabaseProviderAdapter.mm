@@ -14,7 +14,7 @@ DatabaseProviderAdapter::DatabaseProviderAdapter(id<IOSInspectorProtocol> _Nonnu
     this->delegate = delegate;
 }
 
-vector<string> DatabaseProviderAdapter::databasePathList() {
+vector<string> DatabaseProviderAdapter::databasePathList() const {
     auto list = vector<string>();
     auto paths = delegate.databaseList;
     for (NSString *path in paths) {

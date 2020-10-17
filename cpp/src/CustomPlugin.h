@@ -23,22 +23,21 @@ struct PluginMeta {
 void to_json(nlohmann::json &j, const PluginMeta &p);
 
 class CustomPlugin {
-    Router *router;
+private:
+    Router &router;
     std::vector<PluginMeta> plugins;
     std::map<std::string, PluginAction> actions;
 
-protected:
-    CustomPlugin() = default;
-    Response execute(PluginAction executor);
     void addPlugin(const std::string &key, const std::string &name, PluginAction action, bool live);
 
 public:
-    CustomPlugin(Router *router);
+    CustomPlugin(Router &router);
+
+    Response execute(PluginAction executor);
 
     void addPlugin(const std::string &key, const std::string &name, PluginAction action);
     void addPluginAPI(const std::string &method, const std::string &path, PluginAPIAction action);
     void addLivePlugin(const std::string &key, const std::string &name, PluginAction action);
 };
-
 
 #endif //INSPECTOR_CUSTOMPLUGIN_H

@@ -11,10 +11,12 @@
 #include <set>
 
 class NetworkPlugin {
+private:
     std::set<std::shared_ptr<WebSocket>> request_clients, response_clients;
     std::mutex mutex;
+
 public:
-    NetworkPlugin(Router *router);
+    NetworkPlugin(Router &router);
 
     bool isRequestConnected() const;
     bool isResponseConnected() const;
@@ -23,6 +25,5 @@ public:
     void sendRequest(const std::string &uid, const std::string &headers, const std::string &body);
     void sendResponse(const std::string &uid, const std::string &headers, const std::string &body, bool compressed = false);
 };
-
 
 #endif //INSPECTOR_NETWORKPLUGIN_H

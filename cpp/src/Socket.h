@@ -5,6 +5,7 @@
 #include <string>
 
 class Socket {
+private:
     int m_sock;
     sockaddr_in m_addr;
 
@@ -36,6 +37,5 @@ public:
 
     int fd() const;
 };
-
 
 #endif

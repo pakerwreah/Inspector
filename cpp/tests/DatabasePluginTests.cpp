@@ -9,17 +9,17 @@ using json = nlohmann::json;
 
 TEST_CASE("DatabasePlugin - Provider") {
     Router router;
-    MockDatabaseProvider databaseProvider;
-    DatabasePlugin plugin(&router, &databaseProvider);
-    databaseProvider.databases = {"database1.db", "database2.db"};
+    shared_ptr databaseProvider = make_shared<MockDatabaseProvider>();
+    DatabasePlugin plugin(router, databaseProvider);
+    databaseProvider->databases = {"database1.db", "database2.db"};
 
-    CHECK(plugin.databasePathList() == databaseProvider.databasePathList());
+    CHECK(plugin.databasePathList() == databaseProvider->databasePathList());
 }
 
 TEST_CASE("DatabasePlugin - Open") {
     Router router;
-    MockDatabaseProvider databaseProvider;
-    DatabasePlugin plugin(&router, &databaseProvider);
+    shared_ptr databaseProvider = make_shared<MockDatabaseProvider>();
+    DatabasePlugin plugin(router, databaseProvider);
 
     REQUIRE_NOTHROW([] {
         const string path = "database1.db";
@@ -35,13 +35,13 @@ TEST_CASE("DatabasePlugin - Open") {
     SECTION("Database does not exist") {
         const string path = "no_database.db";
         filesystem::remove(path);
-        databaseProvider.databases = {path};
+        databaseProvider->databases = {path};
         const auto matcher = Catch::Message("Error opening database (14): " + path);
         CHECK_THROWS_MATCHES(plugin.open(), runtime_error, matcher);
     }
 
     SECTION("Success") {
-        databaseProvider.databases = {"database1.db"};
+        databaseProvider->databases = {"database1.db"};
         REQUIRE_NOTHROW(plugin.open());
         CHECK(plugin.isOpen());
         CHECK(plugin.databaseName() == "database1.db");
@@ -49,7 +49,7 @@ TEST_CASE("DatabasePlugin - Open") {
 
     SECTION("Debounce") {
         plugin.setDebounce(50ms);
-        databaseProvider.databases = {"database1.db"};
+        databaseProvider->databases = {"database1.db"};
         REQUIRE_NOTHROW(plugin.open());
         CHECK(plugin.isOpen());
 
@@ -66,11 +66,11 @@ TEST_CASE("DatabasePlugin - Open") {
 
 TEST_CASE("DatabasePlugin - Select database") {
     Router router;
-    MockDatabaseProvider databaseProvider;
-    DatabasePlugin plugin(&router, &databaseProvider);
+    shared_ptr databaseProvider = make_shared<MockDatabaseProvider>();
+    DatabasePlugin plugin(router, databaseProvider);
 
     SECTION("In Code") {
-        databaseProvider.databases = {"path/database1.db", "path/database2.db"};
+        databaseProvider->databases = {"path/database1.db", "path/database2.db"};
 
         CHECK_NOTHROW(plugin.selectDB(0));
         CHECK_FALSE(plugin.isOpen());
@@ -85,7 +85,7 @@ TEST_CASE("DatabasePlugin - Select database") {
         Request request;
         Response response;
 
-        databaseProvider.databases = {"database1.db", "database2.db"};
+        databaseProvider->databases = {"database1.db", "database2.db"};
 
         REQUIRE_NOTHROW([] {
             const string path = "database2.db";
@@ -106,9 +106,9 @@ TEST_CASE("DatabasePlugin - List") {
     Router router;
     Request request;
     Response response;
-    MockDatabaseProvider databaseProvider;
-    DatabasePlugin plugin(&router, &databaseProvider);
-    databaseProvider.databases = {"file://path/database1.db", "database2.db", "database2.db-shm", "database2.db-wal"};
+    shared_ptr databaseProvider = make_shared<MockDatabaseProvider>();
+    DatabasePlugin plugin(router, databaseProvider);
+    databaseProvider->databases = {"file://path/database1.db", "database2.db", "database2.db-shm", "database2.db-wal"};
     CHECK_NOTHROW(plugin.selectDB(1));
 
     json expected = {{"databases", {"database1.db", "database2.db"}},
@@ -126,10 +126,10 @@ TEST_CASE("DatabasePlugin - Encryption") {
     Router router;
     Request request;
     Response response;
-    MockDatabaseProvider databaseProvider;
-    DatabasePlugin plugin(&router, &databaseProvider);
+    shared_ptr databaseProvider = make_shared<MockDatabaseProvider>();
+    DatabasePlugin plugin(router, databaseProvider);
     const string path = "database1.db";
-    databaseProvider.databases = {path};
+    databaseProvider->databases = {path};
 
     REQUIRE_NOTHROW([&] {
         filesystem::remove(path);
@@ -158,10 +158,10 @@ TEST_CASE("DatabasePlugin - Query") {
     Router router;
     Request request;
     Response response;
-    MockDatabaseProvider databaseProvider;
-    DatabasePlugin plugin(&router, &databaseProvider);
+    shared_ptr databaseProvider = make_shared<MockDatabaseProvider>();
+    DatabasePlugin plugin(router, databaseProvider);
     const string path = "database1.db";
-    databaseProvider.databases = {path};
+    databaseProvider->databases = {path};
 
     REQUIRE_NOTHROW([&] {
         filesystem::remove(path);
@@ -198,11 +198,11 @@ TEST_CASE("DatabasePlugin - Execute") {
     Router router;
     Request request;
     Response response;
-    MockDatabaseProvider databaseProvider;
-    DatabasePlugin plugin(&router, &databaseProvider);
+    shared_ptr databaseProvider = make_shared<MockDatabaseProvider>();
+    DatabasePlugin plugin(router, databaseProvider);
 
     const string path = "database1.db";
-    databaseProvider.databases = {path};
+    databaseProvider->databases = {path};
     filesystem::remove(path);
     Database db(path, "", 0, true);
 
