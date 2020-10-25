@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Usage</title>
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+    <script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <v-app>
+        <v-main>
+            <v-container>
+                <v-card class="mx-auto text-center">
+                    <v-card-text>
+                        <chart :height="300" :chart-data="chart_cpu_data" :options="chart_options"/>
+                    </v-card-text>
+                </v-card>
+                <v-card class="mx-auto text-center mt-5">
+                    <v-card-text>
+                        <chart :height="300" :chart-data="chart_memory_data" :options="chart_options"/>
+                    </v-card-text>
+                </v-card>
+            </v-container>
+        </v-main>
+    </v-app>
+</div>
+</body>
+</html>
+
+<!--suppress JSUnresolvedFunction, JSUnusedGlobalSymbols, JSUnresolvedVariable -->
+<script>
+    Vue.component('chart', {
+        extends: VueChartJs.Line,
+        mixins: [VueChartJs.mixins.reactiveProp],
+        props: {
+            options: Object
+        },
+        mounted() {
+            this.renderChart(this.chartData, this.options)
+        }
+    })
+
+    new Vue({
+        el: '#app',
+        vuetify: new Vuetify(),
+        data: () => ({
+            colors: {},
+            connected: false,
+            interval: null,
+            ws: null,
+            cpu_data: [{usage: 0}],
+            memory_data: [{used: 0, max: 1}]
+        }),
+        computed: {
+            chart_cpu_data() {
+                const cpu_data = this.cpu_data.map(d => d && d.usage.toFixed(0))
+                return {
+                    labels: cpu_data,
+                    datasets: [{
+                        label: `CPU Usage (${cpu_data.slice(-1)[0] || 0}%)`,
+                        backgroundColor: this.colors.accent + 'cc',
+                        borderColor: this.colors.accent,
+                        borderWidth: 1,
+                        data: cpu_data
+                    }]
+                }
+            },
+            chart_memory_data() {
+                const current = this.memory_data.slice(-1)[0] || {used: 0, max: 0}
+                const memory_data = this.memory_data.map(d => d && (d.max >= 0 ? 100 * d.used / d.max : 0).toFixed(0))
+                return {
+                    labels: memory_data,
+                    datasets: [{
+                        label: `Memory Usage (${memory_data.slice(-1)[0]}% - ${current.used.toFixed(1)}MB of ${current.max.toFixed(1)}MB)`,
+                        backgroundColor: this.colors.primary + 'cc',
+                        borderColor: this.colors.primary,
+                        borderWidth: 1,
+                        data: memory_data
+                    }]
+                }
+            },
+            chart_options() {
+                return {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: {
+                        duration: 0
+                    },
+                    elements: {
+                        point: {
+                            radius: 0
+                        },
+                        line: {
+                            tension: 0.3
+                        }
+                    },
+                    scales: {
+                        xAxes: [{
+                            display: false
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true,
+                                min: 0,
+                                max: 100
+                            }
+                        }]
+                    }
+                }
+            }
+        },
+        methods: {
+            close() {
+                if (this.ws) {
+                    this.ws.onclose = null
+                    this.ws.close()
+                }
+            },
+            reconnect() {
+                clearTimeout(this.interval)
+                this.interval = setTimeout(this.connect.bind(this), 1000)
+            },
+            connect() {
+                this.close()
+                const {hostname, port} = location
+                const ws = this.ws = new WebSocket(`ws://${hostname}:${port}/plugins/ws/usage`)
+                ws.onopen = () => {
+                    console.log("Usage connected")
+                }
+                const size = 30
+                ws.onmessage = ({data}) => {
+                    const {cpu, memory} = JSON.parse(data)
+                    this.cpu_data = [...Array(size), ...this.cpu_data, cpu].slice(-size)
+                    this.memory_data = [...Array(size), ...this.memory_data, memory].slice(-size)
+                }
+                ws.onclose = () => {
+                    this.connected = false
+                    this.reconnect()
+                }
+            }
+        },
+        beforeDestroy() {
+            clearTimeout(this.interval)
+            this.close()
+        },
+        mounted() {
+            if (window.self !== window.top) {
+                window.addEventListener('message', ({data}) => {
+                    this.colors = data.colors
+                    this.$vuetify.theme.dark = data.theme === 'dark'
+                })
+            }
+            this.connect()
+        }
+    })
+</script>
+
+<style>
+    html {
+        overflow: auto;
+    }
+</style>

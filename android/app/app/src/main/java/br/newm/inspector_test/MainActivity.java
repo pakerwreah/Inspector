@@ -3,13 +3,18 @@ package br.newm.inspector_test;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.CompoundButton;
+import android.widget.ToggleButton;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity {
+
+    boolean simulatingUsage = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +26,17 @@ public class MainActivity extends AppCompatActivity {
         mockPrefs();
 
         mockNetwork();
+
+        ToggleButton btn_simulate_usage = findViewById(R.id.btn_simulate_usage);
+
+        btn_simulate_usage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton cb, boolean checked) {
+                if (simulatingUsage = checked) {
+                    simulateUsage();
+                }
+            }
+        });
     }
 
     private void createDatabaseFolder() {
@@ -52,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
                 };
                 for (int i = 0; ; i++) {
                     try {
+                        //noinspection BusyWait
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -67,4 +84,17 @@ public class MainActivity extends AppCompatActivity {
         }).start();
     }
 
+    public void simulateUsage() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<String> arr = new ArrayList<>();
+                for (int i = 0; simulatingUsage; i++) {
+                    arr.add("Lorem ipsum dolor sit amet, consectetur adipiscing elit." + i);
+                    System.out.println("Simulating usage");
+                }
+                System.out.println("String usage: " + arr.size());
+            }
+        }).start();
+    }
 }

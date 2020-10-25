@@ -11,6 +11,7 @@
 #include "util.h"
 #include "ext/explorer/explorer.h"
 #include "ext/realtime/realtime.h"
+#include "ext/usage/usage.h"
 
 using namespace std;
 using json = nlohmann::json;
@@ -138,6 +139,8 @@ int main() {
     Explorer explorer(inspector, "../../");
 
     Realtime realtime(inspector);
+
+    Usage usage(inspector);
 
     this_thread::sleep_for(100h);
 
