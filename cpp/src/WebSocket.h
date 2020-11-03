@@ -11,7 +11,9 @@
 #include <memory>
 
 class WebSocket {
+private:
     std::shared_ptr<Client> client;
+
 public:
     WebSocket(std::shared_ptr<Client> client);
 
@@ -19,6 +21,5 @@ public:
     static Response handshake(const Request &request);
     static std::string pack(const std::string &msg, bool binary);
 };
-
 
 #endif //INSPECTOR_WEBSOCKET_H

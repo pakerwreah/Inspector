@@ -62,10 +62,11 @@ public class Application extends android.app.Application {
 ```
 
 #### Intercept network requests
+<sub>:warning: if you use addNetworkInterceptor it won't intercept timeouts</sub>
 ```java
 import br.newm.inspector.NetworkInterceptor;
 
-new OkHttpClient.Builder().addNetworkInterceptor(new NetworkInterceptor());
+new OkHttpClient.Builder().addInterceptor(new NetworkInterceptor());
 ```
 
 #### Static plugins
@@ -120,9 +121,8 @@ new WebSocket(`ws://${location.hostname}:${location.port}/plugins/ws/mykey`)
 ```java
 Inspector.sendMessage("mykey", "Hello world!");
 ```
-
-#### :warning: Attention
-You should run this command to work with emulators
+#
+:warning: You should run this command to work with emulators
 ```bash
 # same port number used to initialize the plugin
 adb forward tcp:30000 tcp:30000

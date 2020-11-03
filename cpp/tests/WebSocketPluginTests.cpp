@@ -10,7 +10,7 @@ TEST_CASE("WebSocketPlugin - Connection") {
     Headers headers{{"Sec-WebSocket-Key", "secret"}};
     shared_ptr client = make_shared<MockClient>();
 
-    WebSocketPlugin plugin(&router);
+    WebSocketPlugin plugin(router);
     CHECK_FALSE(plugin.isConnected());
 
     SECTION("Success") {
@@ -35,7 +35,7 @@ TEST_CASE("WebSocketPlugin - Send message") {
     Headers headers;
     shared_ptr client = make_shared<MockClient>();
 
-    WebSocketPlugin plugin(&router);
+    WebSocketPlugin plugin(router);
     CHECK_FALSE(plugin.isConnected());
 
     headers = {{"Sec-WebSocket-Key", "secret"}};

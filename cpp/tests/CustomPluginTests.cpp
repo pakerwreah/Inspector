@@ -4,12 +4,14 @@
 using namespace std;
 using json = nlohmann::json;
 
-TEST_CASE_METHOD(CustomPlugin, "CustomPlugin - Execute") {
+TEST_CASE("CustomPlugin - Execute") {
+    Router router;
     Response response;
+    CustomPlugin plugin(router);
 
     SECTION("HTML") {
         string content = "text";
-        CHECK_NOTHROW(response = execute([&] {
+        CHECK_NOTHROW(response = plugin.execute([&] {
             return content;
         }));
         CHECK(response.headers[Http::ContentType::Key] == Http::ContentType::HTML);
@@ -19,7 +21,7 @@ TEST_CASE_METHOD(CustomPlugin, "CustomPlugin - Execute") {
 
     SECTION("JSON") {
         string content = "{\"json\":true}";
-        CHECK_NOTHROW(response = execute([&] {
+        CHECK_NOTHROW(response = plugin.execute([&] {
             return content;
         }));
         CHECK(response.headers[Http::ContentType::Key] == Http::ContentType::JSON);
@@ -30,7 +32,7 @@ TEST_CASE_METHOD(CustomPlugin, "CustomPlugin - Execute") {
     SECTION("Fail") {
         struct MyException : public exception {
         };
-        CHECK_THROWS_AS(execute([] {
+        CHECK_THROWS_AS(plugin.execute([] {
             return throw MyException(), "";
         }), MyException);
     }
@@ -48,7 +50,7 @@ TEST_CASE("CustomPlugin - Routes") {
     Router router;
     Request request;
     Response response;
-    CustomPlugin plugin(&router);
+    CustomPlugin plugin(router);
 
     int normal = 0, live = 0, api_get = 0, api_post = 0;
 

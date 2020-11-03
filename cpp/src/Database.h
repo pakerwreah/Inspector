@@ -12,8 +12,10 @@
 #include "ResultSet.h"
 
 class Database {
+private:
     sqlite3 *db;
     mutable bool failed;
+
 public:
     Database(const std::string &path, const std::string &password = "", int version = 0, bool create = false);
 

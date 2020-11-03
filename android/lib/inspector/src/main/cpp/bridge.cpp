@@ -1,98 +1,23 @@
 #include <jni.h>
 #include <vector>
+#include "jni_util.h"
 #include "Inspector.h"
+#include "AndroidDatabaseProvider.h"
+#include "device_info.h"
 
 using namespace std;
 using json = nlohmann::json;
 
-JavaVM *jvm;
-
-JNIEnv *attachThread() {
-    JNIEnv *env = nullptr;
-    jvm->AttachCurrentThread(&env, nullptr);
-    return env;
-}
-
-void detachThread() {
-    jvm->DetachCurrentThread();
-}
-
-string readString(JNIEnv *env, jstring data) {
-    const char *chars = env->GetStringUTFChars(data, nullptr);
-    string str = chars;
-    env->ReleaseStringUTFChars(data, chars);
-    return str;
-}
-
-string readByteArray(JNIEnv *env, jbyteArray data) {
-    jsize size = env->GetArrayLength(data);
-    jbyte *bytes = env->GetByteArrayElements(data, nullptr);
-    auto str = string(reinterpret_cast<const char *>(bytes), static_cast<size_t>(size));
-    env->ReleaseByteArrayElements(data, bytes, 0);
-    return str;
-}
-
-DeviceInfo getDeviceInfo(JNIEnv *env, jclass clazz) {
-    jclass build_class = env->FindClass("android/os/Build");
-
-    jfieldID manufacturer_id = env->GetStaticFieldID(build_class, "MANUFACTURER", "Ljava/lang/String;");
-    jfieldID model_id = env->GetStaticFieldID(build_class, "MODEL", "Ljava/lang/String;");
-    jmethodID getPackageName_id = env->GetStaticMethodID(clazz, "getPackageName", "()Ljava/lang/String;");
-    jmethodID getVersionName_id = env->GetStaticMethodID(clazz, "getVersionName", "()Ljava/lang/String;");
-
-    auto jmanufacturer = (jstring) env->GetStaticObjectField(build_class, manufacturer_id);
-    auto jmodel = (jstring) env->GetStaticObjectField(build_class, model_id);
-    auto jpackageName = (jstring) env->CallStaticObjectMethod(clazz, getPackageName_id);
-    auto jversionName = (jstring) env->CallStaticObjectMethod(clazz, getVersionName_id);
-
-    string manufacturer = readString(env, jmanufacturer);
-    string model = readString(env, jmodel);
-    string name = manufacturer != "unknown" ? manufacturer + " " + model : model;
-
-    string packageName = readString(env, jpackageName);
-    string versionName = readString(env, jversionName);
-
-    return {"android", name, packageName, versionName};
-}
-
-class AndroidDatabaseProvider : public DatabaseProvider {
-    jclass clazz;
-public:
-    explicit AndroidDatabaseProvider(jclass clazz): clazz(clazz) {}
-protected:
-    vector<string> databasePathList() override {
-        auto env = attachThread();
-
-        jmethodID methodID = env->GetStaticMethodID(clazz, "databasePathList", "()[Ljava/lang/String;");
-        auto res = (jobjectArray) env->CallStaticObjectMethod(clazz, methodID);
-
-        int count = env->GetArrayLength(res);
-
-        auto list = vector<string>();
-
-        for (int i = 0; i < count; i++) {
-            auto name = (jstring) env->GetObjectArrayElement(res, i);
-            list.push_back(readString(env, name));
-        }
-
-        detachThread();
-
-        return list;
-    }
-};
-
-Inspector *inspector;
+static JavaVM *jvm;
+static unique_ptr<Inspector> inspector;
 
 jint JNI_OnLoad(JavaVM *vm, void *) {
-    JNIEnv *env;
+    JNIEnv *env = nullptr;
     if (vm->GetEnv(reinterpret_cast<void **>(&env), JNI_VERSION_1_6) != JNI_OK) {
-        return -1;
+        return JNI_ERR;
     }
 
     jvm = vm;
-
-    if (!env->FindClass("br/newm/inspector/Inspector"))
-        return JNI_ERR;
 
     return JNI_VERSION_1_6;
 }
@@ -100,7 +25,7 @@ jint JNI_OnLoad(JavaVM *vm, void *) {
 extern "C" JNIEXPORT void JNICALL
 Java_br_newm_inspector_Inspector_initialize(JNIEnv *env, jclass clazz, jint port) {
     clazz = (jclass) env->NewGlobalRef(clazz);
-    inspector = new Inspector(new AndroidDatabaseProvider(clazz), getDeviceInfo(env, clazz));
+    inspector = make_unique<Inspector>(make_shared<AndroidDatabaseProvider>(jvm, clazz), getDeviceInfo(env, clazz));
     // Emulator: ./adb forward tcp:30000 tcp:30000
     inspector->bind(port);
 }
@@ -113,16 +38,16 @@ Java_br_newm_inspector_Inspector_setCipherKeyJNI(JNIEnv *env, jclass, jstring da
 extern "C"
 JNIEXPORT void JNICALL
 Java_br_newm_inspector_Inspector_addPluginJNI(JNIEnv *env, jclass, jstring key, jstring name, jobject _plugin) {
-    auto plugin = env->NewGlobalRef(_plugin);
+    jobject plugin = env->NewGlobalRef(_plugin);
 
     inspector->addPlugin(readString(env, key), readString(env, name), [plugin] {
-        auto env = attachThread();
+        JNIEnv *env = attachThread(jvm);
 
-        auto clazz = env->GetObjectClass(plugin);
+        jclass clazz = env->GetObjectClass(plugin);
         jmethodID methodID = env->GetMethodID(clazz, "action", "()Ljava/lang/String;");
-        auto res = readString(env, (jstring) env->CallObjectMethod(plugin, methodID));
+        string res = readString(env, (jstring) env->CallObjectMethod(plugin, methodID));
 
-        detachThread();
+        detachThread(jvm);
 
         return res;
     });
@@ -131,16 +56,16 @@ Java_br_newm_inspector_Inspector_addPluginJNI(JNIEnv *env, jclass, jstring key, 
 extern "C"
 JNIEXPORT void JNICALL
 Java_br_newm_inspector_Inspector_addLivePluginJNI(JNIEnv *env, jclass, jstring key, jstring name, jobject _plugin) {
-    auto plugin = env->NewGlobalRef(_plugin);
+    jobject plugin = env->NewGlobalRef(_plugin);
 
     inspector->addLivePlugin(readString(env, key), readString(env, name), [plugin] {
-        auto env = attachThread();
+        JNIEnv *env = attachThread(jvm);
 
-        auto clazz = env->GetObjectClass(plugin);
+        jclass clazz = env->GetObjectClass(plugin);
         jmethodID methodID = env->GetMethodID(clazz, "action", "()Ljava/lang/String;");
-        auto res = readString(env, (jstring) env->CallObjectMethod(plugin, methodID));
+        string res = readString(env, (jstring) env->CallObjectMethod(plugin, methodID));
 
-        detachThread();
+        detachThread(jvm);
 
         return res;
     });
@@ -149,18 +74,18 @@ Java_br_newm_inspector_Inspector_addLivePluginJNI(JNIEnv *env, jclass, jstring k
 extern "C"
 JNIEXPORT void JNICALL
 Java_br_newm_inspector_Inspector_addPluginAPIJNI(JNIEnv *env, jclass, jstring method, jstring path, jobject _plugin) {
-    auto plugin = env->NewGlobalRef(_plugin);
+    auto *plugin = env->NewGlobalRef(_plugin);
 
     inspector->addPluginAPI(readString(env, method), readString(env, path), [plugin](const Params &params) {
-        auto env = attachThread();
+        JNIEnv *env = attachThread(jvm);
 
-        auto clazz = env->GetObjectClass(plugin);
+        jclass clazz = env->GetObjectClass(plugin);
         jmethodID methodID = env->GetMethodID(clazz, "action", "(Ljava/lang/String;)[B");
         jstring jparams = env->NewStringUTF(json(params).dump().c_str());
-        auto res = readByteArray(env, (jbyteArray) env->CallObjectMethod(plugin, methodID, jparams));
+        string res = readByteArray(env, (jbyteArray) env->CallObjectMethod(plugin, methodID, jparams));
         env->DeleteLocalRef(jparams);
 
-        detachThread();
+        detachThread(jvm);
 
         return res;
     });

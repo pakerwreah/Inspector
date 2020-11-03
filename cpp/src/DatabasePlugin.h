@@ -16,7 +16,7 @@
 
 class DatabaseProvider {
 public:
-    virtual std::vector<std::string> databasePathList() = 0;
+    virtual std::vector<std::string> databasePathList() const = 0;
 };
 
 struct DatabaseMeta {
@@ -25,15 +25,18 @@ struct DatabaseMeta {
 };
 
 class DatabasePlugin {
+private:
     int auto_close_token;
     std::string db_path;
-    DatabaseProvider *provider;
     std::map<std::string, DatabaseMeta> db_meta;
     std::shared_ptr<Database> db_con;
+    std::shared_ptr<DatabaseProvider> provider;
+
 protected:
     std::chrono::nanoseconds debounce;
+
 public:
-    DatabasePlugin(Router *router, DatabaseProvider *provider);
+    DatabasePlugin(Router &router, std::shared_ptr<DatabaseProvider> provider);
     virtual ~DatabasePlugin();
 
     std::vector<std::string> databasePathList();
@@ -44,6 +47,5 @@ public:
     bool isOpen() const;
     void setDebounce(std::chrono::nanoseconds debounce);
 };
-
 
 #endif //INSPECTOR_DATABASEPLUGIN_H

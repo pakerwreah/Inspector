@@ -4,6 +4,7 @@ import br.newm.inspector.Inspector;
 import br.newm.inspector_test.plugins.ExplorerPlugin;
 import br.newm.inspector_test.plugins.LogcatPlugin;
 import br.newm.inspector_test.plugins.SharedPrefsPlugin;
+import br.newm.inspector_test.plugins.UsagePlugin;
 
 public class Application extends android.app.Application {
     @Override
@@ -18,6 +19,7 @@ public class Application extends android.app.Application {
         Inspector.addPlugin("prefs", "Shared Preferences", new SharedPrefsPlugin(this));
         Inspector.addLivePlugin("logcat", "Logcat", new LogcatPlugin(this));
         Inspector.addLivePlugin("explorer", "Explorer", new ExplorerPlugin(this));
+        Inspector.addLivePlugin("usage", "Usage", new UsagePlugin(this));
     }
 
     @Override

@@ -11,15 +11,16 @@
 #include <map>
 
 class WebSocketPlugin {
+private:
     std::multimap<std::string, std::shared_ptr<WebSocket>> clients;
     std::mutex mutex;
+
 public:
-    WebSocketPlugin(Router *router);
+    WebSocketPlugin(Router &router);
 
     bool isConnected() const;
 
     void sendMessage(const std::string &key, const std::string &message);
 };
-
 
 #endif //INSPECTOR_WEBSOCKETPLUGIN_H

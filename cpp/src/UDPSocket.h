@@ -5,6 +5,7 @@
 #include <netinet/in.h>
 
 class UDPSocket {
+private:
     int m_sock;
     sockaddr_in m_addr;
 
@@ -23,6 +24,5 @@ public:
 
     bool is_valid() const;
 };
-
 
 #endif //INSPECTOR_UDPSOCKET_H

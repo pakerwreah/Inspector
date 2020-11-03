@@ -10,7 +10,9 @@
 #include <memory>
 
 class SocketClient : public Client {
+private:
     std::unique_ptr<Socket> socket;
+
 public:
     SocketClient(std::unique_ptr<Socket> socket);
 
@@ -18,6 +20,5 @@ public:
     std::string read(const timeval &timeout) const;
     bool send(const std::string &data) override;
 };
-
 
 #endif //INSPECTOR_SOCKETCLIENT_H

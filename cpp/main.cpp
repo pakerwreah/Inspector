@@ -11,13 +11,14 @@
 #include "util.h"
 #include "ext/explorer/explorer.h"
 #include "ext/realtime/realtime.h"
+#include "ext/usage/usage.h"
 
 using namespace std;
 using json = nlohmann::json;
 
 class TestDatabaseProvider : public DatabaseProvider {
 protected:
-    vector<string> databasePathList() override {
+    vector<string> databasePathList() const override {
         return {"database.db", "database_cipher3.db", "database_cipher4.db"};
     }
 };
@@ -101,7 +102,7 @@ static void mockNetwork(Inspector &inspector) {
 
 int main() {
     DeviceInfo info = {"desktop", "Demo Application", "com.demo.app", "v1.0.0"};
-    Inspector inspector(new TestDatabaseProvider, info);
+    Inspector inspector(make_shared<TestDatabaseProvider>(), info);
 
     inspector.setCipherKey("database_cipher3.db", "123456", 3);
     inspector.setCipherKey("database_cipher4.db", "1234567", 4);
@@ -138,6 +139,8 @@ int main() {
     Explorer explorer(inspector, "../../");
 
     Realtime realtime(inspector);
+
+    Usage usage(inspector);
 
     this_thread::sleep_for(100h);
 

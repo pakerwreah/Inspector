@@ -6,8 +6,8 @@
 
 using namespace std;
 
-WebSocketPlugin::WebSocketPlugin(Router *router) {
-    router->get("/plugins/ws/{key}", [this](const Request &request, const Params &params) {
+WebSocketPlugin::WebSocketPlugin(Router &router) {
+    router.get("/plugins/ws/{key}", [this](const Request &request, const Params &params) {
         Response response = WebSocket::handshake(request);
         if (response.code == 101) {
             lock_guard guard(mutex);
