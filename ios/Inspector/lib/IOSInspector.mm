@@ -36,9 +36,9 @@ static inline NSDictionary<NSString *, NSString *>* NS(const Params &params) {
 static string buildHeaders(NSDictionary<NSString *,NSString *> *headers) {
     string headerstr;
     NSArray<NSString *> *sorted_headers = [[headers allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
-    for(NSString *_key in sorted_headers) {
+    for (NSString *_key in sorted_headers) {
         NSString *key = _key;
-        if([key hasPrefix:@"_"]) {
+        if ([key hasPrefix:@"_"]) {
             key = [key substringFromIndex: 1];
         }
         headerstr += string() + key.UTF8String + ": " + headers[_key].UTF8String + "\n";
@@ -80,10 +80,10 @@ static string buildHeaders(NSDictionary<NSString *,NSString *> *headers) {
 
     NSMutableDictionary<NSString*,NSString*> *headers = @{
         @"_URL": request.URL.absoluteString,
-        @"_Method" : request.HTTPMethod
+        @"_Method": request.HTTPMethod
     }.mutableCopy;
-    
-    if (!headers) {
+
+    if (request.allHTTPHeaderFields) {
         [headers addEntriesFromDictionary: request.allHTTPHeaderFields];
     }
 
@@ -98,7 +98,7 @@ static string buildHeaders(NSDictionary<NSString *,NSString *> *headers) {
         @"_Status": response ? @(response.statusCode).stringValue : @"Error"
     }.mutableCopy;
 
-    if(response) {
+    if (response.allHeaderFields) {
         [headers addEntriesFromDictionary: response.allHeaderFields];
     }
 
