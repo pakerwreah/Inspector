@@ -30,7 +30,7 @@ jobs:
 
     - name: Export environments
       run: |
-        echo "::set-env name=ANDROID_HOME::$ANDROID_HOME"
+        echo "ANDROID_HOME=$ANDROID_HOME" >> $GITHUB_ENV
 
     - name: NDK Cache
       id: ndk-cache
