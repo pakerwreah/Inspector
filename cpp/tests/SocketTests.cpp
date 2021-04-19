@@ -54,3 +54,17 @@ TEST_CASE("UDP Socket") {
     CHECK(socket.broadcast("hello world!"));
     CHECK(socket.close());
 }
+
+TEST_CASE("TCP Socket - Invalid port") {
+    Socket socket;
+    REQUIRE(socket.create());
+    CHECK_FALSE(socket.bind(-1));
+    CHECK(errno == EINVAL);
+}
+
+TEST_CASE("UDP Socket - Invalid port") {
+    UDPSocket socket;
+    REQUIRE(socket.create());
+    CHECK_FALSE(socket.bind(-1));
+    CHECK(errno == EINVAL);
+}

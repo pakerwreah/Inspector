@@ -3,6 +3,7 @@
 #include <signal.h>
 #include <unistd.h>
 #include <cstring>
+#include <errno.h>
 
 // MSG_NOSIGNAL does not exists on OS X
 #if defined(__APPLE__) || defined(__MACH__)
@@ -42,7 +43,10 @@ bool UDPSocket::create() {
 
 bool UDPSocket::bind(int port) {
     if (!is_valid()) return false;
-    if (port < 0 || port > 65535) return false;
+    if (port < 0 || port > 65535) {
+        errno = EINVAL;
+        return false;
+    }
 
     m_addr.sin_family = AF_INET;
     m_addr.sin_addr.s_addr = INADDR_BROADCAST;
