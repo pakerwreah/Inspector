@@ -24,7 +24,7 @@ jobs:
 
     - name: Create NDK folder
       run: |
-        sudo mkdir ${ANDROID_HOME}/ndk
+        sudo mkdir -p ${ANDROID_HOME}/ndk
         sudo chmod -R a+rwx ${ANDROID_HOME}/ndk
         sudo chown -R $USER:$USER ${ANDROID_HOME}/ndk
 
