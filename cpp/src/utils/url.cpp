@@ -14,7 +14,7 @@ namespace url {
         char ch;
         int i, j;
         for (i = 0; i < encoded.length(); i++) {
-            if (int(encoded[i]) == 37) {
+            if (static_cast<int>(encoded[i]) == 37) {
                 sscanf(encoded.substr(i + 1, 2).c_str(), "%x", &j);
                 ch = static_cast<char>(j);
                 ret += ch;

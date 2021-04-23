@@ -34,7 +34,7 @@ Response Router::handle(const Request &request) const {
     const size_t path_size = path_pieces.size();
     const auto &it = routes.find(request.method);
 
-    if (it != routes.end())
+    if (it != routes.end()) {
         for (const auto &[path, handler] : it->second) {
             const vector<string> &route_pieces = util::split(path, '/');
             if (path_size != route_pieces.size()) continue;
@@ -53,6 +53,7 @@ Response Router::handle(const Request &request) const {
                 }
             }
         }
+    }
 
     throw out_of_range("Route not found");
 }

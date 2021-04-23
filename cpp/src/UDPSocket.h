@@ -1,8 +1,8 @@
 #ifndef INSPECTOR_UDPSOCKET_H
 #define INSPECTOR_UDPSOCKET_H
 
-#include <string>
 #include <netinet/in.h>
+#include <string>
 
 class UDPSocket {
 private:

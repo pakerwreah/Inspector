@@ -15,7 +15,7 @@ private:
     std::mutex mutex;
 
 public:
-    WebSocketPlugin(Router &router);
+    explicit WebSocketPlugin(Router &router);
 
     bool isConnected() const;
 

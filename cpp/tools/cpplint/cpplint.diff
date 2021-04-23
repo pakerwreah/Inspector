@@ -1,0 +1,175 @@
+diff --git a/cpplint.orig.py b/cpplint.py
+old mode 100644
+new mode 100755
+index e09fa77..5699164
+--- a/cpplint.orig.py
++++ b/cpplint.py
+@@ -55,6 +55,7 @@ import sys
+ import sysconfig
+ import unicodedata
+ import xml.etree.ElementTree
++import fnmatch
+ 
+ # if empty, use defaults
+ _valid_extensions = set([])
+@@ -730,15 +731,6 @@ _TYPES = re.compile(
+     r'(u?int(max|ptr)_t)|'
+     r')$')
+ 
+-
+-# These headers are excluded from [build/include] and [build/include_order]
+-# checks:
+-# - Anything not following google file name conventions (containing an
+-#   uppercase character, such as Python.h or nsStringAPI.h, for example).
+-# - Lua headers.
+-_THIRD_PARTY_HEADERS_PATTERN = re.compile(
+-    r'^(?:[^/]*[A-Z][^/]*\.h|lua\.h|lauxlib\.h|lualib\.h)$')
+-
+ # Pattern for matching FileInfo.BaseName() against test file name
+ _test_suffixes = ['_test', '_regtest', '_unittest']
+ _TEST_FILE_SUFFIX = '(' + '|'.join(_test_suffixes) + r')$'
+@@ -1082,10 +1074,10 @@ class _IncludeState(object):
+   # needs to move backwards, CheckNextIncludeOrder will raise an error.
+   _INITIAL_SECTION = 0
+   _MY_H_SECTION = 1
+-  _C_SECTION = 2
+-  _CPP_SECTION = 3
+-  _OTHER_SYS_SECTION = 4
+-  _OTHER_H_SECTION = 5
++  _OTHER_SYS_SECTION = 2
++  _OTHER_H_SECTION = 3
++  _C_SECTION = 4
++  _CPP_SECTION = 5
+ 
+   _TYPE_NAMES = {
+       _C_SYS_HEADER: 'C system header',
+@@ -1202,15 +1194,9 @@ class _IncludeState(object):
+ 
+     last_section = self._section
+ 
+-    if header_type == _C_SYS_HEADER:
+-      if self._section <= self._C_SECTION:
+-        self._section = self._C_SECTION
+-      else:
+-        self._last_header = ''
+-        return error_message
+-    elif header_type == _CPP_SYS_HEADER:
+-      if self._section <= self._CPP_SECTION:
+-        self._section = self._CPP_SECTION
++    if header_type == _POSSIBLE_MY_HEADER or header_type == _LIKELY_MY_HEADER:
++      if self._section <= self._MY_H_SECTION:
++        self._section = self._MY_H_SECTION
+       else:
+         self._last_header = ''
+         return error_message
+@@ -1220,21 +1206,24 @@ class _IncludeState(object):
+       else:
+         self._last_header = ''
+         return error_message
+-    elif header_type == _LIKELY_MY_HEADER:
+-      if self._section <= self._MY_H_SECTION:
+-        self._section = self._MY_H_SECTION
+-      else:
++    elif header_type == _OTHER_HEADER:
++      if self._section <= self._OTHER_H_SECTION:
+         self._section = self._OTHER_H_SECTION
+-    elif header_type == _POSSIBLE_MY_HEADER:
+-      if self._section <= self._MY_H_SECTION:
+-        self._section = self._MY_H_SECTION
+       else:
+-        # This will always be the fallback because we're not sure
+-        # enough that the header is associated with this file.
+-        self._section = self._OTHER_H_SECTION
+-    else:
+-      assert header_type == _OTHER_HEADER
+-      self._section = self._OTHER_H_SECTION
++        self._last_header = ''
++        return error_message
++    elif header_type == _C_SYS_HEADER:
++      if self._section <= self._C_SECTION:
++        self._section = self._C_SECTION
++      else:
++        self._last_header = ''
++        return error_message
++    elif header_type == _CPP_SYS_HEADER:
++      if self._section <= self._CPP_SECTION:
++        self._section = self._CPP_SECTION
++      else:
++        self._last_header = ''
++        return error_message
+ 
+     if last_section != self._section:
+       self._last_header = ''
+@@ -3503,8 +3492,7 @@ def CheckSpacingForFunctionCall(filename, clean_lines, linenum, error):
+       # If the closing parenthesis is preceded by only whitespaces,
+       # try to give a more descriptive error message.
+       if Search(r'^\s+\)', fncall):
+-        error(filename, linenum, 'whitespace/parens', 2,
+-              'Closing ) should be moved to the previous line')
++        pass
+       else:
+         error(filename, linenum, 'whitespace/parens', 2,
+               'Extra space before )')
+@@ -5061,18 +5049,6 @@ def CheckIncludeLine(filename, clean_lines, linenum, include_state, error):
+   fileinfo = FileInfo(filename)
+   line = clean_lines.lines[linenum]
+ 
+-  # "include" should use the new style "foo/bar.h" instead of just "bar.h"
+-  # Only do this check if the included header follows google naming
+-  # conventions.  If not, assume that it's a 3rd party API that
+-  # requires special include conventions.
+-  #
+-  # We also make an exception for Lua headers, which follow google
+-  # naming convention but not the include convention.
+-  match = Match(r'#include\s*"([^/]+\.h)"', line)
+-  if match and not _THIRD_PARTY_HEADERS_PATTERN.match(match.group(1)):
+-    error(filename, linenum, 'build/include_subdir', 4,
+-          'Include the directory when naming .h files')
+-
+   # we shouldn't include a file more than once. actually, there are a
+   # handful of instances where doing so is okay, but in general it's
+   # not.
+@@ -5094,19 +5070,7 @@ def CheckIncludeLine(filename, clean_lines, linenum, include_state, error):
+               'Do not include .' + extension + ' files from other packages')
+         return
+ 
+-    # We DO want to include a 3rd party looking header if it matches the
+-    # filename. Otherwise we get an erroneous error "...should include its
+-    # header" error later.
+-    third_src_header = False
+-    for ext in GetHeaderExtensions():
+-      basefilename = filename[0:len(filename) - len(fileinfo.Extension())]
+-      headerfile = basefilename + '.' + ext
+-      headername = FileInfo(headerfile).RepositoryName()
+-      if headername in include or include in headername:
+-        third_src_header = True
+-        break
+-
+-    if third_src_header or not _THIRD_PARTY_HEADERS_PATTERN.match(include):
++    if True:  # minimize diff
+       include_state.include_list[-1].append((include, linenum))
+ 
+       # We want to ensure that headers appear in the right order:
+@@ -6524,6 +6488,7 @@ def ProcessConfigOverrides(filename):
+ 
+     try:
+       with open(cfg_file) as file_handle:
++        skip = False
+         for line in file_handle:
+           line, _, _ = line.partition('#')  # Remove comments.
+           if not line.strip():
+@@ -6532,6 +6497,14 @@ def ProcessConfigOverrides(filename):
+           name, _, val = line.partition('=')
+           name = name.strip()
+           val = val.strip()
++
++          if name == 'filematch':
++            skip = not fnmatch.fnmatch(os.path.basename(filename), val)
++            continue
++
++          if skip:
++            continue
++
+           if name == 'set noparent':
+             keep_looking = False
+           elif name == 'filter':

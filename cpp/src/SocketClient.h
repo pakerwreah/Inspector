@@ -14,7 +14,7 @@ private:
     std::unique_ptr<Socket> socket;
 
 public:
-    SocketClient(std::unique_ptr<Socket> socket);
+    explicit SocketClient(std::unique_ptr<Socket> socket);
     virtual ~SocketClient() = default;
 
     std::string read() override;

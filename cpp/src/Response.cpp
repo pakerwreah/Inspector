@@ -6,7 +6,7 @@
 #include <sstream>
 
 using namespace std;
-using json = nlohmann::json;
+using nlohmann::json;
 
 Response::Response(const char *data, int code) : Response(data ? string(data) : "", code) {}
 

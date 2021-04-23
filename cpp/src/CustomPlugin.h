@@ -26,7 +26,7 @@ private:
     void addPlugin(const std::string &key, const std::string &name, PluginAction action, bool live);
 
 public:
-    CustomPlugin(Router &router);
+    explicit CustomPlugin(Router &router);
 
     Response execute(PluginAction executor);
 

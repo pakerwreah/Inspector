@@ -5,12 +5,12 @@
 #ifndef INSPECTOR_UTIL_H
 #define INSPECTOR_UTIL_H
 
+#include <sys/time.h>
 #include <map>
 #include <string>
 #include <sstream>
 #include <vector>
 #include <functional>
-#include <sys/time.h>
 
 namespace util {
     std::string uid();

@@ -8,7 +8,7 @@
 
 using namespace std;
 using namespace chrono_literals;
-using json = nlohmann::json;
+using nlohmann::json;
 
 DatabasePlugin::~DatabasePlugin() {
     db_con = nullptr;

@@ -35,9 +35,6 @@ bool Request::parse(const string &plain) {
     );
 
     if (body_start > 0) {
-        this->method = string(method).substr(0, method_len);
-        this->path = string(path).substr(0, path_len);
-
         for (int i = 0; i < num_headers; i++) {
             auto header = headers[i];
             auto name = string(header.name).substr(0, header.name_len);
@@ -45,7 +42,9 @@ bool Request::parse(const string &plain) {
             this->headers[name] = value;
         }
 
-        this->body = plain.substr(static_cast<unsigned long>(body_start));
+        this->method = string(method).substr(0, method_len);
+        this->path = string(path).substr(0, path_len);
+        this->body = plain.substr(body_start);
 
         return true;
     }
