@@ -10,7 +10,7 @@
 #include <ifaddrs.h>
 
 using namespace std;
-using json = nlohmann::json;
+using nlohmann::json;
 
 void to_json(json &j, const DeviceInfo &i) {
     j = {{"type",    i.type},
@@ -32,7 +32,7 @@ vector<IPAddress> getIPAddress() {
     getifaddrs(&ifap);
     for (ifa = ifap; ifa; ifa = ifa->ifa_next) {
         if (ifa->ifa_addr && ifa->ifa_addr->sa_family == AF_INET) {
-            sa = (sockaddr_in *) ifa->ifa_addr;
+            sa = reinterpret_cast<sockaddr_in *>(ifa->ifa_addr);
             string adp = ifa->ifa_name;
             string addr = inet_ntoa(sa->sin_addr);
             addresses.push_back({adp, addr});

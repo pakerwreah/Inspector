@@ -3,10 +3,10 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-#include <cstring>
 #include <fcntl.h>
 #include <signal.h>
 #include <errno.h>
+#include <cstring>
 
 // MSG_NOSIGNAL does not exists on OS X
 #if defined(__APPLE__) || defined(__MACH__)
@@ -74,7 +74,7 @@ bool Socket::connect(const std::string &host, int port) {
     if (!is_valid()) return false;
 
     m_addr.sin_family = AF_INET;
-    m_addr.sin_port = htons (port);
+    m_addr.sin_port = htons(port);
     m_addr.sin_addr.s_addr = inet_addr(host == "localhost" ? "127.0.0.1" : host.c_str());
 
     return ::connect(m_sock, (sockaddr *) &m_addr, sizeof(m_addr)) == 0;

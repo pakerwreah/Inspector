@@ -13,7 +13,7 @@ private:
     mutable bool failed;
 
 public:
-    Database(const std::string &path, const std::string &password = "", int version = 0, bool create = false);
+    explicit Database(const std::string &path, const std::string &password = "", int version = 0, bool create = false);
 
     ~Database();
 

@@ -34,7 +34,7 @@ namespace base64 {
             val = (val << 6) + T[c];
             valb += 6;
             if (valb >= 0) {
-                out.push_back(char((val >> valb) & 0xFF));
+                out.push_back(static_cast<char>((val >> valb) & 0xFF));
                 valb -= 8;
             }
         }

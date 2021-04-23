@@ -16,7 +16,7 @@ private:
     std::mutex mutex;
 
 public:
-    NetworkPlugin(Router &router);
+    explicit NetworkPlugin(Router &router);
 
     bool isRequestConnected() const;
     bool isResponseConnected() const;
