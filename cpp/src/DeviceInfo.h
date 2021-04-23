@@ -5,7 +5,6 @@
 #ifndef INSPECTOR_DEVICEINFO_H
 #define INSPECTOR_DEVICEINFO_H
 
-#include <string>
 #include "json.hpp"
 
 struct IPAddress {

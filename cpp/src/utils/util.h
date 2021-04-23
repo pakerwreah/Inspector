@@ -24,16 +24,16 @@ namespace util {
     std::vector<std::string> split(const std::string &str, char delim, bool allow_empty = true);
     std::vector<std::string> split(const std::string &str, const std::string &delim, bool allow_empty = true);
 
-    static const char *whitespace = " \t\n\r\f\v";
+    const std::string whitespaces = " \t\n\r\f\v";
 
     // trim from end of string (right)
-    std::string rtrim(const std::string &s, const std::string &t = whitespace);
+    std::string rtrim(const std::string &s, const std::string &t = whitespaces);
 
     // trim from beginning of string (left)
-    std::string ltrim(const std::string &s, const std::string &t = whitespace);
+    std::string ltrim(const std::string &s, const std::string &t = whitespaces);
 
     // trim from both ends of string (right then left)
-    std::string trim(const std::string &s, const std::string &t = whitespace);
+    std::string trim(const std::string &s, const std::string &t = whitespaces);
 
     bool endsWith(const std::string &str, const std::string &suffix);
 

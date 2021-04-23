@@ -8,7 +8,6 @@
 #include "Client.h"
 #include "Request.h"
 #include "Response.h"
-#include <memory>
 
 class WebSocket {
 private:

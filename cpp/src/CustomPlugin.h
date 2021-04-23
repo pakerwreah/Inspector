@@ -5,11 +5,6 @@
 #ifndef INSPECTOR_CUSTOMPLUGIN_H
 #define INSPECTOR_CUSTOMPLUGIN_H
 
-#include <map>
-#include <string>
-#include <vector>
-#include <functional>
-
 #include "Router.h"
 
 typedef std::function<std::string()> PluginAction;

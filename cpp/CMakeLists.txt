@@ -15,6 +15,7 @@ file(GLOB_RECURSE sources src/*.cpp src/*.c)
 
 # Create base object with sources
 add_library(inspector-cpp OBJECT ${sources})
+target_compile_options(inspector-cpp PRIVATE -pedantic-errors -Werror -Wall -Wextra -Wno-reorder-ctor -Wno-sign-compare)
 
 # Configure code coverage
 include(CodeCoverage.cmake)

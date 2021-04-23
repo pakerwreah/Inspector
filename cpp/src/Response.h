@@ -5,8 +5,6 @@
 #ifndef INSPECTOR_RESPONSE_H
 #define INSPECTOR_RESPONSE_H
 
-#include <map>
-#include <string>
 #include "json.hpp"
 #include "Http.h"
 

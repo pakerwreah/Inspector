@@ -5,13 +5,12 @@
 #ifndef INSPECTOR_HTTPSERVER_H
 #define INSPECTOR_HTTPSERVER_H
 
-#include <memory>
-#include <thread>
-
 #include "Client.h"
 #include "HttpServing.h"
 #include "Router.h"
 #include "Socket.h"
+#include <chrono>
+#include <thread>
 
 class HttpServer : public HttpServing {
 private:

@@ -15,6 +15,7 @@ private:
 
 public:
     SocketClient(std::unique_ptr<Socket> socket);
+    virtual ~SocketClient() = default;
 
     std::string read() override;
     std::string read(const timeval &timeout) const;

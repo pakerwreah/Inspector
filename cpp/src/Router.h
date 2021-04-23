@@ -5,8 +5,6 @@
 #ifndef INSPECTOR_ROUTER_H
 #define INSPECTOR_ROUTER_H
 
-#include <map>
-#include <string>
 #include "Request.h"
 #include "Response.h"
 

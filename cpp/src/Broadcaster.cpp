@@ -4,7 +4,6 @@
 
 #include "Broadcaster.h"
 #include "UDPSocket.h"
-#include "DeviceInfo.h"
 #include "json.hpp"
 
 using namespace std;

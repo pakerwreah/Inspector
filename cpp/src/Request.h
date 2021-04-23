@@ -5,12 +5,9 @@
 #ifndef INSPECTOR_REQUEST_H
 #define INSPECTOR_REQUEST_H
 
-#include <map>
-#include <string>
-#include <memory>
-
 #include "Client.h"
 #include "Http.h"
+#include <memory>
 
 struct Request {
     std::shared_ptr<Client> client;

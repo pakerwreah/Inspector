@@ -6,6 +6,7 @@
 #define INSPECTOR_BROADCASTER_H
 
 #include "DeviceInfo.h"
+#include <chrono>
 #include <thread>
 
 class Broadcaster {

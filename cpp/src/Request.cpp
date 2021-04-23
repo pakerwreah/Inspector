@@ -22,7 +22,7 @@ bool Request::parse(const string &plain) {
     size_t path_len, method_len;
     int minor_version;
     size_t num_headers = 50;
-    struct phr_header headers[num_headers];
+    struct phr_header headers[50];
     const char *buffer = plain.c_str();
 
     int body_start = phr_parse_request(
@@ -30,7 +30,9 @@ bool Request::parse(const string &plain) {
             &method, &method_len,
             &path, &path_len,
             &minor_version,
-            headers, &num_headers, 0);
+            headers, &num_headers,
+            0
+    );
 
     if (body_start > 0) {
         this->method = string(method).substr(0, method_len);

@@ -5,14 +5,9 @@
 #ifndef INSPECTOR_DATABASEPLUGIN_H
 #define INSPECTOR_DATABASEPLUGIN_H
 
-#include <map>
-#include <string>
-#include <vector>
-#include <memory>
-#include <chrono>
-
 #include "Router.h"
 #include "Database.h"
+#include <chrono>
 
 class DatabaseProvider {
 public:

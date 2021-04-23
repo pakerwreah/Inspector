@@ -13,7 +13,7 @@ class ResultSet {
 private:
     sqlite3 *db;
     sqlite3_stmt *stmt;
-    int index = -1, first_step = -1;
+    int index, first_step;
 
     bool step();
 

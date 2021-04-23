@@ -8,7 +8,6 @@
 #include "Router.h"
 #include "WebSocket.h"
 #include <mutex>
-#include <map>
 
 class WebSocketPlugin {
 private:

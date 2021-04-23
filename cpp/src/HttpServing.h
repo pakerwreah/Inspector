@@ -6,6 +6,7 @@
 #define INSPECTOR_HTTPSERVING_H
 
 #include "Client.h"
+#include <memory>
 
 struct HttpServing {
     virtual void process(std::shared_ptr<Client> client) const = 0;

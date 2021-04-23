@@ -7,9 +7,7 @@
 
 using namespace std;
 
-ResultSet::ResultSet(sqlite3 *db, sqlite3_stmt *stmt) {
-    this->db = db;
-    this->stmt = stmt;
+ResultSet::ResultSet(sqlite3 *db, sqlite3_stmt *stmt): index(-1), db(db), stmt(stmt) {
     sqlite3_reset(stmt);
     first_step = step();
 }

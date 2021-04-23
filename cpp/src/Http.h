@@ -5,6 +5,9 @@
 #ifndef INSPECTOR_HTTP_H
 #define INSPECTOR_HTTP_H
 
+#include <string>
+#include <map>
+
 namespace Http {
     namespace ContentType {
         const std::string Key = "Content-Type";

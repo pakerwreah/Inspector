@@ -7,12 +7,10 @@
 
 using namespace std;
 
-SocketClient::SocketClient(unique_ptr<Socket> socket) {
-    this->socket = std::move(socket);
-}
+SocketClient::SocketClient(unique_ptr<Socket> socket) : socket(move(socket)) {}
 
 string SocketClient::read() {
-    return read({0,10000});
+    return read({0, 10000});
 }
 
 string SocketClient::read(const timeval &timeout) const {
