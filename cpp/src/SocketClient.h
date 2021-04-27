@@ -2,8 +2,7 @@
 // Created by Paker on 24/08/20.
 //
 
-#ifndef INSPECTOR_SOCKETCLIENT_H
-#define INSPECTOR_SOCKETCLIENT_H
+#pragma once
 
 #include "Client.h"
 #include "Socket.h"
@@ -21,5 +20,3 @@ public:
     std::string read(const timeval &timeout) const;
     bool send(const std::string &data) override;
 };
-
-#endif //INSPECTOR_SOCKETCLIENT_H

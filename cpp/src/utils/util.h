@@ -2,8 +2,7 @@
 // Created by Paker on 2019-10-24.
 //
 
-#ifndef INSPECTOR_UTIL_H
-#define INSPECTOR_UTIL_H
+#pragma once
 
 #include <sys/time.h>
 #include <map>
@@ -71,5 +70,3 @@ namespace util {
         }
     }
 }
-
-#endif //INSPECTOR_UTIL_H

@@ -2,8 +2,7 @@
 // Created by Paker on 2019-10-23.
 //
 
-#ifndef INSPECTOR_DATABASE_H
-#define INSPECTOR_DATABASE_H
+#pragma once
 
 #include "ResultSet.h"
 
@@ -27,5 +26,3 @@ public:
 
     ResultSet query(const std::string &sql) const;
 };
-
-#endif //INSPECTOR_DATABASE_H

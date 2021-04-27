@@ -2,8 +2,7 @@
 // Created by Paker on 29/10/19.
 //
 
-#ifndef INSPECTOR_DATABASEPLUGIN_H
-#define INSPECTOR_DATABASEPLUGIN_H
+#pragma once
 
 #include "Router.h"
 #include "Database.h"
@@ -42,5 +41,3 @@ public:
     bool isOpen() const;
     void setDebounce(std::chrono::nanoseconds debounce);
 };
-
-#endif //INSPECTOR_DATABASEPLUGIN_H

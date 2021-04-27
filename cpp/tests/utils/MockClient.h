@@ -1,5 +1,4 @@
-#ifndef INSPECTOR_MOCKCLIENT_H
-#define INSPECTOR_MOCKCLIENT_H
+#pragma once
 
 #include "Client.h"
 
@@ -11,5 +10,3 @@ struct MockClient : public Client {
     bool send(const std::string &data) override;
 };
 
-
-#endif //INSPECTOR_MOCKCLIENT_H

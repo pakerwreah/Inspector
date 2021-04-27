@@ -1,5 +1,4 @@
-#ifndef INSPECTOR_UDPSOCKET_H
-#define INSPECTOR_UDPSOCKET_H
+#pragma once
 
 #include <netinet/in.h>
 #include <string>
@@ -24,5 +23,3 @@ public:
 
     bool is_valid() const;
 };
-
-#endif //INSPECTOR_UDPSOCKET_H

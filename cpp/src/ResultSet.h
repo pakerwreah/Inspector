@@ -2,8 +2,7 @@
 // Created by Paker on 2020-08-23.
 //
 
-#ifndef INSPECTOR_RESULTSET_H
-#define INSPECTOR_RESULTSET_H
+#pragma once
 
 #include "sqlite3.h"
 #include <string>
@@ -36,5 +35,3 @@ public:
 
     double decimal(int column) const;
 };
-
-#endif //INSPECTOR_RESULTSET_H

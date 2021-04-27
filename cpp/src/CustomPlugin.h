@@ -2,8 +2,7 @@
 // Created by Paker on 04/04/20.
 //
 
-#ifndef INSPECTOR_CUSTOMPLUGIN_H
-#define INSPECTOR_CUSTOMPLUGIN_H
+#pragma once
 
 #include "Router.h"
 
@@ -34,5 +33,3 @@ public:
     void addPluginAPI(const std::string &method, const std::string &path, PluginAPIAction action);
     void addLivePlugin(const std::string &key, const std::string &name, PluginAction action);
 };
-
-#endif //INSPECTOR_CUSTOMPLUGIN_H

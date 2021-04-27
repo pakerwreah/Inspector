@@ -2,8 +2,7 @@
 // Created by Paker on 13/09/20.
 //
 
-#ifndef INSPECTOR_WEBSOCKET_H
-#define INSPECTOR_WEBSOCKET_H
+#pragma once
 
 #include "Client.h"
 #include "Request.h"
@@ -20,5 +19,3 @@ public:
     static Response handshake(const Request &request);
     static std::string pack(const std::string &msg, bool binary);
 };
-
-#endif //INSPECTOR_WEBSOCKET_H

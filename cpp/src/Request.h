@@ -2,8 +2,7 @@
 // Created by Paker on 2020-08-23.
 //
 
-#ifndef INSPECTOR_REQUEST_H
-#define INSPECTOR_REQUEST_H
+#pragma once
 
 #include "Client.h"
 #include "Http.h"
@@ -23,5 +22,3 @@ struct Request {
 
     bool parse(const std::string &plain);
 };
-
-#endif //INSPECTOR_REQUEST_H

@@ -2,8 +2,7 @@
 // Created by Paker on 2020-08-23.
 //
 
-#ifndef INSPECTOR_RESPONSE_H
-#define INSPECTOR_RESPONSE_H
+#pragma once
 
 #include "json.hpp"
 #include "Http.h"
@@ -31,5 +30,3 @@ struct Response {
         return {{{"msg", error}}, 500};
     }
 };
-
-#endif //INSPECTOR_RESPONSE_H

@@ -2,8 +2,7 @@
 // Created by Paker on 25/09/20.
 //
 
-#ifndef INSPECTOR_WEBSOCKETPLUGIN_H
-#define INSPECTOR_WEBSOCKETPLUGIN_H
+#pragma once
 
 #include "Router.h"
 #include "WebSocket.h"
@@ -21,5 +20,3 @@ public:
 
     void sendMessage(const std::string &key, const std::string &message);
 };
-
-#endif //INSPECTOR_WEBSOCKETPLUGIN_H

@@ -2,8 +2,7 @@
 // Created by Paker on 2019-10-23.
 //
 
-#ifndef INSPECTOR_HTTPSERVER_H
-#define INSPECTOR_HTTPSERVER_H
+#pragma once
 
 #include "Client.h"
 #include "HttpServing.h"
@@ -36,5 +35,3 @@ public:
     std::thread *start(int port);
     void setReconnectInterval(std::chrono::nanoseconds interval);
 };
-
-#endif //INSPECTOR_HTTPSERVER_H
