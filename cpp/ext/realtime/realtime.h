@@ -7,6 +7,5 @@
 #include "Inspector.h"
 
 struct Realtime {
-    Realtime(Inspector &inspector);
+    explicit Realtime(Inspector &inspector);
 };
-

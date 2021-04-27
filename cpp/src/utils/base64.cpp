@@ -21,7 +21,6 @@ namespace base64 {
         return out;
     }
 
-
     std::string decode(const std::string &in) {
         std::string out;
 

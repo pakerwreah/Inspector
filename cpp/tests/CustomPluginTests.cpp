@@ -2,7 +2,7 @@
 #include "CustomPlugin.h"
 
 using namespace std;
-using json = nlohmann::json;
+using nlohmann::json;
 
 TEST_CASE("CustomPlugin - Execute") {
     Router router;

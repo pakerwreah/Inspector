@@ -9,4 +9,3 @@ struct MockClient : public Client {
     std::string read() override;
     bool send(const std::string &data) override;
 };
-

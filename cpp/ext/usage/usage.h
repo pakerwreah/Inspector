@@ -7,6 +7,5 @@
 #include "Inspector.h"
 
 struct Usage {
-    Usage(Inspector &inspector);
+    explicit Usage(Inspector &inspector);
 };
-

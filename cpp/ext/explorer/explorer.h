@@ -7,5 +7,5 @@
 #include "Inspector.h"
 
 struct Explorer {
-    Explorer(Inspector &inspector, const std::string &root = ".");
+    explicit Explorer(Inspector &inspector, const std::string &root = ".");
 };

@@ -7,4 +7,3 @@ struct MockHttpServer : public HttpServer {
 
     void process(std::shared_ptr<Client> client) const override;
 };
-

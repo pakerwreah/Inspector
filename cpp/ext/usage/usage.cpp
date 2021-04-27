@@ -6,7 +6,7 @@
 #include "read_file.h"
 
 using namespace std;
-using json = nlohmann::json;
+using nlohmann::json;
 
 Usage::Usage(Inspector &inspector) {
     inspector.addLivePlugin("usage", "Usage", [] {
@@ -15,9 +15,10 @@ Usage::Usage(Inspector &inspector) {
 
     thread([&] {
         float cpu_usage = 50, memory_used = 50, memory_max = 512;
+        unsigned int seed = 0;
         while (true) {
-            cpu_usage = fmin(100, fmax(0, cpu_usage + rand() % 100 - 50));
-            memory_used = fmin(memory_max, fmax(0, memory_used + rand() % 100 - 50));
+            cpu_usage = fmin(100, fmax(0, cpu_usage + rand_r(&seed) % 100 - 50));
+            memory_used = fmin(memory_max, fmax(0, memory_used + rand_r(&seed) % 100 - 50));
             json cpu = {
                     {"usage", cpu_usage}
             };
