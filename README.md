@@ -18,16 +18,20 @@ To keep network log history the web system uses the built-in IndexedDB from the 
 https://github.com/pakerwreah/InspectorWeb
 
 ## Android
-[![Version](https://api.bintray.com/packages/pakerwreah/Inspector/br.newm.inspector/images/download.svg)](https://bintray.com/pakerwreah/Inspector/br.newm.inspector/_latestVersion)
+[![Version](https://jitpack.io/v/pakerwreah/Inspector.svg)](https://jitpack.io/#pakerwreah/Inspector)
+
+<details>
+    <summary>Setup</summary>
+
 #### Gradle
 ```gradle
 repositories {
-    jcenter()
+    maven { url "https://jitpack.io" }
 }
 ```
 ```gradle
 dependencies {
-    implementation "br.newm.inspector:inspector:<version>"
+    implementation "com.github.pakerwreah:Inspector:<release-tag>"
 }
 ```
 
@@ -35,6 +39,10 @@ dependencies {
 ```
 -keep class br.newm.inspector.* { *; }
 ```
+</details>
+
+<details>
+    <summary>Usage</summary>
 
 #### Application
 ```java
@@ -128,15 +136,24 @@ Inspector.sendMessage("mykey", "Hello world!");
 adb forward tcp:30000 tcp:30000
 ```
 Or configure its network as bridge and use the device's IP
+</details>
 
 ## iOS
 [![Version](https://img.shields.io/cocoapods/v/IOSInspector.svg)](https://cocoapods.org/pods/IOSInspector)
+
+<details>
+    <summary>Setup</summary>
+
 #### CocoaPods
 ```gradle
 target 'MyApp' do
    pod "IOSInspector"
 end
 ```
+</details>
+
+<details>
+    <summary>Usage</summary>
 
 #### AppDelegate
 ```swift
@@ -227,3 +244,4 @@ new WebSocket(`ws://${location.hostname}:${location.port}/plugins/ws/mykey`)
 ```swift
 IOSInspector.sendMessage(to: "mykey", message: "Hello world!")
 ```
+</details>
