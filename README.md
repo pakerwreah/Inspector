@@ -1,5 +1,5 @@
 # Inspector
-![release](https://img.shields.io/github/v/release/pakerwreah/Inspector)
+[![release](https://img.shields.io/github/v/release/pakerwreah/Inspector)](https://github.com/pakerwreah/Inspector/releases/latest)
 ![c++](https://img.shields.io/badge/C++-17-blue.svg?style=flat&logo=c%2B%2B)
 ![android](https://img.shields.io/badge/Android-grey.svg?style=flat&logo=android)
 ![ios](https://img.shields.io/badge/iOS-grey.svg?style=flat&logo=apple)
