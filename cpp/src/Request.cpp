@@ -22,7 +22,7 @@ bool Request::parse(const string &plain) {
     size_t path_len, method_len;
     int minor_version;
     size_t num_headers = 50;
-    struct phr_header headers[num_headers];
+    struct phr_header headers[50];
     const char *buffer = plain.c_str();
 
     int body_start = phr_parse_request(
@@ -30,12 +30,11 @@ bool Request::parse(const string &plain) {
             &method, &method_len,
             &path, &path_len,
             &minor_version,
-            headers, &num_headers, 0);
+            headers, &num_headers,
+            0
+    );
 
     if (body_start > 0) {
-        this->method = string(method).substr(0, method_len);
-        this->path = string(path).substr(0, path_len);
-
         for (int i = 0; i < num_headers; i++) {
             auto header = headers[i];
             auto name = string(header.name).substr(0, header.name_len);
@@ -43,7 +42,9 @@ bool Request::parse(const string &plain) {
             this->headers[name] = value;
         }
 
-        this->body = plain.substr(static_cast<unsigned long>(body_start));
+        this->method = string(method).substr(0, method_len);
+        this->path = string(path).substr(0, path_len);
+        this->body = plain.substr(body_start);
 
         return true;
     }

@@ -2,8 +2,7 @@
 // Created by Paker on 2019-10-23.
 //
 
-#ifndef INSPECTOR_INSPECTOR_H
-#define INSPECTOR_INSPECTOR_H
+#pragma once
 
 #include "HttpServer.h"
 #include "DatabasePlugin.h"
@@ -46,5 +45,3 @@ public:
 
     void stop();
 };
-
-#endif //INSPECTOR_INSPECTOR_H

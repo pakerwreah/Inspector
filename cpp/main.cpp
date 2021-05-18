@@ -2,19 +2,19 @@
 // Created by Paker on 26/10/19.
 //
 
-#include <unistd.h>
-#include <thread>
-#include <vector>
-#include <sys/time.h>
-
 #include "Inspector.h"
 #include "util.h"
+
 #include "ext/explorer/explorer.h"
 #include "ext/realtime/realtime.h"
 #include "ext/usage/usage.h"
 
+#include <unistd.h>
+#include <thread>
+#include <vector>
+
 using namespace std;
-using json = nlohmann::json;
+using nlohmann::json;
 
 class TestDatabaseProvider : public DatabaseProvider {
 protected:
@@ -24,8 +24,8 @@ protected:
 };
 
 static void rsleep() {
-    srand(time(nullptr)); // use current time as seed for random generator
-    sleep((rand() % 5) + 5);
+    static unsigned int seed = 0;
+    sleep((rand_r(&seed) % 5) + 5);
 }
 
 static void mockNetwork(Inspector &inspector) {

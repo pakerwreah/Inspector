@@ -5,7 +5,7 @@
 #include <thread>
 
 using namespace std;
-using json = nlohmann::json;
+using nlohmann::json;
 
 TEST_CASE("DatabasePlugin - Provider") {
     Router router;
@@ -152,7 +152,6 @@ TEST_CASE("DatabasePlugin - Encryption") {
         CHECK(response.headers[Http::ContentType::Key] == Http::ContentType::JSON);
     }
 }
-
 
 TEST_CASE("DatabasePlugin - Query") {
     Router router;

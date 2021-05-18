@@ -2,17 +2,11 @@
 // Created by Paker on 29/10/19.
 //
 
-#ifndef INSPECTOR_DATABASEPLUGIN_H
-#define INSPECTOR_DATABASEPLUGIN_H
-
-#include <map>
-#include <string>
-#include <vector>
-#include <memory>
-#include <chrono>
+#pragma once
 
 #include "Router.h"
 #include "Database.h"
+#include <chrono>
 
 class DatabaseProvider {
 public:
@@ -47,5 +41,3 @@ public:
     bool isOpen() const;
     void setDebounce(std::chrono::nanoseconds debounce);
 };
-
-#endif //INSPECTOR_DATABASEPLUGIN_H

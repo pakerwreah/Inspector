@@ -2,11 +2,8 @@
 // Created by Paker on 2020-08-23.
 //
 
-#ifndef INSPECTOR_RESPONSE_H
-#define INSPECTOR_RESPONSE_H
+#pragma once
 
-#include <map>
-#include <string>
 #include "json.hpp"
 #include "Http.h"
 
@@ -15,9 +12,9 @@ struct Response {
     Headers headers;
     std::string body;
 
-    Response(const char *data = "", int code = 200);
-    Response(const std::string &data, int code = 200);
-    Response(const nlohmann::json &data, int code = 200);
+    Response(const char *data = "", int code = 200); // NOLINT(runtime/explicit)
+    Response(const std::string &data, int code = 200); // NOLINT(runtime/explicit)
+    Response(const nlohmann::json &data, int code = 200); // NOLINT(runtime/explicit)
 
     operator std::string() const;
 
@@ -33,5 +30,3 @@ struct Response {
         return {{{"msg", error}}, 500};
     }
 };
-
-#endif //INSPECTOR_RESPONSE_H

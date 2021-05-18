@@ -1,9 +1,9 @@
 #include "catch.hpp"
 #include "util.h"
 
-#include <string>
 #include <unistd.h>
 #include <ctime>
+#include <string>
 
 using namespace std;
 using namespace util;

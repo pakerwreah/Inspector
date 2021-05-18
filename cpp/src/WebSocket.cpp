@@ -9,9 +9,7 @@
 
 using namespace std;
 
-WebSocket::WebSocket(shared_ptr<Client> client) {
-    this->client = client;
-}
+WebSocket::WebSocket(shared_ptr<Client> client) : client(client) {}
 
 bool WebSocket::send(const string &data, bool binary) const {
     return client->send(pack(data, binary));

@@ -2,7 +2,7 @@
 #include "Response.h"
 
 using namespace std;
-using json = nlohmann::json;
+using nlohmann::json;
 
 TEST_CASE("Response - NULL") {
     Response response(nullptr);

@@ -6,6 +6,8 @@
 #include "SocketClient.h"
 #include "compress.hpp"
 
+#include <thread>
+
 using namespace std;
 
 HttpServer::HttpServer() : _listening(false), _stop(false), _error(0), interval(1s) {}

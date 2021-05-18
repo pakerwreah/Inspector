@@ -2,8 +2,10 @@
 // Created by Paker on 25/08/20.
 //
 
-#ifndef INSPECTOR_HTTP_H
-#define INSPECTOR_HTTP_H
+#pragma once
+
+#include <string>
+#include <map>
 
 namespace Http {
     namespace ContentType {
@@ -16,5 +18,3 @@ namespace Http {
 
 typedef std::map<std::string, std::string> Headers;
 typedef std::map<std::string, std::string> Params;
-
-#endif //INSPECTOR_HTTP_H

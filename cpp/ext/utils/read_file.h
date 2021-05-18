@@ -1,5 +1,4 @@
-#ifndef INSPECTOR_READ_FILE_H
-#define INSPECTOR_READ_FILE_H
+#pragma once
 
 #include <sstream>
 #include <fstream>
@@ -10,5 +9,3 @@ inline std::string read_file(const std::string &path) {
     buffer << file.rdbuf();
     return buffer.str();
 }
-
-#endif //INSPECTOR_READ_FILE_H

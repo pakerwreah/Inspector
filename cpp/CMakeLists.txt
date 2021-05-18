@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.13.0)
+project(Inspector)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -7,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_C_COMPILER clang)
 set(CMAKE_CXX_COMPILER clang++)
 
-project(inspector)
+add_custom_target(cpplint python3 tools/cpplint/cpplint.py --quiet --recursive src WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 include_directories(src src/utils src/libs)
 
@@ -15,6 +16,8 @@ file(GLOB_RECURSE sources src/*.cpp src/*.c)
 
 # Create base object with sources
 add_library(inspector-cpp OBJECT ${sources})
+target_compile_options(inspector-cpp PRIVATE -pedantic-errors -Werror -Wall -Wextra -Wno-reorder-ctor -Wno-sign-compare)
+add_dependencies(inspector-cpp cpplint)
 
 # Configure code coverage
 include(CodeCoverage.cmake)
@@ -34,6 +37,6 @@ target_link_libraries(inspector-demo inspector-cpp)
 # Create tests runner
 file(GLOB_RECURSE tests tests/*.cpp)
 add_executable(inspector-tests ${tests})
-target_include_directories(inspector-tests PRIVATE tests/utils)
+target_include_directories(inspector-tests PRIVATE tests/libs tests/utils)
 target_link_libraries(inspector-tests inspector-cpp)
 add_custom_target(test inspector-tests)

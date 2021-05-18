@@ -4,11 +4,10 @@
 
 #include "Broadcaster.h"
 #include "UDPSocket.h"
-#include "DeviceInfo.h"
 #include "json.hpp"
 
 using namespace std;
-using json = nlohmann::json;
+using nlohmann::json;
 
 Broadcaster::Broadcaster() : _stop(false), _broadcasting(false), _error(0), interval(5s) {}
 
@@ -46,7 +45,7 @@ thread *Broadcaster::start(int port, const DeviceInfo &info) {
                         _error = errno;
                         break;
                     }
-                    if(!_stop) {
+                    if (!_stop) {
                         this_thread::sleep_for(interval);
                     }
                 } while (!_stop);

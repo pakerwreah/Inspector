@@ -1,2 +1,14 @@
 #!/bin/sh
-cmake -Bcmake-build-debug && make -C cmake-build-debug
+
+GREEN='\033[0;32m'
+CYAN='\033[0;36m'
+NC='\033[0m'
+
+if [ -f /.dockerenv ]; then
+	printf "\n💡 ${GREEN}Building outside volume for better performance: ${CYAN}../cmake-build-debug${NC}\n\n"
+	cmake -B../cmake-build-debug && make -C ../cmake-build-debug -j
+	cp clear-gcda.sh ../cmake-build-debug
+else
+	cmake -Bcmake-build-debug && make -C cmake-build-debug -j
+	cp clear-gcda.sh cmake-build-debug
+fi

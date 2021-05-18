@@ -11,6 +11,11 @@
 		3405AB6723775885002FA13A /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB6623775885002FA13A /* Http.swift */; };
 		3405AB6B237794B4002FA13A /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB6623775885002FA13A /* Http.swift */; };
 		3405AB6E2377A1EC002FA13A /* NetworkPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB6C2377A1EC002FA13A /* NetworkPlugin.cpp */; };
+		341CBCA0256366E300FF1D1B /* RealtimePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343EE27F251F020500CDF0DD /* RealtimePlugin.swift */; };
+		341CBCA1256366E300FF1D1B /* ExplorerPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34595B4924EC468600ECB544 /* ExplorerPlugin.swift */; };
+		341CBCA2256366E300FF1D1B /* realtime.html in Resources */ = {isa = PBXBuildFile; fileRef = 343EE27B251F01DE00CDF0DD /* realtime.html */; };
+		341CBCA3256366E300FF1D1B /* explorer.html in Resources */ = {isa = PBXBuildFile; fileRef = 34595B4B24EC47AA00ECB544 /* explorer.html */; };
+		341CBCA4256366E300FF1D1B /* UserDefaultsPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34595B4724EC460800ECB544 /* UserDefaultsPlugin.swift */; };
 		34232AF42374C06000E45BCA /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 34232AF32374C03E00E45BCA /* libz.tbd */; };
 		342B0E542438D0F8001D7227 /* DatabaseProviderAdapter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 342B0E532438D0F8001D7227 /* DatabaseProviderAdapter.mm */; };
 		342B0E572438DA92001D7227 /* CustomPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 342B0E562438DA92001D7227 /* CustomPlugin.cpp */; };
@@ -373,6 +378,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				341CBCA2256366E300FF1D1B /* realtime.html in Resources */,
+				341CBCA3256366E300FF1D1B /* explorer.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -473,8 +480,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				341CBCA0256366E300FF1D1B /* RealtimePlugin.swift in Sources */,
+				341CBCA4256366E300FF1D1B /* UserDefaultsPlugin.swift in Sources */,
 				344AFA15236A857D007B2896 /* AppDelegate.swift in Sources */,
 				3405AB6B237794B4002FA13A /* Http.swift in Sources */,
+				341CBCA1256366E300FF1D1B /* ExplorerPlugin.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

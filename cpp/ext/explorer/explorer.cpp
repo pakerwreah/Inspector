@@ -8,7 +8,7 @@
 #include <filesystem>
 
 using namespace std;
-using json = nlohmann::json;
+using nlohmann::json;
 
 Explorer::Explorer(Inspector &inspector, const string &root) {
 

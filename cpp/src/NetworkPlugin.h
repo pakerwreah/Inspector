@@ -2,8 +2,7 @@
 // Created by Paker on 09/11/19.
 //
 
-#ifndef INSPECTOR_NETWORKPLUGIN_H
-#define INSPECTOR_NETWORKPLUGIN_H
+#pragma once
 
 #include "Router.h"
 #include "WebSocket.h"
@@ -16,7 +15,7 @@ private:
     std::mutex mutex;
 
 public:
-    NetworkPlugin(Router &router);
+    explicit NetworkPlugin(Router &router);
 
     bool isRequestConnected() const;
     bool isResponseConnected() const;
@@ -25,5 +24,3 @@ public:
     void sendRequest(const std::string &uid, const std::string &headers, const std::string &body);
     void sendResponse(const std::string &uid, const std::string &headers, const std::string &body, bool compressed = false);
 };
-
-#endif //INSPECTOR_NETWORKPLUGIN_H

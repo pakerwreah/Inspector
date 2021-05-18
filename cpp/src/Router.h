@@ -2,11 +2,8 @@
 // Created by Paker on 24/08/20.
 //
 
-#ifndef INSPECTOR_ROUTER_H
-#define INSPECTOR_ROUTER_H
+#pragma once
 
-#include <map>
-#include <string>
 #include "Request.h"
 #include "Response.h"
 
@@ -27,5 +24,3 @@ public:
     void post(const std::string &path, Handler handler);
     void put(const std::string &path, Handler handler);
 };
-
-#endif //INSPECTOR_ROUTER_H

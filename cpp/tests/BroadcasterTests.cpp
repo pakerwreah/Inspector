@@ -1,6 +1,6 @@
 #include "catch.hpp"
 #include "Broadcaster.h"
-#include "UDPSocket.h"
+#include <thread>
 
 using namespace std;
 
@@ -31,7 +31,9 @@ TEST_CASE("Broadcaster - Fail") {
 TEST_CASE("Broadcaster - Invalid port") {
     Broadcaster broadcaster;
     thread *th = broadcaster.start(-1, {});
+    this_thread::sleep_for(1ms);
+    CHECK_FALSE(broadcaster.broadcasting());
     broadcaster.stop();
     th->join();
-    CHECK_FALSE(broadcaster.broadcasting());
+    CHECK(broadcaster.error() == EINVAL);
 }

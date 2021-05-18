@@ -2,10 +2,10 @@
 // Created by Paker on 03/10/20.
 //
 
-#ifndef INSPECTOR_BROADCASTER_H
-#define INSPECTOR_BROADCASTER_H
+#pragma once
 
 #include "DeviceInfo.h"
+#include <chrono>
 #include <thread>
 
 class Broadcaster {
@@ -24,5 +24,3 @@ public:
     std::thread *start(int port, const DeviceInfo &info);
     void setInterval(std::chrono::nanoseconds interval);
 };
-
-#endif //INSPECTOR_BROADCASTER_H

@@ -1,8 +1,7 @@
-#ifndef INSPECTOR_UDPSOCKET_H
-#define INSPECTOR_UDPSOCKET_H
+#pragma once
 
-#include <string>
 #include <netinet/in.h>
+#include <string>
 
 class UDPSocket {
 private:
@@ -24,5 +23,3 @@ public:
 
     bool is_valid() const;
 };
-
-#endif //INSPECTOR_UDPSOCKET_H

@@ -1,0 +1,10 @@
+version: '3'
+services:
+  inspector:
+    build: .
+    image: pakerwreah/inspector
+    container_name: Inspector
+    stdin_open: true
+    tty: true
+    volumes:
+      - '../cpp:/Inspector:cached'

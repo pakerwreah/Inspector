@@ -4,6 +4,7 @@
 #include "SocketClient.h"
 #include "MockClient.h"
 #include "MockHttpServer.h"
+#include <thread>
 
 using namespace std;
 
