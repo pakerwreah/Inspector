@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.13.0)
+project(Inspector)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -6,8 +7,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 set(CMAKE_C_COMPILER clang)
 set(CMAKE_CXX_COMPILER clang++)
-
-project(inspector)
 
 add_custom_target(cpplint python3 tools/cpplint/cpplint.py --quiet --recursive src WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
