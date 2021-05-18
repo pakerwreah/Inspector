@@ -1,0 +1,4 @@
+before_install:
+  - cd android/lib
+install:
+  - ./gradlew assembleRelease publishToMavenLocal
