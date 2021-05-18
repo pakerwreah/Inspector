@@ -32,7 +32,8 @@ dependencies {
     localImplementation project(':inspector')
     localImplementation 'com.squareup.okhttp3:okhttp:4.4.0'
 
-    mavenImplementation 'com.github.pakerwreah:Inspector:jitpack-SNAPSHOT'
+    // gradle resolves all flavors every time, so we have to comment this out
+    // mavenImplementation 'com.github.pakerwreah:Inspector:develop-SNAPSHOT'
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.2.0'
