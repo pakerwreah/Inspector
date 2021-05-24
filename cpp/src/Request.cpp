@@ -37,13 +37,13 @@ bool Request::parse(const string &plain) {
     if (body_start > 0) {
         for (int i = 0; i < num_headers; i++) {
             auto header = headers[i];
-            auto name = string(header.name).substr(0, header.name_len);
-            auto value = string(header.value).substr(0, header.value_len);
+            auto name = string(header.name, header.name_len);
+            auto value = string_view(header.value, header.value_len);
             this->headers[name] = value;
         }
 
-        this->method = string(method).substr(0, method_len);
-        this->path = string(path).substr(0, path_len);
+        this->method = string_view(method, method_len);
+        this->path = string_view(path, path_len);
         this->body = plain.substr(body_start);
 
         return true;
