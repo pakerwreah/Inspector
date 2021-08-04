@@ -59,17 +59,17 @@ Response Router::handle(const Request &request) const {
 }
 
 void Router::route(const string &method, const string &path, Handler handler) {
-    routes[method][path] = handler;
+    routes[method][path] = std::move(handler);
 }
 
 void Router::get(const string &path, Handler handler) {
-    route("GET", path, handler);
+    route("GET", path, std::move(handler));
 }
 
 void Router::post(const string &path, Handler handler) {
-    route("POST", path, handler);
+    route("POST", path, std::move(handler));
 }
 
 void Router::put(const string &path, Handler handler) {
-    route("PUT", path, handler);
+    route("PUT", path, std::move(handler));
 }

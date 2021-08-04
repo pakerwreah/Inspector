@@ -1,8 +1,8 @@
 #include "UDPSocket.h"
 #include <sys/socket.h>
-#include <signal.h>
 #include <unistd.h>
-#include <errno.h>
+#include <cerrno>
+#include <csignal>
 #include <cstring>
 
 // MSG_NOSIGNAL does not exists on OS X
@@ -12,7 +12,7 @@
 # endif
 #endif
 
-UDPSocket::UDPSocket() : m_sock(-1) {
+UDPSocket::UDPSocket() : m_sock(-1), m_addr() {
     signal(SIGPIPE, SIG_IGN);
     std::memset(&m_addr, 0, sizeof(m_addr));
 }

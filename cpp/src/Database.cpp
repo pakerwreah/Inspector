@@ -7,7 +7,8 @@
 
 using namespace std;
 
-Database::Database(const string &path, const string &password, int version, bool create) {
+Database::Database(const string &path, const string &password, int version, bool create) : db(nullptr), failed(false) {
+
     if (!path.length()) {
         throw runtime_error("Invalid database path");
     }

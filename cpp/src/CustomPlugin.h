@@ -22,14 +22,14 @@ private:
     std::vector<PluginMeta> plugins;
     std::map<std::string, PluginAction> actions;
 
-    void addPlugin(const std::string &key, const std::string &name, PluginAction action, bool live);
+    void addPlugin(const std::string &key, const std::string &name, const PluginAction &action, bool live);
 
 public:
     explicit CustomPlugin(Router &router);
 
-    Response execute(PluginAction executor);
+    static Response execute(const PluginAction &action);
 
-    void addPlugin(const std::string &key, const std::string &name, PluginAction action);
-    void addPluginAPI(const std::string &method, const std::string &path, PluginAPIAction action);
-    void addLivePlugin(const std::string &key, const std::string &name, PluginAction action);
+    void addPlugin(const std::string &key, const std::string &name, const PluginAction &action);
+    void addPluginAPI(const std::string &method, const std::string &path, const PluginAPIAction &action);
+    void addLivePlugin(const std::string &key, const std::string &name, const PluginAction &action);
 };

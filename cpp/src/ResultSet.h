@@ -16,7 +16,7 @@ private:
 
     bool step();
 
-    ResultSet(sqlite3 *db, sqlite3_stmt *stmt);
+    explicit ResultSet(sqlite3 *db, sqlite3_stmt *stmt);
 
     friend class Database;
 

@@ -9,13 +9,13 @@
 using namespace std;
 
 Request::Request(shared_ptr<Client> client)
-        : client(client) {}
+        : client(std::move(client)) {}
 
-Request::Request(const string &method, const string &path, const string &body)
-        : method(method), path(path), body(body) {}
+Request::Request(string method, string path, string body)
+        : method(std::move(method)), path(std::move(path)), body(std::move(body)) {}
 
-Request::Request(const string &method, const string &path, std::shared_ptr<Client> client, const Headers &headers)
-        : method(method), path(path), client(client), headers(headers) {}
+Request::Request(string method, string path, std::shared_ptr<Client> client, Headers headers)
+        : method(std::move(method)), path(std::move(path)), client(std::move(client)), headers(std::move(headers)) {}
 
 bool Request::parse(const string &plain) {
     const char *method, *path;

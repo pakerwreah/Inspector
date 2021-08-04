@@ -10,7 +10,7 @@ using nlohmann::json;
 
 Response::Response(const char *data, int code) : Response(data ? string(data) : "", code) {}
 
-Response::Response(const string &data, int code) : code(code), body(data) {
+Response::Response(string data, int code) : code(code), body(std::move(data)) {
     headers[Http::ContentType::Key] = Http::ContentType::HTML;
 }
 

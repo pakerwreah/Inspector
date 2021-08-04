@@ -20,7 +20,8 @@ vector<string> ResultSet::headers() const {
     vector<string> headers;
     int count = sqlite3_column_count(stmt);
     for (int i = 0; i < count; i++) {
-        headers.push_back(sqlite3_column_name(stmt, i));
+        if (auto name = sqlite3_column_name(stmt, i))
+            headers.emplace_back(name);
     }
     return headers;
 }

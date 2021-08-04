@@ -11,14 +11,10 @@ namespace url {
     string decode(const string &_encoded) {
         string encoded = util::replaceAll(_encoded, "+", "%20");
         string ret;
-        char ch;
-        int i, j;
-        for (i = 0; i < encoded.length(); i++) {
+        for (int i = 0; i < encoded.length(); i++) {
             if (static_cast<int>(encoded[i]) == 37) {
-                sscanf(encoded.substr(i + 1, 2).c_str(), "%x", &j);
-                ch = static_cast<char>(j);
-                ret += ch;
-                i = i + 2;
+                ret += static_cast<char>(strtoul(encoded.substr(i + 1, 2).c_str(), nullptr, 16));
+                i += 2;
             } else {
                 ret += encoded[i];
             }
