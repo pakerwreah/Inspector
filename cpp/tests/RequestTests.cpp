@@ -41,7 +41,7 @@ TEST_CASE("Request - parsed") {
         plain_request = "GET " + plain_request;
         REQUIRE(request.parse(plain_request));
         CHECK(request.method == "GET");
-        CHECK(request.body == "");
+        CHECK(request.body.empty());
     }
 
     SECTION("POST") {

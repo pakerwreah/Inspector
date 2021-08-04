@@ -14,7 +14,7 @@ void to_json(json &j, const PluginMeta &p) {
          {"live", p.live}};
 }
 
-Response CustomPlugin::execute(PluginAction action) {
+Response CustomPlugin::execute(const PluginAction &action) {
     string res;
     try {
         return json::parse(res = action());
@@ -29,28 +29,31 @@ CustomPlugin::CustomPlugin(Router &router) : router(router) {
     });
 }
 
-void CustomPlugin::addPlugin(const string &key, const string &name, PluginAction action, bool live) {
+void CustomPlugin::addPlugin(const string &key, const string &name, const PluginAction &action, bool live) {
     plugins.push_back({key, name, live});
-    router.get("/plugins/" + key, [this, action](const Request &, const Params &) {
+    router.get("/plugins/" + key, [action](const Request &, const Params &) {
         return execute([action] {
             return action();
         });
     });
 }
 
-void CustomPlugin::addPlugin(const string &key, const string &name, PluginAction action) {
+void CustomPlugin::addPlugin(const string &key, const string &name, const PluginAction &action) {
     addPlugin(key, name, action, false);
 }
 
-void CustomPlugin::addLivePlugin(const string &key, const string &name, PluginAction action) {
+void CustomPlugin::addLivePlugin(const string &key, const string &name, const PluginAction &action) {
     addPlugin(key, name, action, true);
 }
 
-void CustomPlugin::addPluginAPI(const string &method, const string &path, PluginAPIAction action) {
-    router.route(method, "/plugins/api/" + util::ltrim(path, "/"),
-                 [this, action](const Request &, const Params &params) {
-                     return execute([action, &params] {
-                         return action(params);
-                     });
-                 });
+void CustomPlugin::addPluginAPI(const string &method, const string &path, const PluginAPIAction &action) {
+    router.route(
+            method,
+            "/plugins/api/" + util::ltrim(path, "/"),
+            [action](const Request &, const Params &params) {
+                return execute([action, &params] {
+                    return action(params);
+                });
+            }
+    );
 }

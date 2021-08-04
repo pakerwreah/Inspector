@@ -15,8 +15,8 @@ struct Request {
 
     Request() = default;
     explicit Request(std::shared_ptr<Client> client);
-    Request(const std::string &method, const std::string &path, const std::string &body = "");
-    Request(const std::string &method, const std::string &path, std::shared_ptr<Client> client, const Headers &headers);
+    Request(std::string method, std::string path, std::string body = "");
+    Request(std::string method, std::string path, std::shared_ptr<Client> client, Headers headers);
 
     operator std::string() const;
 

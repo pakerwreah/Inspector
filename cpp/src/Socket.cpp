@@ -4,8 +4,8 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
-#include <signal.h>
-#include <errno.h>
+#include <cerrno>
+#include <csignal>
 #include <cstring>
 
 // MSG_NOSIGNAL does not exists on OS X
@@ -17,7 +17,7 @@
 
 #define MAXRECV 500
 
-Socket::Socket() : m_sock(-1) {
+Socket::Socket() : m_sock(-1), m_addr() {
     signal(SIGPIPE, SIG_IGN);
     std::memset(&m_addr, 0, sizeof(m_addr));
 }
@@ -80,7 +80,7 @@ bool Socket::connect(const std::string &host, int port) {
     return ::connect(m_sock, (sockaddr *) &m_addr, sizeof(m_addr)) == 0;
 }
 
-void Socket::set_non_blocking(bool non_blocking) {
+void Socket::set_non_blocking(bool non_blocking) const {
     int opts = fcntl(m_sock, F_GETFL);
 
     if (non_blocking)
