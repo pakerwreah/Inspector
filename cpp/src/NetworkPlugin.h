@@ -22,5 +22,5 @@ public:
     bool isConnected() const;
 
     void sendRequest(const std::string &uid, const std::string &headers, const std::string &body);
-    void sendResponse(const std::string &uid, const std::string &headers, const std::string &body, bool compressed = false);
+    void sendResponse(const std::string &uid, const std::string &headers, const std::string &body, bool is_compressed = false);
 };

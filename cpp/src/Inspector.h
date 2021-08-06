@@ -23,7 +23,7 @@ private:
     std::unique_ptr<WebSocketPlugin> webSocketPlugin;
 
 public:
-    Inspector(std::shared_ptr<DatabaseProvider> databaseProvider, const DeviceInfo &info);
+    Inspector(std::shared_ptr<DatabaseProvider> databaseProvider, DeviceInfo info);
 
     void bind(int port);
 
@@ -33,13 +33,13 @@ public:
 
     void sendRequest(const std::string &uid, const std::string &headers, const std::string &body);
 
-    void sendResponse(const std::string &uid, const std::string &headers, const std::string &body, bool compressed = false);
+    void sendResponse(const std::string &uid, const std::string &headers, const std::string &body, bool is_compressed = false);
 
-    void addPlugin(const std::string &key, const std::string &name, PluginAction action);
+    void addPlugin(const std::string &key, const std::string &name, const PluginAction &action);
 
-    void addLivePlugin(const std::string &key, const std::string &name, PluginAction action);
+    void addLivePlugin(const std::string &key, const std::string &name, const PluginAction &action);
 
-    void addPluginAPI(const std::string &method, const std::string &path, PluginAPIAction action);
+    void addPluginAPI(const std::string &method, const std::string &path, const PluginAPIAction &action);
 
     void sendMessage(const std::string &key, const std::string &message);
 
