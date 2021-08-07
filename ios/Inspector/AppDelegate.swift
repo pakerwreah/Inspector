@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import IOSInspector
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, IOSInspectorProtocol {

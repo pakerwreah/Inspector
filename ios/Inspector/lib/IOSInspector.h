@@ -1,6 +1,6 @@
 //
-//  IOSInspectorDriver.h
-//  IOSInspectorDriver
+//  IOSInspector.h
+//  IOSInspector
 //
 //  Created by Paker on 29/10/19.
 //

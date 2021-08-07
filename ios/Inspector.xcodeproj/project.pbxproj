@@ -3,11 +3,10 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2AEE959994C19A40FC1C32AA /* Pods_Inspector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DBA2507A0A176526438EB33 /* Pods_Inspector.framework */; };
 		3405AB6723775885002FA13A /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB6623775885002FA13A /* Http.swift */; };
 		3405AB6B237794B4002FA13A /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB6623775885002FA13A /* Http.swift */; };
 		3405AB6E2377A1EC002FA13A /* NetworkPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB6C2377A1EC002FA13A /* NetworkPlugin.cpp */; };
@@ -35,6 +34,14 @@
 		34595B4824EC460800ECB544 /* UserDefaultsPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34595B4724EC460800ECB544 /* UserDefaultsPlugin.swift */; };
 		34595B4A24EC468600ECB544 /* ExplorerPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34595B4924EC468600ECB544 /* ExplorerPlugin.swift */; };
 		34595B4C24EC47AA00ECB544 /* explorer.html in Resources */ = {isa = PBXBuildFile; fileRef = 34595B4B24EC47AA00ECB544 /* explorer.html */; };
+		34A3B2D626BF392F007BD9E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 344C1C0E2367E64C00B62594 /* AppDelegate.swift */; };
+		34A3B2D726BF3931007BD9E0 /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB6623775885002FA13A /* Http.swift */; };
+		34A3B2D826BF393B007BD9E0 /* RealtimePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 343EE27F251F020500CDF0DD /* RealtimePlugin.swift */; };
+		34A3B2D926BF393B007BD9E0 /* UserDefaultsPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34595B4724EC460800ECB544 /* UserDefaultsPlugin.swift */; };
+		34A3B2DA26BF393B007BD9E0 /* ExplorerPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 34595B4924EC468600ECB544 /* ExplorerPlugin.swift */; };
+		34A3B2DB26BF3941007BD9E0 /* realtime.html in Resources */ = {isa = PBXBuildFile; fileRef = 343EE27B251F01DE00CDF0DD /* realtime.html */; };
+		34A3B2DC26BF3941007BD9E0 /* explorer.html in Resources */ = {isa = PBXBuildFile; fileRef = 34595B4B24EC47AA00ECB544 /* explorer.html */; };
+		34A3B2DE26BF3951007BD9E0 /* IOSInspector in Frameworks */ = {isa = PBXBuildFile; productRef = 34A3B2DD26BF3951007BD9E0 /* IOSInspector */; };
 		34D09762250F16C700F77CCC /* WebSocket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34D09760250F16C700F77CCC /* WebSocket.cpp */; };
 		34F574E32500B1CA00A7092A /* util.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34F574CD2500B1CA00A7092A /* util.cpp */; };
 		34F574E42500B1CA00A7092A /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34F574CF2500B1CA00A7092A /* base64.cpp */; };
@@ -89,6 +96,7 @@
 		34595B4724EC460800ECB544 /* UserDefaultsPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsPlugin.swift; sourceTree = "<group>"; };
 		34595B4924EC468600ECB544 /* ExplorerPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExplorerPlugin.swift; sourceTree = "<group>"; };
 		34595B4B24EC47AA00ECB544 /* explorer.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = explorer.html; path = ../../../cpp/ext/explorer/explorer.html; sourceTree = "<group>"; };
+		34A3B2C226BF38A7007BD9E0 /* Inspector-spm.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Inspector-spm.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34D09760250F16C700F77CCC /* WebSocket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = WebSocket.cpp; sourceTree = "<group>"; };
 		34D09761250F16C700F77CCC /* WebSocket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebSocket.h; sourceTree = "<group>"; };
 		34F574C82500B1C900A7092A /* Http.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Http.h; sourceTree = "<group>"; };
@@ -139,7 +147,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				34232AF42374C06000E45BCA /* libz.tbd in Frameworks */,
-				2AEE959994C19A40FC1C32AA /* Pods_Inspector.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34A3B2BF26BF38A7007BD9E0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				34A3B2DE26BF3951007BD9E0 /* IOSInspector in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,6 +198,7 @@
 			children = (
 				344C1C0B2367E64C00B62594 /* Inspector.app */,
 				344AFA20236A857D007B2896 /* Inspector-pod.app */,
+				34A3B2C226BF38A7007BD9E0 /* Inspector-spm.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -334,8 +350,30 @@
 			dependencies = (
 			);
 			name = Inspector;
+			packageProductDependencies = (
+			);
 			productName = Inspector;
 			productReference = 344C1C0B2367E64C00B62594 /* Inspector.app */;
+			productType = "com.apple.product-type.application";
+		};
+		34A3B2C126BF38A7007BD9E0 /* Inspector-spm */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 34A3B2D326BF38A9007BD9E0 /* Build configuration list for PBXNativeTarget "Inspector-spm" */;
+			buildPhases = (
+				34A3B2BE26BF38A7007BD9E0 /* Sources */,
+				34A3B2BF26BF38A7007BD9E0 /* Frameworks */,
+				34A3B2C026BF38A7007BD9E0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Inspector-spm";
+			packageProductDependencies = (
+				34A3B2DD26BF3951007BD9E0 /* IOSInspector */,
+			);
+			productName = "Inspector-spm";
+			productReference = 34A3B2C226BF38A7007BD9E0 /* Inspector-spm.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -344,13 +382,16 @@
 		344C1C032367E64C00B62594 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1110;
+				LastSwiftUpdateCheck = 1250;
 				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
 					344C1C0A2367E64C00B62594 = {
 						CreatedOnToolsVersion = 11.1;
 						LastSwiftMigration = 1110;
+					};
+					34A3B2C126BF38A7007BD9E0 = {
+						CreatedOnToolsVersion = 12.5.1;
 					};
 				};
 			};
@@ -363,12 +404,16 @@
 				Base,
 			);
 			mainGroup = 344C1C022367E64C00B62594;
+			packageReferences = (
+				3460E39526BF24B0007F59E2 /* XCRemoteSwiftPackageReference "Inspector" */,
+			);
 			productRefGroup = 344C1C0C2367E64C00B62594 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				344C1C0A2367E64C00B62594 /* Inspector */,
 				344AFA0F236A857D007B2896 /* Inspector-pod */,
+				34A3B2C126BF38A7007BD9E0 /* Inspector-spm */,
 			);
 		};
 /* End PBXProject section */
@@ -389,6 +434,15 @@
 			files = (
 				34595B4C24EC47AA00ECB544 /* explorer.html in Resources */,
 				343EE27C251F01DE00CDF0DD /* realtime.html in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34A3B2C026BF38A7007BD9E0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				34A3B2DB26BF3941007BD9E0 /* realtime.html in Resources */,
+				34A3B2DC26BF3941007BD9E0 /* explorer.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -521,6 +575,18 @@
 				3405AB6E2377A1EC002FA13A /* NetworkPlugin.cpp in Sources */,
 				34F574E62500B1CA00A7092A /* sha1.cpp in Sources */,
 				657FEFFEB9C578D7E05EEB11 /* DatabasePlugin.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		34A3B2BE26BF38A7007BD9E0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				34A3B2D826BF393B007BD9E0 /* RealtimePlugin.swift in Sources */,
+				34A3B2DA26BF393B007BD9E0 /* ExplorerPlugin.swift in Sources */,
+				34A3B2D926BF393B007BD9E0 /* UserDefaultsPlugin.swift in Sources */,
+				34A3B2D626BF392F007BD9E0 /* AppDelegate.swift in Sources */,
+				34A3B2D726BF3931007BD9E0 /* Http.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -717,6 +783,46 @@
 			};
 			name = Release;
 		};
+		34A3B2D426BF38A9007BD9E0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"Inspector-spm/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		34A3B2D526BF38A9007BD9E0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_ASSET_PATHS = "\"Inspector-spm/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -747,7 +853,35 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		34A3B2D326BF38A9007BD9E0 /* Build configuration list for PBXNativeTarget "Inspector-spm" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				34A3B2D426BF38A9007BD9E0 /* Debug */,
+				34A3B2D526BF38A9007BD9E0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		3460E39526BF24B0007F59E2 /* XCRemoteSwiftPackageReference "Inspector" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "file:///Users/paker/Projetos/Inspector/Inspector";
+			requirement = {
+				branch = spm;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		34A3B2DD26BF3951007BD9E0 /* IOSInspector */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3460E39526BF24B0007F59E2 /* XCRemoteSwiftPackageReference "Inspector" */;
+			productName = IOSInspector;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 344C1C032367E64C00B62594 /* Project object */;
 }

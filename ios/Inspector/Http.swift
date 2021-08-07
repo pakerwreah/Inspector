@@ -5,6 +5,7 @@
 import UIKit
 import Foundation
 import SystemConfiguration
+import IOSInspector
 
 extension Data {
     var string: String? {

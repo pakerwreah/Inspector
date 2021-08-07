@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "IOSInspector",
+        "repositoryURL": "/Users/paker/Projetos/Inspector/Inspector",
+        "state": {
+          "branch": "spm",
+          "revision": "7c8e34e7632af4860d697400ee6aedf7587421ef",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}

@@ -5,7 +5,7 @@
 //  Created by Paker on 18/08/20.
 //
 
-import Foundation
+import IOSInspector
 
 class UserDefaultsPlugin: PluginActionProtocol {
     func action() -> String {

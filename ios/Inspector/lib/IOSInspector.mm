@@ -1,6 +1,6 @@
 //
-//  IOSInspectorDriver.m
-//  IOSInspectorDriver
+//  IOSInspector.m
+//  IOSInspector
 //
 //  Created by Paker on 29/10/19.
 //

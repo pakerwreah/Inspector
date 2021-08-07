@@ -7,6 +7,11 @@
 		<key>Inspector-pod.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
+			<integer>2</integer>
+		</dict>
+		<key>Inspector-spm.xcscheme_^#shared#^_</key>
+		<dict>
+			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
 		<key>Inspector.xcscheme_^#shared#^_</key>
@@ -20,7 +25,12 @@
 		<key>344C1C0A2367E64C00B62594</key>
 		<dict>
 			<key>primary</key>
-			<true />
+			<true/>
+		</dict>
+		<key>3460E39826BF2590007F59E2</key>
+		<dict>
+			<key>primary</key>
+			<true/>
 		</dict>
 	</dict>
 </dict>
