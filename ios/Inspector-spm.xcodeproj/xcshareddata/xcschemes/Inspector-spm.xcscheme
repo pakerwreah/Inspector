@@ -7,17 +7,17 @@
       buildImplicitDependencies = "YES">
       <BuildActionEntries>
          <BuildActionEntry
-            buildForTesting = "YES"
+            buildForTesting = "NO"
             buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "34A3B2C126BF38A7007BD9E0"
                BuildableName = "Inspector-spm.app"
                BlueprintName = "Inspector-spm"
-               ReferencedContainer = "container:Inspector.xcodeproj">
+               ReferencedContainer = "container:Inspector-spm.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -47,7 +47,7 @@
             BlueprintIdentifier = "34A3B2C126BF38A7007BD9E0"
             BuildableName = "Inspector-spm.app"
             BlueprintName = "Inspector-spm"
-            ReferencedContainer = "container:Inspector.xcodeproj">
+            ReferencedContainer = "container:Inspector-spm.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <LocationScenarioReference
@@ -61,15 +61,6 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "34A3B2C126BF38A7007BD9E0"
-            BuildableName = "Inspector-spm.app"
-            BlueprintName = "Inspector-spm"
-            ReferencedContainer = "container:Inspector.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
