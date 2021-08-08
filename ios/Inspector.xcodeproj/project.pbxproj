@@ -47,6 +47,7 @@
 		34F574EC2500B1CA00A7092A /* Router.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34F574E22500B1CA00A7092A /* Router.cpp */; };
 		657FEFFEB9C578D7E05EEB11 /* DatabasePlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657FE7265DB0ABE839354EDE /* DatabasePlugin.cpp */; };
 		B3D63DCAC9BC2984740C724A /* Pods_Inspector_pod.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF6E007F7005D4507CED6AC2 /* Pods_Inspector_pod.framework */; };
+		F777629B6B4FDE385F17F322 /* Pods_Inspector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DBA2507A0A176526438EB33 /* Pods_Inspector.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -138,6 +139,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34232AF42374C06000E45BCA /* libz.tbd in Frameworks */,
+				F777629B6B4FDE385F17F322 /* Pods_Inspector.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -332,8 +334,6 @@
 			dependencies = (
 			);
 			name = Inspector;
-			packageProductDependencies = (
-			);
 			productName = Inspector;
 			productReference = 344C1C0B2367E64C00B62594 /* Inspector.app */;
 			productType = "com.apple.product-type.application";
@@ -363,8 +363,6 @@
 				Base,
 			);
 			mainGroup = 344C1C022367E64C00B62594;
-			packageReferences = (
-			);
 			productRefGroup = 344C1C0C2367E64C00B62594 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
