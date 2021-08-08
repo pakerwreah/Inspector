@@ -5,7 +5,9 @@
 //  Created by Paker on 26/09/20.
 //
 
-import Foundation
+#if canImport(IOSInspector)
+import IOSInspector
+#endif
 
 class RealtimePlugin: PluginActionProtocol {
     private lazy var frontend: String = {

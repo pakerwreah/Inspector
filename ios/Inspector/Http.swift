@@ -6,6 +6,10 @@ import UIKit
 import Foundation
 import SystemConfiguration
 
+#if canImport(IOSInspector)
+import IOSInspector
+#endif
+
 extension Data {
     var string: String? {
         return String(data: self, encoding: String.Encoding.utf8)
