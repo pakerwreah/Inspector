@@ -5,7 +5,10 @@
 import UIKit
 import Foundation
 import SystemConfiguration
+
+#if canImport(IOSInspector)
 import IOSInspector
+#endif
 
 extension Data {
     var string: String? {

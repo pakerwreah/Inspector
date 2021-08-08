@@ -16,6 +16,9 @@ let package = Package(
             dependencies: ["Inspector"],
             path: "ios/Inspector/lib",
             publicHeadersPath: ".",
+            cSettings: [
+                .define("NO_SQLCIPHER") // FIXME: Waiting for official SPM support
+            ],
             cxxSettings: [
                 .headerSearchPath("../../../cpp/src"),
                 .headerSearchPath("../../../cpp/src/utils"),
@@ -24,7 +27,6 @@ let package = Package(
         ),
         .target(
             name: "Inspector",
-            dependencies: ["SQLCipher"], // FIXME: Waiting for official SPM support
             path: "cpp/src",
             exclude: ["libs/CPPLINT.cfg"],
             cxxSettings: [
@@ -32,7 +34,8 @@ let package = Package(
                 .headerSearchPath("libs")
             ],
             linkerSettings: [
-                .linkedLibrary("z")
+                .linkedLibrary("z"),
+                .linkedLibrary("sqlite3")
             ]
         )
     ],

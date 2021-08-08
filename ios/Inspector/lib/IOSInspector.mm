@@ -71,6 +71,9 @@ static string buildHeaders(NSDictionary<NSString *,NSString *> *headers) {
 }
 
 + (void)setCipherKey:(nonnull NSString *)database password:(nonnull NSString *)password version:(int)version {
+#ifdef NO_SQLCIPHER
+    NSAssert(NO, @"SQLCipher is not yet supported by SPM");
+#endif
     inspector->setCipherKey(database.UTF8String, password.UTF8String, version);
 }
 

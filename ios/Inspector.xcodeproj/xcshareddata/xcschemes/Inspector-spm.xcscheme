@@ -40,6 +40,16 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "34A3B2C126BF38A7007BD9E0"
+            BuildableName = "Inspector-spm.app"
+            BlueprintName = "Inspector-spm"
+            ReferencedContainer = "container:Inspector.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
       <LocationScenarioReference
          identifier = "com.apple.dt.IDEFoundation.CurrentLocationScenarioIdentifier"
          referenceType = "1">

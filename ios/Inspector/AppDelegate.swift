@@ -6,16 +6,22 @@
 //
 
 import UIKit
+
+#if canImport(IOSInspector)
 import IOSInspector
+#endif
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, IOSInspectorProtocol {
 
     func applicationDidFinishLaunching(_ application: UIApplication) {
+
         IOSInspector.initialize(withDelegate: self)
 
+        #if !NO_SQLCIPHER
         IOSInspector.setCipherKey("database_cipher3.db", password: "123456", version: 3)
         IOSInspector.setCipherKey("database_cipher4.db", password: "1234567", version: 4)
+        #endif
 
         IOSInspector.addPlugin("prefs", name: "User Defaults", plugin: UserDefaultsPlugin())
         IOSInspector.addLivePlugin("realtime", name: "Realtime", plugin: RealtimePlugin())
