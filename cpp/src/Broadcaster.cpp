@@ -38,10 +38,8 @@ thread *Broadcaster::start(int port, const DeviceInfo &info, timeval timeout) {
             UDPSocket socket;
             if (socket.create() && socket.bind(port)) {
                 _broadcasting = true;
-                // for some reason the first broadcast always fails on iOS
-                socket.broadcast(datagram, {});
                 do {
-                    if (!socket.broadcast(datagram, timeout)) {
+                    if (!socket.broadcast(datagram, timeout) && errno != EHOSTUNREACH) {
                         _error = errno;
                         _stop = true;
                     }
