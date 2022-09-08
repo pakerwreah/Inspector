@@ -6,8 +6,8 @@
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
-    <script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="https://unpkg.com/vue-chartjs@3.5.1/dist/vue-chartjs.min.js"></script>
 </head>
 <body>
 <div id="app">
@@ -99,16 +99,14 @@
                         }
                     },
                     scales: {
-                        xAxes: [{
+                        xAxis: {
                             display: false
-                        }],
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true,
-                                min: 0,
-                                max: 100
-                            }
-                        }]
+                        },
+                        yAxis: {
+                            min: 0,
+                            max: 100,
+                            beginAtZero: true
+                        }
                     }
                 }
             }
