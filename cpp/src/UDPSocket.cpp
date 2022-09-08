@@ -55,8 +55,11 @@ bool UDPSocket::bind(int port) {
     return true;
 }
 
-bool UDPSocket::broadcast(const std::string &data) {
-    return ::sendto(m_sock, data.c_str(), data.size(), MSG_NOSIGNAL, (sockaddr *) &m_addr, sizeof(m_addr)) != -1;
+bool UDPSocket::broadcast(const std::string &data, const timeval timeout) {
+    if (timeout.tv_sec || timeout.tv_usec) {
+        setsockopt(m_sock, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
+    }
+    return sendto(m_sock, data.c_str(), data.size(), MSG_NOSIGNAL, (sockaddr *) &m_addr, sizeof(m_addr)) != -1;
 }
 
 bool UDPSocket::is_valid() const {

@@ -16,7 +16,9 @@ public:
     explicit SocketClient(std::unique_ptr<Socket> socket);
     virtual ~SocketClient() = default;
 
-    std::string read() override;
-    std::string read(const timeval &timeout) const;
-    bool send(const std::string &data) override;
+    std::string read() const override;
+    bool send(const std::string &data) const override;
+
+    std::string read(timeval timeout) const;
+    bool send(const std::string &data, timeval timeout) const;
 };

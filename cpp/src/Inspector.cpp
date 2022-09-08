@@ -15,7 +15,7 @@ Inspector::Inspector(shared_ptr<DatabaseProvider> databaseProvider, DeviceInfo i
 
 void Inspector::bind(int port) {
     threads.push_back(server.start(port));
-    threads.push_back(broadcaster.start(port, info));
+    threads.push_back(broadcaster.start(port, info, {3, 0}));
 }
 
 void Inspector::stop() {

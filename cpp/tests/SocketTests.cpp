@@ -7,6 +7,7 @@
 using namespace std;
 
 const int test_port = 50000;
+const timeval timeout = {0, 1000};
 
 TEST_CASE("TCP Socket") {
     Socket server;
@@ -26,7 +27,7 @@ TEST_CASE("TCP Socket") {
         CHECK(client->create());
         CHECK(client->connect("localhost", test_port));
         m_connect.unlock();
-        SocketClient socketClient(move(client));
+        SocketClient socketClient(std::move(client));
         m_read.lock(); // wait for server signal
         response = socketClient.read();
         m_check.unlock(); // signal server to check for response
@@ -51,7 +52,7 @@ TEST_CASE("UDP Socket") {
     UDPSocket socket;
     CHECK(socket.create());
     CHECK(socket.bind(test_port));
-    CHECK(socket.broadcast("hello world!"));
+    CHECK(socket.broadcast("hello world!", timeout));
     CHECK(socket.close());
 }
 

@@ -2,11 +2,11 @@
 
 using namespace std;
 
-string MockClient::read() {
+string MockClient::read() const {
     return recv;
 }
 
-bool MockClient::send(const string &data) {
+bool MockClient::send(const string &data) const {
     sent = connected ? data : "";
     return connected;
 }
