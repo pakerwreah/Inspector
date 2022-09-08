@@ -31,7 +31,7 @@ public:
     bool is_valid() const;
 
     // Data Transimission
-    bool send(const std::string &data) const;
+    bool send(const std::string &data, timeval timeout) const;
 
     int recv(std::string &data, timeval timeout) const;
 

@@ -112,7 +112,7 @@ TEST_CASE("HttpServer - Accept Success") {
     CHECK(client->create());
     CHECK(client->connect("localhost", test_port));
 
-    SocketClient socketClient(move(client));
+    SocketClient socketClient(std::move(client));
     CHECK(socketClient.read() == "hello");
 
     REQUIRE(server.stop());

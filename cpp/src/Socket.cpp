@@ -95,7 +95,10 @@ bool Socket::is_valid() const {
     return m_sock != -1;
 }
 
-bool Socket::send(const std::string &data) const {
+bool Socket::send(const std::string &data, const timeval timeout) const {
+    if (timeout.tv_sec || timeout.tv_usec) {
+        setsockopt(m_sock, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
+    }
     return ::send(m_sock, data.c_str(), data.size(), MSG_NOSIGNAL) != -1;
 }
 

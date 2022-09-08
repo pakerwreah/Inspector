@@ -21,6 +21,6 @@ public:
     int error() const;
     void stop();
     bool broadcasting() const;
-    std::thread *start(int port, const DeviceInfo &info);
+    std::thread *start(int port, const DeviceInfo &info, timeval timeout);
     void setInterval(std::chrono::nanoseconds interval);
 };
