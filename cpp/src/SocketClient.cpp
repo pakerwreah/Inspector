@@ -7,13 +7,17 @@
 
 using namespace std;
 
-SocketClient::SocketClient(unique_ptr<Socket> socket) : socket(move(socket)) {}
+SocketClient::SocketClient(unique_ptr<Socket> socket) : socket(std::move(socket)) {}
 
-string SocketClient::read() {
+string SocketClient::read() const {
     return read({0, 10000});
 }
 
-string SocketClient::read(const timeval &timeout) const {
+bool SocketClient::send(const string &data) const {
+    return send(data, {3, 0});
+}
+
+string SocketClient::read(const timeval timeout) const {
     ostringstream os;
     string buf;
     while (socket->recv(buf, timeout) > 0) {
@@ -22,6 +26,6 @@ string SocketClient::read(const timeval &timeout) const {
     return os.str();
 }
 
-bool SocketClient::send(const string &data) {
-    return socket->send(data);
+bool SocketClient::send(const string &data, const timeval timeout) const {
+    return socket->send(data, timeout);
 }

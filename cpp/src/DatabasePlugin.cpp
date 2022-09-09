@@ -47,7 +47,9 @@ shared_ptr<Database> DatabasePlugin::open() {
     return db_con;
 }
 
-DatabasePlugin::DatabasePlugin(Router &router, shared_ptr<DatabaseProvider> provider) : provider(provider), debounce(5s) {
+DatabasePlugin::DatabasePlugin(Router &router, shared_ptr<DatabaseProvider> provider)
+        : provider(std::move(provider)), debounce(5s), auto_close_token(0) {
+
     router.get("/database/list", [this](const Request &, const Params &) {
         int index = 0;
         auto paths = databasePathList();

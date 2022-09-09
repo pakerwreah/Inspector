@@ -4,6 +4,7 @@
 
 #include "NetworkPlugin.h"
 #include "compress.hpp"
+#include "util.h"
 
 using namespace std;
 
@@ -28,24 +29,29 @@ NetworkPlugin::NetworkPlugin(Router &router) {
 }
 
 bool NetworkPlugin::isRequestConnected() const {
-    return request_clients.size();
+    return !request_clients.empty();
 }
 
 bool NetworkPlugin::isResponseConnected() const {
-    return response_clients.size();
+    return !response_clients.empty();
 }
 
 bool NetworkPlugin::isConnected() const {
     return isRequestConnected() && isResponseConnected();
 }
 
+string pack(const std::array<string, 3> &data) {
+    return util::join(data, '\n');
+}
+
 void NetworkPlugin::sendRequest(const string &uid, const string &headers, const string &body) {
     lock_guard guard(mutex);
-    auto it = request_clients.begin();
-    while (it != request_clients.end()) {
+
+    for (auto it = request_clients.begin(); it != request_clients.end();) {
         shared_ptr client = *it;
-        const string m_body = gzip::compress(body.c_str(), body.size());
-        if (client->send(uid + "\n" + headers + "\n" + m_body, true)) {
+        const string c_body = gzip::compress(body.c_str(), body.size());
+
+        if (client->send(pack({uid, headers, c_body}), true)) {
             it++;
         } else {
             it = request_clients.erase(it);
@@ -53,16 +59,14 @@ void NetworkPlugin::sendRequest(const string &uid, const string &headers, const 
     }
 }
 
-void NetworkPlugin::sendResponse(const string &uid, const string &headers, const string &body, bool compressed) {
+void NetworkPlugin::sendResponse(const string &uid, const string &headers, const string &body, bool is_compressed) {
     lock_guard guard(mutex);
-    auto it = response_clients.begin();
-    while (it != response_clients.end()) {
+
+    for (auto it = response_clients.begin(); it != response_clients.end();) {
         shared_ptr client = *it;
-        string m_body = body;
-        if (!compressed) {
-            m_body = gzip::compress(body.c_str(), body.size());
-        }
-        if (client->send(uid + "\n" + headers + "\n" + m_body, true)) {
+        const string c_body = is_compressed ? body : gzip::compress(body.c_str(), body.size());
+
+        if (client->send(pack({uid, headers, c_body}), true)) {
             it++;
         } else {
             it = response_clients.erase(it);

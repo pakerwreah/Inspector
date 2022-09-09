@@ -26,14 +26,14 @@ public:
 
     bool connect(const std::string &host, int port);
 
-    void set_non_blocking(bool non_blocking = true);
+    void set_non_blocking(bool non_blocking = true) const;
 
     bool is_valid() const;
 
     // Data Transimission
-    bool send(const std::string &data) const;
+    bool send(const std::string &data, timeval timeout) const;
 
-    int recv(std::string &data, const timeval timeout) const;
+    int recv(std::string &data, timeval timeout) const;
 
     int fd() const;
 };

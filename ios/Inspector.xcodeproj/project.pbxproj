@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2AEE959994C19A40FC1C32AA /* Pods_Inspector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DBA2507A0A176526438EB33 /* Pods_Inspector.framework */; };
 		3405AB6723775885002FA13A /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB6623775885002FA13A /* Http.swift */; };
 		3405AB6B237794B4002FA13A /* Http.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB6623775885002FA13A /* Http.swift */; };
 		3405AB6E2377A1EC002FA13A /* NetworkPlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3405AB6C2377A1EC002FA13A /* NetworkPlugin.cpp */; };
@@ -48,6 +47,7 @@
 		34F574EC2500B1CA00A7092A /* Router.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 34F574E22500B1CA00A7092A /* Router.cpp */; };
 		657FEFFEB9C578D7E05EEB11 /* DatabasePlugin.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 657FE7265DB0ABE839354EDE /* DatabasePlugin.cpp */; };
 		B3D63DCAC9BC2984740C724A /* Pods_Inspector_pod.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AF6E007F7005D4507CED6AC2 /* Pods_Inspector_pod.framework */; };
+		F777629B6B4FDE385F17F322 /* Pods_Inspector.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DBA2507A0A176526438EB33 /* Pods_Inspector.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -139,7 +139,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34232AF42374C06000E45BCA /* libz.tbd in Frameworks */,
-				2AEE959994C19A40FC1C32AA /* Pods_Inspector.framework in Frameworks */,
+				F777629B6B4FDE385F17F322 /* Pods_Inspector.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -344,7 +344,7 @@
 		344C1C032367E64C00B62594 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1110;
+				LastSwiftUpdateCheck = 1250;
 				LastUpgradeCheck = 1200;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
@@ -533,6 +533,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 32973VC289;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -551,6 +552,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 32973VC289;
 				GCC_C_LANGUAGE_STANDARD = c11;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

@@ -1,4 +1,5 @@
 #include "catch.hpp"
+#include "Http.h"
 #include "url.h"
 
 using namespace std;
@@ -11,8 +12,8 @@ TEST_CASE("url::decode") {
 }
 
 TEST_CASE("url::params") {
-    map<string, string> value = params("param1=query%25%2F&param2=data%3D%28%26%3A%3F%29");
-    map<string, string> expected = {
+    Params value = params("param1=query%25%2F&param2=data%3D%28%26%3A%3F%29");
+    Params expected = {
             {"param1", "query%/"},
             {"param2", "data=(&:?)"}
     };

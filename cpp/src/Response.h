@@ -13,7 +13,7 @@ struct Response {
     std::string body;
 
     Response(const char *data = "", int code = 200); // NOLINT(runtime/explicit)
-    Response(const std::string &data, int code = 200); // NOLINT(runtime/explicit)
+    Response(std::string data, int code = 200); // NOLINT(runtime/explicit)
     Response(const nlohmann::json &data, int code = 200); // NOLINT(runtime/explicit)
 
     operator std::string() const;

@@ -20,7 +20,7 @@ WebSocketPlugin::WebSocketPlugin(Router &router) {
 }
 
 bool WebSocketPlugin::isConnected() const {
-    return clients.size();
+    return !clients.empty();
 }
 
 void WebSocketPlugin::sendMessage(const string &key, const string &message) {
@@ -29,8 +29,7 @@ void WebSocketPlugin::sendMessage(const string &key, const string &message) {
     auto it = range.first;
     while (it != range.second) {
         shared_ptr client = it->second;
-        string m_message = message;
-        if (client->send(m_message, false)) {
+        if (client->send(message, false)) {
             it++;
         } else {
             it = clients.erase(it);

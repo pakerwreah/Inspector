@@ -9,13 +9,13 @@
 using namespace std;
 
 Request::Request(shared_ptr<Client> client)
-        : client(client) {}
+        : client(std::move(client)) {}
 
-Request::Request(const string &method, const string &path, const string &body)
-        : method(method), path(path), body(body) {}
+Request::Request(string method, string path, string body)
+        : method(std::move(method)), path(std::move(path)), body(std::move(body)) {}
 
-Request::Request(const string &method, const string &path, std::shared_ptr<Client> client, const Headers &headers)
-        : method(method), path(path), client(client), headers(headers) {}
+Request::Request(string method, string path, std::shared_ptr<Client> client, Headers headers)
+        : method(std::move(method)), path(std::move(path)), client(std::move(client)), headers(std::move(headers)) {}
 
 bool Request::parse(const string &plain) {
     const char *method, *path;
@@ -37,13 +37,13 @@ bool Request::parse(const string &plain) {
     if (body_start > 0) {
         for (int i = 0; i < num_headers; i++) {
             auto header = headers[i];
-            auto name = string(header.name).substr(0, header.name_len);
-            auto value = string(header.value).substr(0, header.value_len);
+            auto name = string(header.name, header.name_len);
+            auto value = string_view(header.value, header.value_len);
             this->headers[name] = value;
         }
 
-        this->method = string(method).substr(0, method_len);
-        this->path = string(path).substr(0, path_len);
+        this->method = string_view(method, method_len);
+        this->path = string_view(path, path_len);
         this->body = plain.substr(body_start);
 
         return true;

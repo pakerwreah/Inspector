@@ -4,16 +4,13 @@
 
 #pragma once
 
-#include <string>
 #include <map>
 
-namespace Http {
-    namespace ContentType {
-        const std::string Key = "Content-Type";
-        const std::string HTML = "text/html";
-        const std::string JSON = "application/json";
-        const std::string URL_ENCODED = "application/x-www-form-urlencoded";
-    }
+namespace Http::ContentType {
+    const auto Key = "Content-Type";
+    const auto HTML = "text/html";
+    const auto JSON = "application/json";
+    const auto URL_ENCODED = "application/x-www-form-urlencoded";
 }
 
 typedef std::map<std::string, std::string> Headers;

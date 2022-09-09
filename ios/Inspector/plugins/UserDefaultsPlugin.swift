@@ -5,7 +5,9 @@
 //  Created by Paker on 18/08/20.
 //
 
-import Foundation
+#if canImport(IOSInspector)
+import IOSInspector
+#endif
 
 class UserDefaultsPlugin: PluginActionProtocol {
     func action() -> String {

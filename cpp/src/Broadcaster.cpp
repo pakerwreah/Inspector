@@ -23,7 +23,7 @@ bool Broadcaster::broadcasting() const {
     return _broadcasting;
 }
 
-thread *Broadcaster::start(int port, const DeviceInfo &info) {
+thread *Broadcaster::start(int port, const DeviceInfo &info, timeval timeout) {
     _stop = false;
     return new thread([=] {
         vector<IPAddress> addresses;
@@ -38,12 +38,10 @@ thread *Broadcaster::start(int port, const DeviceInfo &info) {
             UDPSocket socket;
             if (socket.create() && socket.bind(port)) {
                 _broadcasting = true;
-                // for some reason the first broadcast always fails on iOS
-                socket.broadcast(datagram);
                 do {
-                    if (!socket.broadcast(datagram)) {
+                    if (!socket.broadcast(datagram, timeout) && errno != EHOSTUNREACH) {
                         _error = errno;
-                        break;
+                        _stop = true;
                     }
                     if (!_stop) {
                         this_thread::sleep_for(interval);
@@ -52,7 +50,7 @@ thread *Broadcaster::start(int port, const DeviceInfo &info) {
                 _broadcasting = false;
             } else {
                 _error = errno;
-                stop();
+                _stop = true;
             }
         } while (!_stop);
     });

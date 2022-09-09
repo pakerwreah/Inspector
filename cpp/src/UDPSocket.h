@@ -19,7 +19,7 @@ public:
 
     bool bind(int port);
 
-    bool broadcast(const std::string &datagram);
+    bool broadcast(const std::string &datagram, timeval timeout);
 
     bool is_valid() const;
 };

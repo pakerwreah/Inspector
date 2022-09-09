@@ -3,7 +3,7 @@
 
 namespace base64 {
     typedef unsigned char uchar;
-    static const std::string b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";//=
+    static const char *b = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";//=
     std::string encode(const std::string &in) {
         std::string out;
 

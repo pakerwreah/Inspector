@@ -8,7 +8,7 @@ TEST_CASE("Response - NULL") {
     Response response(nullptr);
     CHECK(response.code == 200);
     CHECK(response.headers == Headers{{"Content-Type", "text/html"}});
-    CHECK(response.body == "");
+    CHECK(response.body.empty());
 }
 
 TEST_CASE("Response - Fail") {
