@@ -12,7 +12,7 @@ publishing {
             version this.version
 
             pom.withXml {
-                def dependenciesNode = asNode().appendNode('dependencies')
+                def dependenciesNode = asNode(null).appendNode('dependencies')
 
                 //Iterate over the compile dependencies (we don't want the test ones), adding a <dependency> node for each
                 configurations.releaseCompileClasspath.allDependencies.each {

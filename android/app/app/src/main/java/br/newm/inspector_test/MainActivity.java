@@ -32,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
         btn_simulate_usage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton cb, boolean checked) {
-                if (simulatingUsage = checked) {
+                simulatingUsage = checked;
+                if (checked) {
                     simulateUsage();
                 }
             }
