@@ -7,12 +7,15 @@ on:
     branches: [ develop ]
 
 jobs:
-  build:
+  unit-tests:
+    name: Unit Tests
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Install Linux dependencies
         run: |
@@ -42,5 +45,8 @@ jobs:
           -ignore-filename-regex="${ignored}" > coverage.txt
 
       - name: Upload Coverage
-        run: |
-          bash <(curl -s https://codecov.io/bash) -X gcov -Z
+        uses: codecov/codecov-action@v5
+        with:
+          fail_ci_if_error: true
+          files: ./coverage.txt
+          token: ${{ secrets.CODECOV_TOKEN }}
