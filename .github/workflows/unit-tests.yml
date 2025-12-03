@@ -2,13 +2,13 @@ name: Unit Tests
 
 on:
   push:
-    branches: [ develop-disabled ]
+    branches: [ develop ]
   pull_request:
-    branches: [ develop-disabled ]
+    branches: [ develop ]
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
