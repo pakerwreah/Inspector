@@ -64,7 +64,7 @@ DatabasePlugin::DatabasePlugin(Router &router, shared_ptr<DatabaseProvider> prov
         json data = {{"databases", names},
                      {"current",   index}};
 
-        return data;
+        return Response(data);
     });
 
     router.put("/database/current/{index}", [this](const Request &, const Params &params) {

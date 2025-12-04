@@ -9,7 +9,7 @@ using nlohmann::json;
 
 TEST_CASE("DatabasePlugin - Provider") {
     Router router;
-    shared_ptr databaseProvider = make_shared<MockDatabaseProvider>();
+    auto databaseProvider = make_shared<MockDatabaseProvider>();
     DatabasePlugin plugin(router, databaseProvider);
     databaseProvider->databases = {"database1.db", "database2.db"};
 
@@ -18,7 +18,7 @@ TEST_CASE("DatabasePlugin - Provider") {
 
 TEST_CASE("DatabasePlugin - Open") {
     Router router;
-    shared_ptr databaseProvider = make_shared<MockDatabaseProvider>();
+    auto databaseProvider = make_shared<MockDatabaseProvider>();
     DatabasePlugin plugin(router, databaseProvider);
 
     REQUIRE_NOTHROW([] {
@@ -66,7 +66,7 @@ TEST_CASE("DatabasePlugin - Open") {
 
 TEST_CASE("DatabasePlugin - Select database") {
     Router router;
-    shared_ptr databaseProvider = make_shared<MockDatabaseProvider>();
+    auto databaseProvider = make_shared<MockDatabaseProvider>();
     DatabasePlugin plugin(router, databaseProvider);
 
     SECTION("In Code") {
@@ -93,7 +93,7 @@ TEST_CASE("DatabasePlugin - Select database") {
             Database(path, "", 0, true);
         }());
 
-        request = {"PUT", "/database/current/1"};
+        request = {.method = "PUT", .path = "/database/current/1"};
 
         REQUIRE_NOTHROW(response = router.handle(request));
         CHECK(response.code == 200);
@@ -106,7 +106,7 @@ TEST_CASE("DatabasePlugin - List") {
     Router router;
     Request request;
     Response response;
-    shared_ptr databaseProvider = make_shared<MockDatabaseProvider>();
+    auto databaseProvider = make_shared<MockDatabaseProvider>();
     DatabasePlugin plugin(router, databaseProvider);
     databaseProvider->databases = {"file://path/database1.db", "database2.db", "database2.db-shm", "database2.db-wal"};
     CHECK_NOTHROW(plugin.selectDB(1));
@@ -114,7 +114,7 @@ TEST_CASE("DatabasePlugin - List") {
     json expected = {{"databases", {"database1.db", "database2.db"}},
                      {"current",   1}};
 
-    request = {"GET", "/database/list"};
+    request = {.method = "GET", .path = "/database/list"};
 
     REQUIRE_NOTHROW(response = router.handle(request));
     CHECK(response.code == 200);
@@ -126,7 +126,7 @@ TEST_CASE("DatabasePlugin - Encryption") {
     Router router;
     Request request;
     Response response;
-    shared_ptr databaseProvider = make_shared<MockDatabaseProvider>();
+    auto databaseProvider = make_shared<MockDatabaseProvider>();
     DatabasePlugin plugin(router, databaseProvider);
     const string path = "database1.db";
     databaseProvider->databases = {path};
@@ -137,7 +137,7 @@ TEST_CASE("DatabasePlugin - Encryption") {
         db.execute("CREATE TABLE tb_test (id INT, name TEXT)");
     }());
 
-    request = {"POST", "/database/query", "SELECT * FROM tb_test"};
+    request = {.method = "POST", .path = "/database/query", .body = "SELECT * FROM tb_test"};
 
     SECTION("Fail") {
         REQUIRE_NOTHROW(response = router.handle(request));
@@ -157,7 +157,7 @@ TEST_CASE("DatabasePlugin - Query") {
     Router router;
     Request request;
     Response response;
-    shared_ptr databaseProvider = make_shared<MockDatabaseProvider>();
+    auto databaseProvider = make_shared<MockDatabaseProvider>();
     DatabasePlugin plugin(router, databaseProvider);
     const string path = "database1.db";
     databaseProvider->databases = {path};
@@ -169,11 +169,13 @@ TEST_CASE("DatabasePlugin - Query") {
                    "INSERT INTO tb_test VALUES (1, 'tuple 1'), (2, 'tuple 2')");
     }());
 
-    request = {"POST",
-               "/database/query",
-               "SELECT *, id/10.0 as 'decimal', "
-               "CASE WHEN id = 2 THEN 'text' ELSE NULL END as 'null' "
-               "FROM tb_test"};
+    request = {
+        .method = "POST",
+        .path = "/database/query",
+        .body = "SELECT *, id/10.0 as 'decimal', "
+        "CASE WHEN id = 2 THEN 'text' ELSE NULL END as 'null' "
+        "FROM tb_test",
+    };
 
     REQUIRE_NOTHROW(response = router.handle(request));
     CHECK(response.code == 200);
@@ -197,7 +199,7 @@ TEST_CASE("DatabasePlugin - Execute") {
     Router router;
     Request request;
     Response response;
-    shared_ptr databaseProvider = make_shared<MockDatabaseProvider>();
+    auto databaseProvider = make_shared<MockDatabaseProvider>();
     DatabasePlugin plugin(router, databaseProvider);
 
     const string path = "database1.db";
@@ -205,11 +207,13 @@ TEST_CASE("DatabasePlugin - Execute") {
     filesystem::remove(path);
     Database db(path, "", 0, true);
 
-    request = {"POST",
-               "/database/execute",
-               "CREATE TABLE tb_test (id INT, name TEXT);"
-               "INSERT INTO tb_test VALUES (1, 'tuple 1');"
-               "INSERT INTO tb_test VALUES (2, 'tuple 2')"};
+    request = {
+        .method = "POST",
+        .path = "/database/execute",
+        .body = "CREATE TABLE tb_test (id INT, name TEXT);"
+        "INSERT INTO tb_test VALUES (1, 'tuple 1');"
+        "INSERT INTO tb_test VALUES (2, 'tuple 2')",
+    };
 
     SECTION("Success") {
         REQUIRE_NOTHROW(response = router.handle(request));

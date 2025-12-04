@@ -10,6 +10,7 @@
 
 class DatabaseProvider {
 public:
+    virtual ~DatabaseProvider() = default;
     virtual std::vector<std::string> databasePathList() const = 0;
 };
 

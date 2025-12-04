@@ -10,20 +10,20 @@ TEST_CASE("NetworkPlugin") {
     Request request;
     Response response;
     Headers headers{{"Sec-WebSocket-Key", "secret"}};
-    shared_ptr requestClient = make_shared<MockClient>();
-    shared_ptr responseClient = make_shared<MockClient>();
+    auto requestClient = make_shared<MockClient>();
+    auto responseClient = make_shared<MockClient>();
 
     NetworkPlugin plugin(router);
     CHECK_FALSE(plugin.isConnected());
 
-    request = {"GET", "/network/request", requestClient, headers};
+    request = {.client = requestClient, .headers = headers, .method = "GET", .path = "/network/request"};
     REQUIRE_NOTHROW(response = router.handle(request));
     CHECK(string(response) == string(WebSocket::handshake(request)));
     CHECK(plugin.isRequestConnected());
 
     CHECK_FALSE(plugin.isConnected());
 
-    request = {"GET", "/network/response", responseClient, headers};
+    request = {.client = responseClient, .headers = headers, .method = "GET", .path = "/network/response"};
     REQUIRE_NOTHROW(response = router.handle(request));
     CHECK(string(response) == string(WebSocket::handshake(request)));
     CHECK(plugin.isResponseConnected());

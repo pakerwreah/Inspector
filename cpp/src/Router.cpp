@@ -32,9 +32,8 @@ Response Router::handle(const Request &request) const {
     // find handler
     const vector<string> &path_pieces = util::split(path, '/');
     const size_t path_size = path_pieces.size();
-    const auto &it = routes.find(request.method);
 
-    if (it != routes.end()) {
+    if (const auto &it = routes.find(request.method); it != routes.end()) {
         for (const auto &[path, handler] : it->second) {
             const vector<string> &route_pieces = util::split(path, '/');
             if (path_size != route_pieces.size()) continue;

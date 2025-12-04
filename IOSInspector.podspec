@@ -1,14 +1,14 @@
 Pod::Spec.new do |spec|
     spec.name                   = 'IOSInspector'
-    spec.version                = '1.5.4'
+    spec.version                = '1.5.5'
     spec.license                = 'MIT'
     spec.summary                = 'Library to inspect database and network in mobile apps'
     spec.homepage               = 'https://github.com/pakerwreah/Inspector'
     spec.authors                = { 'Carlos César Neves Enumo' => 'paker_wreah@hotmail.com' }
 
-    spec.source                 = { :git => 'https://github.com/pakerwreah/Inspector.git', :tag => 'v1.5.4' }
+    spec.source                 = { :git => 'https://github.com/pakerwreah/Inspector.git', :tag => 'v1.5.5' }
     spec.xcconfig               = {
-      'CLANG_CXX_LANGUAGE_STANDARD' => 'c++17',
+      'CLANG_CXX_LANGUAGE_STANDARD' => 'c++20',
       'USE_HEADERMAP'               => 'NO',
       'DEFINES_MODULE'              => 'YES'
     }

@@ -36,11 +36,10 @@ thread *HttpServer::start(int port) {
             if (server.create() && server.bind(port) && server.listen()) {
                 for (int i = 0; !_stop && i < 3; i++) {
                     _listening = true;
-                    Socket *client;
-                    if (server.accept(client)) {
+                    if (Socket *socket; server.accept(socket)) {
                         i = -1;
-                        auto socket_client = make_shared<SocketClient>(unique_ptr<Socket>(client));
-                        thread(&HttpServer::process, this, socket_client).detach();
+                        auto socket_client = make_shared<SocketClient>(unique_ptr<Socket>(socket));
+                        thread(&HttpServer::process, this, std::move(socket_client)).detach();
                     } else if (server.is_valid()) {
                         _error = errno;
                     }
@@ -71,7 +70,7 @@ void HttpServer::process(shared_ptr<Client> client) const {
                 Response response;
                 response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, PATCH, DELETE";
 
-                client->send(response);
+                (void)client->send(response);
             } else {
                 try {
                     Response response = router.handle(request);
@@ -81,7 +80,7 @@ void HttpServer::process(shared_ptr<Client> client) const {
                         response.headers["Content-Encoding"] = "gzip";
                     }
 
-                    client->send(response);
+                    (void)client->send(response);
 
                 } catch (const out_of_range &ex) {
                     client->send(Response::NotFound(ex.what()));

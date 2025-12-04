@@ -10,7 +10,7 @@
 
 class WebSocketPlugin {
 private:
-    std::multimap<std::string, std::shared_ptr<WebSocket>> clients;
+    std::multimap<std::string, std::unique_ptr<WebSocket>> clients;
     std::mutex mutex;
 
 public:

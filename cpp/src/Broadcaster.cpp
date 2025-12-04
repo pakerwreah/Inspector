@@ -25,7 +25,7 @@ bool Broadcaster::broadcasting() const {
 
 thread *Broadcaster::start(int port, const DeviceInfo &info, timeval timeout) {
     _stop = false;
-    return new thread([=] {
+    return new thread([=, this] {
         vector<IPAddress> addresses;
         for (const IPAddress &addr : getIPAddress()) {
             addresses.push_back(addr);

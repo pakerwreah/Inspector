@@ -13,4 +13,8 @@ if (CODE_COVERAGE)
             -fcoverage-mapping
             )
     target_link_options(coverage_config INTERFACE -fprofile-instr-generate)
+
+    # Clear old GCDA files
+    add_custom_target(clear_gcda COMMAND ${CMAKE_COMMAND} -P "${CMAKE_SOURCE_DIR}/ClearGCDA.cmake")
+    add_dependencies(coverage_config clear_gcda)
 endif (CODE_COVERAGE)

@@ -6,7 +6,7 @@
 using namespace std;
 
 TEST_CASE("WebSocket - Send") {
-    shared_ptr client = make_shared<MockClient>();
+    auto client = make_shared<MockClient>();
     WebSocket ws(client);
     const string data1 = "Lorem ipsum dolor sit amet";
     const string data2 = string(126, '.');

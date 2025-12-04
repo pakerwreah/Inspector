@@ -14,7 +14,6 @@ private:
 
 public:
     explicit SocketClient(std::unique_ptr<Socket> socket);
-    virtual ~SocketClient() = default;
 
     std::string read() const override;
     bool send(const std::string &data) const override;

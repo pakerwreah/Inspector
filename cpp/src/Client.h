@@ -7,6 +7,7 @@
 #include <string>
 
 struct Client {
+    virtual ~Client() = default;
     virtual std::string read() const = 0;
     virtual bool send(const std::string &data) const = 0;
 };

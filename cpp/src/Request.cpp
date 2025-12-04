@@ -8,30 +8,21 @@
 
 using namespace std;
 
-Request::Request(shared_ptr<Client> client)
-        : client(std::move(client)) {}
-
-Request::Request(string method, string path, string body)
-        : method(std::move(method)), path(std::move(path)), body(std::move(body)) {}
-
-Request::Request(string method, string path, std::shared_ptr<Client> client, Headers headers)
-        : method(std::move(method)), path(std::move(path)), client(std::move(client)), headers(std::move(headers)) {}
-
 bool Request::parse(const string &plain) {
     const char *method, *path;
     size_t path_len, method_len;
     int minor_version;
     size_t num_headers = 50;
-    struct phr_header headers[50];
+    phr_header headers[50];
     const char *buffer = plain.c_str();
 
     int body_start = phr_parse_request(
-            buffer, plain.length(),
-            &method, &method_len,
-            &path, &path_len,
-            &minor_version,
-            headers, &num_headers,
-            0
+        buffer, plain.length(),
+        &method, &method_len,
+        &path, &path_len,
+        &minor_version,
+        headers, &num_headers,
+        0
     );
 
     if (body_start > 0) {
@@ -52,13 +43,13 @@ bool Request::parse(const string &plain) {
     return false;
 }
 
-Request::operator std::string() const {
-    const char *crlf = "\r\n";
+std::string Request::str() const {
+    auto crlf = "\r\n";
     ostringstream resp;
     resp << method << " " << path << " HTTP/1.1" << crlf;
 
-    for (const auto &header : headers) {
-        resp << header.first << ": " << header.second << crlf;
+    for (const auto &[name, value] : headers) {
+        resp << name << ": " << value << crlf;
     }
 
     resp << "Content-Length: " << body.length() << crlf << crlf << body;

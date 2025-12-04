@@ -12,8 +12,10 @@ WebSocketPlugin::WebSocketPlugin(Router &router) {
         if (response.code == 101) {
             lock_guard guard(mutex);
             string plugin = params.at("key");
-            shared_ptr client = make_shared<WebSocket>(request.client);
-            clients.insert({plugin, client});
+            clients.insert({
+                plugin,
+                make_unique<WebSocket>(request.client)
+            });
         }
         return response;
     });
@@ -25,12 +27,9 @@ bool WebSocketPlugin::isConnected() const {
 
 void WebSocketPlugin::sendMessage(const string &key, const string &message) {
     lock_guard guard(mutex);
-    auto range = clients.equal_range(key);
-    auto it = range.first;
-    while (it != range.second) {
-        shared_ptr client = it->second;
-        if (client->send(message, false)) {
-            it++;
+    for (auto [it, end] = clients.equal_range(key); it != end;) {
+        if (it->second->send(message, false)) {
+            ++it;
         } else {
             it = clients.erase(it);
         }

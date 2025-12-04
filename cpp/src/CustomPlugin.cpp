@@ -9,23 +9,25 @@ using namespace std;
 using nlohmann::json;
 
 void to_json(json &j, const PluginMeta &p) {
-    j = {{"key",  p.key},
-         {"name", p.name},
-         {"live", p.live}};
+    j = {
+        {"key", p.key},
+        {"name", p.name},
+        {"live", p.live},
+    };
 }
 
 Response CustomPlugin::execute(const PluginAction &action) {
-    string res;
+    string res = action();
     try {
-        return json::parse(res = action());
+        return Response(json::parse(res));
     } catch (const json::parse_error &) {
-        return res;
+        return Response(res);
     }
 }
 
 CustomPlugin::CustomPlugin(Router &router) : router(router) {
     router.get("/plugins", [this](const Request &, const Params &) {
-        return json(plugins);
+        return Response(json(plugins));
     });
 }
 
@@ -48,12 +50,12 @@ void CustomPlugin::addLivePlugin(const string &key, const string &name, const Pl
 
 void CustomPlugin::addPluginAPI(const string &method, const string &path, const PluginAPIAction &action) {
     router.route(
-            method,
-            "/plugins/api/" + util::ltrim(path, "/"),
-            [action](const Request &, const Params &params) {
-                return execute([action, &params] {
-                    return action(params);
-                });
-            }
+        method,
+        "/plugins/api/" + util::ltrim(path, "/"),
+        [action](const Request &, const Params &params) {
+            return execute([action, &params] {
+                return action(params);
+            });
+        }
     );
 }

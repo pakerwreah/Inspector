@@ -11,7 +11,7 @@
 
 class NetworkPlugin {
 private:
-    std::set<std::shared_ptr<WebSocket>> request_clients, response_clients;
+    std::set<std::unique_ptr<WebSocket>> request_clients, response_clients;
     std::mutex mutex;
 
 public:
