@@ -4,14 +4,12 @@
 
 #include "WebSocketPlugin.h"
 
-using namespace std;
-
 WebSocketPlugin::WebSocketPlugin(Router &router) {
     router.get("/plugins/ws/{key}", [this](const Request &request, const Params &params) {
         Response response = WebSocket::handshake(request);
         if (response.code == 101) {
-            lock_guard guard(mutex);
-            string plugin = params.at("key");
+            std::lock_guard guard(mutex);
+            std::string plugin = params.at("key");
             clients.insert({
                 plugin,
                 make_unique<WebSocket>(request.client)
@@ -25,8 +23,8 @@ bool WebSocketPlugin::isConnected() const {
     return !clients.empty();
 }
 
-void WebSocketPlugin::sendMessage(const string &key, const string &message) {
-    lock_guard guard(mutex);
+void WebSocketPlugin::sendMessage(const std::string &key, const std::string &message) {
+    std::lock_guard guard(mutex);
     for (auto [it, end] = clients.equal_range(key); it != end;) {
         if (it->second->send(message, false)) {
             ++it;

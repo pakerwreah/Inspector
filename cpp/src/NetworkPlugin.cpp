@@ -6,13 +6,11 @@
 #include "compress.hpp"
 #include "util.h"
 
-using namespace std;
-
 NetworkPlugin::NetworkPlugin(Router &router) {
     router.get("/network/request", [this](const Request &request, const Params &) {
         Response response = WebSocket::handshake(request);
         if (response.code == 101) {
-            lock_guard guard(mutex);
+            std::lock_guard guard(mutex);
             request_clients.insert(make_unique<WebSocket>(request.client));
         }
         return response;
@@ -21,7 +19,7 @@ NetworkPlugin::NetworkPlugin(Router &router) {
     router.get("/network/response", [this](const Request &request, const Params &) {
         Response response = WebSocket::handshake(request);
         if (response.code == 101) {
-            lock_guard guard(mutex);
+            std::lock_guard guard(mutex);
             response_clients.insert(make_unique<WebSocket>(request.client));
         }
         return response;
@@ -40,15 +38,15 @@ bool NetworkPlugin::isConnected() const {
     return isRequestConnected() && isResponseConnected();
 }
 
-string pack(const std::array<string, 3> &data) {
+std::string pack(const std::array<std::string, 3> &data) {
     return util::join(data, '\n');
 }
 
-void NetworkPlugin::sendRequest(const string &uid, const string &headers, const string &body) {
-    lock_guard guard(mutex);
+void NetworkPlugin::sendRequest(const std::string &uid, const std::string &headers, const std::string &body) {
+    std::lock_guard guard(mutex);
 
     for (auto it = request_clients.begin(); it != request_clients.end();) {
-        const string c_body = gzip::compress(body.c_str(), body.size());
+        const std::string c_body = gzip::compress(body.c_str(), body.size());
 
         if ((*it)->send(pack({uid, headers, c_body}), true)) {
             ++it;
@@ -58,11 +56,16 @@ void NetworkPlugin::sendRequest(const string &uid, const string &headers, const 
     }
 }
 
-void NetworkPlugin::sendResponse(const string &uid, const string &headers, const string &body, bool is_compressed) {
-    lock_guard guard(mutex);
+void NetworkPlugin::sendResponse(
+    const std::string &uid,
+    const std::string &headers,
+    const std::string &body,
+    bool is_compressed
+) {
+    std::lock_guard guard(mutex);
 
     for (auto it = response_clients.begin(); it != response_clients.end();) {
-        const string c_body = is_compressed ? body : gzip::compress(body.c_str(), body.size());
+        const std::string c_body = is_compressed ? body : gzip::compress(body.c_str(), body.size());
 
         if ((*it)->send(pack({uid, headers, c_body}), true)) {
             ++it;

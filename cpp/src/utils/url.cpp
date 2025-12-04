@@ -5,12 +5,10 @@
 #include "url.h"
 #include "util.h"
 
-using namespace std;
-
 namespace url {
-    string decode(const string &_encoded) {
-        string encoded = util::replaceAll(_encoded, "+", "%20");
-        string ret;
+    std::string decode(const std::string &_encoded) {
+        std::string encoded = util::replaceAll(_encoded, "+", "%20");
+        std::string ret;
         for (int i = 0; i < encoded.length(); i++) {
             if (static_cast<int>(encoded[i]) == 37) {
                 ret += static_cast<char>(strtoul(encoded.substr(i + 1, 2).c_str(), nullptr, 16));
@@ -22,10 +20,10 @@ namespace url {
         return ret;
     }
 
-    map<string, string> params(const string &encoded) {
-        map<string, string> params;
+    std::map<std::string, std::string> params(const std::string &encoded) {
+        std::map<std::string, std::string> params;
         auto pieces = util::split(encoded, '&');
-        for (const string &piece : pieces) {
+        for (const std::string &piece : pieces) {
             auto p = util::split(piece, '=');
             params[p[0]] = p.size() == 2 ? decode(p[1]) : "";
         }

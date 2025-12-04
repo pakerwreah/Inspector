@@ -4,8 +4,6 @@
 #include <thread>
 #include <mutex>
 
-using namespace std;
-
 const int test_port = 50000;
 const timeval timeout = {0, 1000};
 
@@ -16,14 +14,14 @@ TEST_CASE("TCP Socket") {
     REQUIRE(server.listen());
     server.set_non_blocking();
 
-    mutex m_connect, m_read, m_check;
+    std::mutex m_connect, m_read, m_check;
     m_connect.lock();
     m_read.lock();
     m_check.lock();
-    string response;
+    std::string response;
 
-    thread th([&] {
-        unique_ptr client = make_unique<Socket>();
+    std::thread th([&] {
+        auto client = std::make_unique<Socket>();
         CHECK(client->create());
         CHECK(client->connect("localhost", test_port));
         m_connect.unlock();
@@ -38,8 +36,8 @@ TEST_CASE("TCP Socket") {
     CHECK(server.accept(client));
     REQUIRE(client != nullptr);
 
-    SocketClient socketClient((unique_ptr<Socket>(client)));
-    const string msg = "Test data";
+    SocketClient socketClient((std::unique_ptr<Socket>(client)));
+    const std::string msg = "Test data";
     CHECK(socketClient.send(msg));
     m_read.unlock(); // signal thread to start reading
     m_check.lock(); // wait for response

@@ -6,7 +6,7 @@
 #include "UDPSocket.h"
 #include "json.hpp"
 
-using namespace std;
+using namespace std::chrono_literals;
 using nlohmann::json;
 
 Broadcaster::Broadcaster() : _stop(false), _broadcasting(false), _error(0), interval(5s) {}
@@ -23,16 +23,16 @@ bool Broadcaster::broadcasting() const {
     return _broadcasting;
 }
 
-thread *Broadcaster::start(int port, const DeviceInfo &info, timeval timeout) {
+std::thread *Broadcaster::start(int port, const DeviceInfo &info, timeval timeout) {
     _stop = false;
-    return new thread([=, this] {
-        vector<IPAddress> addresses;
+    return new std::thread([=, this] {
+        std::vector<IPAddress> addresses;
         for (const IPAddress &addr : getIPAddress()) {
             addresses.push_back(addr);
         }
         json jdatagram(info);
         jdatagram["addresses"] = addresses;
-        string datagram = jdatagram.dump();
+        std::string datagram = jdatagram.dump();
 
         do {
             UDPSocket socket;
@@ -44,7 +44,7 @@ thread *Broadcaster::start(int port, const DeviceInfo &info, timeval timeout) {
                         _stop = true;
                     }
                     if (!_stop) {
-                        this_thread::sleep_for(interval);
+                        std::this_thread::sleep_for(interval);
                     }
                 } while (!_stop);
                 _broadcasting = false;

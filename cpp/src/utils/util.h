@@ -23,7 +23,7 @@ namespace util {
     std::vector<std::string> split(const std::string &str, char delim, bool allow_empty = true);
     std::vector<std::string> split(const std::string &str, const std::string &delim, bool allow_empty = true);
 
-    const std::string whitespaces = " \t\n\r\f\v";
+    constexpr auto whitespaces = " \t\n\r\f\v";
 
     // trim from end of string (right)
     std::string rtrim(const std::string &s, const std::string &t = whitespaces);

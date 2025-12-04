@@ -13,12 +13,12 @@
 #include <thread>
 #include <vector>
 
-using namespace std;
+using namespace std::chrono_literals;
 using nlohmann::json;
 
 class TestDatabaseProvider : public DatabaseProvider {
 protected:
-    vector<string> databasePathList() const override {
+    std::vector<std::string> databasePathList() const override {
         return {"database.db", "database_cipher3.db", "database_cipher4.db"};
     }
 };
@@ -29,70 +29,70 @@ static void rsleep() {
 }
 
 static void mockNetwork(Inspector &inspector) {
-    new thread([&] {
+    new std::thread([&] {
         while (true) {
             sleep(1);
-            string uid = util::uid();
+            std::string uid = util::uid();
             inspector.sendRequest(uid, "URL: http://www.google.com.br\nMethod: GET\n", "");
             rsleep();
             inspector.sendResponse(uid, "Status: 200\nContent-Type: text/plain\nContent-Length: 13\n", "Hello client!");
             rsleep();
         }
     });
-    new thread([&] {
+    new std::thread([&] {
         while (true) {
             sleep(2);
-            string uid = util::uid();
+            std::string uid = util::uid();
             inspector.sendRequest(uid, "URL: http://www.google.com.br/post\nMethod: POST\n", "Some content");
             rsleep();
-            string resp = json{{"foo", "bar"}}.dump();
+            std::string resp = json{{"foo", "bar"}}.dump();
             inspector.sendResponse(uid,
                                    "Status: 200\nContent-Type: application/json\nContent-Length: "
-                                   + to_string(resp.size())
+                                   + std::to_string(resp.size())
                                    + "\n",
                                    resp);
         }
     });
-    new thread([&] {
+    new std::thread([&] {
         while (true) {
             sleep(3);
-            string uid = util::uid();
+            std::string uid = util::uid();
             inspector.sendRequest(uid, "URL: http://www.google.com.br/put\nMethod: PUT\n", "Test");
             rsleep();
             inspector.sendResponse(uid, "Status: 400\nContent-Type: text/html\nContent-Length: 7\n", "Not OK!");
             rsleep();
         }
     });
-    new thread([&] {
+    new std::thread([&] {
         while (true) {
             sleep(4);
-            string uid = util::uid();
+            std::string uid = util::uid();
             inspector.sendRequest(uid, "URL: http://www.google.com.br/delete\nMethod: DELETE\n", "");
             rsleep();
             inspector.sendResponse(uid, "Status: 200\nContent-Type: text/plain\nContent-Length: 8\n", "Deleted!");
             rsleep();
         }
     });
-    new thread([&] {
+    new std::thread([&] {
         while (true) {
             sleep(5);
-            string uid = util::uid();
+            std::string uid = util::uid();
             inspector.sendRequest(uid, "URL: http://www.google.com.br/patch\nMethod: PATCH\n", "");
             rsleep();
             inspector.sendResponse(uid, "Status: 500\nContent-Type: text/plain\nContent-Length: 22\n",
                                    "Internal Server Error!");
         }
     });
-    new thread([&] {
+    new std::thread([&] {
         while (true) {
             sleep(6);
-            string uid = util::uid();
+            std::string uid = util::uid();
             inspector.sendRequest(uid, "URL: http://www.terra.com.br/redirect\nMethod: GET\n", "");
             rsleep();
             inspector.sendResponse(uid, "Status: 301\nContent-Type: text/plain\nContent-Length: 11\n", "Redirected!");
         }
     });
-    new thread([&] {
+    new std::thread([&] {
         while (true) {
             rsleep();
             inspector.sendMessage("realtime", "Message uid: " + util::uid());
@@ -102,7 +102,7 @@ static void mockNetwork(Inspector &inspector) {
 
 int main() {
     DeviceInfo info = {"desktop", "Demo Application", "com.demo.app", "v1.0.0"};
-    Inspector inspector(make_shared<TestDatabaseProvider>(), info);
+    Inspector inspector(std::make_shared<TestDatabaseProvider>(), info);
 
     inspector.setCipherKey("database_cipher3.db", "123456", 3);
     inspector.setCipherKey("database_cipher4.db", "1234567", 4);
@@ -122,7 +122,7 @@ int main() {
 
     inspector.addPlugin("lorem-ipsum", "Lorem ipsum", [] {
         sleep(3);
-        ostringstream os;
+        std::ostringstream os;
         for (int i = 0; i < 10; i++) {
             os << R"(
                 <span class='accent--text'>
@@ -136,13 +136,13 @@ int main() {
         return os.str();
     });
 
-    Explorer explorer(inspector, "../../");
+    [[maybe_unused]] Explorer explorer(inspector, "../../");
 
-    Realtime realtime(inspector);
+    [[maybe_unused]] Realtime realtime(inspector);
 
-    Usage usage(inspector);
+    [[maybe_unused]] Usage usage(inspector);
 
-    this_thread::sleep_for(100h);
+    std::this_thread::sleep_for(100h);
 
     return 0;
 }

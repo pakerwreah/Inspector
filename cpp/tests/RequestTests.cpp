@@ -1,8 +1,6 @@
 #include "catch.hpp"
 #include "Request.h"
 
-using namespace std;
-
 TEST_CASE("Request - invalid") {
     Request request;
     REQUIRE_FALSE(request.parse("GET HTTP/1.1\r\n\r\n"));
@@ -23,7 +21,7 @@ TEST_CASE("Request - incomplete") {
 
 TEST_CASE("Request - parsed") {
     Request request;
-    string plain_request =
+    std::string plain_request =
             "/test/path?a=1&b=2 HTTP/1.1\r\n"
             "Host: www.google.com\r\n"
             "User-Agent: curl/7.64.1\r\n"

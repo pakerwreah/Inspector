@@ -2,7 +2,7 @@
 #include "Broadcaster.h"
 #include <thread>
 
-using namespace std;
+using namespace std::chrono_literals;
 
 const int test_port = 50000;
 const timeval timeout = {0, 1000};
@@ -11,8 +11,8 @@ TEST_CASE("Broadcaster - Success") {
     Broadcaster broadcaster;
     broadcaster.setInterval(10ms);
     CHECK_FALSE(broadcaster.broadcasting());
-    thread *th = broadcaster.start(test_port, {}, timeout);
-    this_thread::sleep_for(2ms);
+    std::thread *th = broadcaster.start(test_port, {}, timeout);
+    std::this_thread::sleep_for(2ms);
     CHECK(broadcaster.broadcasting());
     broadcaster.stop();
     th->join();
@@ -22,10 +22,10 @@ TEST_CASE("Broadcaster - Success") {
 
 TEST_CASE("Broadcaster - Fail") {
     Broadcaster broadcaster;
-    string name;
+    std::string name;
     name.resize(1000000);
-    thread *th = broadcaster.start(test_port, { .name = name }, timeout);
-    this_thread::sleep_for(2ms);
+    std::thread *th = broadcaster.start(test_port, { .name = name }, timeout);
+    std::this_thread::sleep_for(2ms);
     CHECK_FALSE(broadcaster.broadcasting());
     broadcaster.stop();
     th->join();
@@ -34,8 +34,8 @@ TEST_CASE("Broadcaster - Fail") {
 
 TEST_CASE("Broadcaster - Invalid port") {
     Broadcaster broadcaster;
-    thread *th = broadcaster.start(-1, {}, timeout);
-    this_thread::sleep_for(2ms);
+    std::thread *th = broadcaster.start(-1, {}, timeout);
+    std::this_thread::sleep_for(2ms);
     CHECK_FALSE(broadcaster.broadcasting());
     broadcaster.stop();
     th->join();

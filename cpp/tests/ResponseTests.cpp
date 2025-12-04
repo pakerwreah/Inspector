@@ -1,7 +1,6 @@
 #include "catch.hpp"
 #include "Response.h"
 
-using namespace std;
 using nlohmann::json;
 
 TEST_CASE("Response - NULL") {
@@ -15,7 +14,7 @@ TEST_CASE("Response - Fail") {
     Headers expected_headers = {
             {"Content-Type", "application/json"}
     };
-    string expected_response =
+    std::string expected_response =
             "HTTP/1.1 500 \r\n"
             "Access-Control-Allow-Origin: *\r\n"
             "Content-Type: application/json\r\n"
@@ -27,14 +26,14 @@ TEST_CASE("Response - Fail") {
     CHECK(response.code == 500);
     CHECK(response.body == R"({"msg":"This request has failed"})");
     CHECK(response.headers == expected_headers);
-    CHECK(string(response) == expected_response);
+    CHECK(response.str() == expected_response);
 }
 
 TEST_CASE("Response - JSON") {
     Headers expected_headers = {
             {"Content-Type", "application/json"}
     };
-    string expected_response =
+    std::string expected_response =
             "HTTP/1.1 200 \r\n"
             "Access-Control-Allow-Origin: *\r\n"
             "Content-Type: application/json\r\n"
@@ -46,14 +45,14 @@ TEST_CASE("Response - JSON") {
     CHECK(response.code == 200);
     CHECK(response.body == R"({"ok":true})");
     CHECK(response.headers == expected_headers);
-    CHECK(string(response) == expected_response);
+    CHECK(response.str() == expected_response);
 }
 
 TEST_CASE("Response - HTML") {
     Headers expected_headers = {
             {"Content-Type", "text/html"}
     };
-    string expected_response =
+    std::string expected_response =
             "HTTP/1.1 200 \r\n"
             "Access-Control-Allow-Origin: *\r\n"
             "Content-Type: text/html\r\n"
@@ -65,5 +64,5 @@ TEST_CASE("Response - HTML") {
     CHECK(response.code == 200);
     CHECK(response.body == "this is a body");
     CHECK(response.headers == expected_headers);
-    CHECK(string(response) == expected_response);
+    CHECK(response.str() == expected_response);
 }

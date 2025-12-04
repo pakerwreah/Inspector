@@ -5,12 +5,11 @@
 #include "Response.h"
 #include <sstream>
 
-using namespace std;
 using nlohmann::json;
 
-Response::Response(const char *data, int code) : Response(data ? string(data) : "", code) {}
+Response::Response(const char *data, int code) : Response(data ? std::string(data) : "", code) {}
 
-Response::Response(string data, int code) : code(code), body(std::move(data)) {
+Response::Response(std::string data, int code) : code(code), body(std::move(data)) {
     headers[Http::ContentType::Key] = Http::ContentType::HTML;
 }
 
@@ -20,7 +19,7 @@ Response::Response(const json &data, int code) : code(code), body(data.is_null()
 
 std::string Response::str() const {
     auto crlf = "\r\n";
-    ostringstream resp;
+    std::ostringstream resp;
     resp << "HTTP/1.1 " << code << " " << crlf
          << "Access-Control-Allow-Origin: *" << crlf;
 

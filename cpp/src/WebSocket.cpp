@@ -7,20 +7,18 @@
 #include "sha1.h"
 #include <sstream>
 
-using namespace std;
+WebSocket::WebSocket(std::shared_ptr<Client> client) : client(std::move(client)) {}
 
-WebSocket::WebSocket(shared_ptr<Client> client) : client(std::move(client)) {}
-
-bool WebSocket::send(const string &data, bool binary) const {
+bool WebSocket::send(const std::string &data, bool binary) const {
     return client->send(pack(data, binary));
 }
 
 Response WebSocket::handshake(const Request &request) {
     const auto &it = request.headers.find("Sec-WebSocket-Key");
     if (it != request.headers.end()) {
-        const string secKey = it->second;
-        const string magic = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
-        const string secAccept = base64::encode(sha1::calc(secKey + magic));
+        const std::string secKey = it->second;
+        const std::string magic = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
+        const std::string secAccept = base64::encode(sha1::calc(secKey + magic));
 
         Response response;
         response.code = 101;
@@ -39,10 +37,10 @@ Response WebSocket::handshake(const Request &request) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wshift-count-overflow"
 
-string WebSocket::pack(const string &msg, bool binary) {
+std::string WebSocket::pack(const std::string &msg, bool binary) {
     auto length = msg.size();
 
-    ostringstream wrap;
+    std::ostringstream wrap;
 
     wrap << char(binary ? 130 : 129);
     if (length <= 125) {

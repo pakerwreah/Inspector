@@ -6,25 +6,24 @@
 #include "util.h"
 #include <thread>
 
-using namespace std;
-using namespace chrono_literals;
+using namespace std::chrono_literals;
 using nlohmann::json;
 
 DatabasePlugin::~DatabasePlugin() {
     db_con = nullptr;
 }
 
-shared_ptr<Database> DatabasePlugin::open() {
+std::shared_ptr<Database> DatabasePlugin::open() {
     if (db_path.empty()) {
         try {
             selectDB(0);
-        } catch (const out_of_range &) {
-            throw runtime_error("No databases available");
+        } catch (const std::out_of_range &) {
+            throw std::runtime_error("No databases available");
         }
     }
 
     if (!db_con) {
-        const string &name = databaseName();
+        const std::string &name = databaseName();
         const auto &it = db_meta.find(name);
         if (it != db_meta.end()) {
             DatabaseMeta config = it->second;
@@ -37,8 +36,8 @@ shared_ptr<Database> DatabasePlugin::open() {
     // debouncer to auto close db after a while
     // it won't abort any queries because it uses shared_ptr
     int token = ++auto_close_token;
-    thread([this, token]() {
-        this_thread::sleep_for(debounce);
+    std::thread([this, token]() {
+        std::this_thread::sleep_for(debounce);
         if (token == auto_close_token) {
             db_con = nullptr;
         }
@@ -47,7 +46,7 @@ shared_ptr<Database> DatabasePlugin::open() {
     return db_con;
 }
 
-DatabasePlugin::DatabasePlugin(Router &router, shared_ptr<DatabaseProvider> provider)
+DatabasePlugin::DatabasePlugin(Router &router, std::shared_ptr<DatabaseProvider> provider)
         : provider(std::move(provider)), debounce(5s), auto_close_token(0) {
 
     router.get("/database/list", [this](const Request &, const Params &) {
@@ -120,13 +119,13 @@ DatabasePlugin::DatabasePlugin(Router &router, shared_ptr<DatabaseProvider> prov
                          {"duration", duration}};
 
             return Response(data);
-        } catch (const exception &ex) {
+        } catch (const std::exception &ex) {
             return Response::BadRequest(ex.what());
         }
     });
 
     router.post("/database/execute", [this](const Request &request, const Params &) {
-        shared_ptr<Database> db;
+        std::shared_ptr<Database> db;
         try {
             db = open();
 
@@ -141,17 +140,17 @@ DatabasePlugin::DatabasePlugin(Router &router, shared_ptr<DatabaseProvider> prov
             json data = {{"duration", duration}};
 
             return Response(data);
-        } catch (const exception &ex) {
+        } catch (const std::exception &ex) {
             db->rollback();
             return Response::BadRequest(ex.what());
         }
     });
 }
 
-vector<string> DatabasePlugin::databasePathList() {
-    const array<string, 3> arr = {"-journal", "-shm", "-wal"};
-    return util::filter(provider->databasePathList(), [&arr](const string &item) {
-        return none_of(arr.begin(), arr.end(), [&item](const string &suffix) {
+std::vector<std::string> DatabasePlugin::databasePathList() {
+    const std::array<std::string, 3> arr = {"-journal", "-shm", "-wal"};
+    return util::filter(provider->databasePathList(), [&arr](const std::string &item) {
+        return std::none_of(arr.begin(), arr.end(), [&item](const std::string &suffix) {
             return util::endsWith(item, suffix);
         });
     });
@@ -163,15 +162,15 @@ void DatabasePlugin::selectDB(int index) {
         db_path = list[index];
         db_con = nullptr;
     } else {
-        throw out_of_range("Index out of range");
+        throw std::out_of_range("Index out of range");
     }
 }
 
-void DatabasePlugin::setCipherKey(const string &database, const string &password, int version) {
+void DatabasePlugin::setCipherKey(const std::string &database, const std::string &password, int version) {
     db_meta[database] = {password, version};
 }
 
-string DatabasePlugin::databaseName() const {
+std::string DatabasePlugin::databaseName() const {
     return util::split(db_path, '/').back();
 }
 
@@ -179,6 +178,6 @@ bool DatabasePlugin::isOpen() const {
     return db_con != nullptr;
 }
 
-void DatabasePlugin::setDebounce(chrono::nanoseconds debounce) {
+void DatabasePlugin::setDebounce(std::chrono::nanoseconds debounce) {
     this->debounce = debounce;
 }

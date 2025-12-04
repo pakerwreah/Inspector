@@ -1,18 +1,16 @@
 #include "catch.hpp"
 #include "Router.h"
 
-using namespace std;
-
 TEST_CASE("Router - Invalid header") {
     Router router;
     Request request;
-    CHECK_THROWS_MATCHES(router.handle(request), runtime_error, Catch::Message("Bad Request"));
+    CHECK_THROWS_MATCHES(router.handle(request), std::runtime_error, Catch::Message("Bad Request"));
 }
 
 TEST_CASE("Router - No route defined") {
     Router router;
     Request request {.method = "GET", .path = "/test/path"};
-    CHECK_THROWS_MATCHES(router.handle(request), out_of_range, Catch::Message("Route not found"));
+    CHECK_THROWS_MATCHES(router.handle(request), std::out_of_range, Catch::Message("Route not found"));
 }
 
 TEST_CASE("Router - Match route") {
@@ -30,7 +28,7 @@ TEST_CASE("Router - Match route") {
 
     SECTION("Not found") {
         request = {.method = "GET", .path = "/test/wrong/p_1"};
-        CHECK_THROWS_MATCHES(router.handle(request), out_of_range, Catch::Message("Route not found"));
+        CHECK_THROWS_MATCHES(router.handle(request), std::out_of_range, Catch::Message("Route not found"));
     }
 }
 

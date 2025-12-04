@@ -2,13 +2,11 @@
 #include "WebSocketPlugin.h"
 #include "MockClient.h"
 
-using namespace std;
-
 TEST_CASE("WebSocketPlugin - Connection") {
     Router router;
     Request request;
     Headers headers{{"Sec-WebSocket-Key", "secret"}};
-    auto client = make_shared<MockClient>();
+    auto client = std::make_shared<MockClient>();
 
     WebSocketPlugin plugin(router);
     CHECK_FALSE(plugin.isConnected());
@@ -18,12 +16,12 @@ TEST_CASE("WebSocketPlugin - Connection") {
         Response response;
         REQUIRE_NOTHROW(response = router.handle(request));
         CHECK(plugin.isConnected());
-        CHECK(string(response) == string(WebSocket::handshake(request)));
+        CHECK(response.str() == WebSocket::handshake(request).str());
     }
 
     SECTION("Fail") {
         request = {.client = client, .headers = headers, .method = "GET", .path = "/plugins/ws/path/test"};
-        CHECK_THROWS_MATCHES(router.handle(request), out_of_range, Catch::Message("Route not found"));
+        CHECK_THROWS_MATCHES(router.handle(request), std::out_of_range, Catch::Message("Route not found"));
         CHECK_FALSE(plugin.isConnected());
     }
 }
@@ -33,7 +31,7 @@ TEST_CASE("WebSocketPlugin - Send message") {
     Request request;
     Response response;
     Headers headers;
-    auto client = make_shared<MockClient>();
+    auto client = std::make_shared<MockClient>();
 
     WebSocketPlugin plugin(router);
     CHECK_FALSE(plugin.isConnected());
@@ -43,7 +41,7 @@ TEST_CASE("WebSocketPlugin - Send message") {
     REQUIRE_NOTHROW(response = router.handle(request));
 
     CHECK(plugin.isConnected());
-    CHECK(string(response) == string(WebSocket::handshake(request)));
+    CHECK(response.str() == WebSocket::handshake(request).str());
 
     SECTION("Success") {
         REQUIRE_NOTHROW(plugin.sendMessage("test", "Test message"));

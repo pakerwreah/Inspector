@@ -6,9 +6,7 @@
 #include "picohttpparser.h"
 #include <sstream>
 
-using namespace std;
-
-bool Request::parse(const string &plain) {
+bool Request::parse(const std::string &plain) {
     const char *method, *path;
     size_t path_len, method_len;
     int minor_version;
@@ -28,13 +26,13 @@ bool Request::parse(const string &plain) {
     if (body_start > 0) {
         for (int i = 0; i < num_headers; i++) {
             auto header = headers[i];
-            auto name = string(header.name, header.name_len);
-            auto value = string_view(header.value, header.value_len);
+            auto name = std::string(header.name, header.name_len);
+            auto value = std::string_view(header.value, header.value_len);
             this->headers[name] = value;
         }
 
-        this->method = string_view(method, method_len);
-        this->path = string_view(path, path_len);
+        this->method = std::string_view(method, method_len);
+        this->path = std::string_view(path, path_len);
         this->body = plain.substr(body_start);
 
         return true;
@@ -45,7 +43,7 @@ bool Request::parse(const string &plain) {
 
 std::string Request::str() const {
     auto crlf = "\r\n";
-    ostringstream resp;
+    std::ostringstream resp;
     resp << method << " " << path << " HTTP/1.1" << crlf;
 
     for (const auto &[name, value] : headers) {

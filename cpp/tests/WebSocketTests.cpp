@@ -3,37 +3,35 @@
 #include "MockClient.h"
 #include "util.h"
 
-using namespace std;
-
 TEST_CASE("WebSocket - Send") {
-    auto client = make_shared<MockClient>();
+    auto client = std::make_shared<MockClient>();
     WebSocket ws(client);
-    const string data1 = "Lorem ipsum dolor sit amet";
-    const string data2 = string(126, '.');
-    const string data3 = string(65536, '.');
+    const std::string data1 = "Lorem ipsum dolor sit amet";
+    const std::string data2 = std::string(126, '.');
+    const std::string data3 = std::string(65536, '.');
 
     SECTION("Text") {
-        ws.send(data1, false);
+        (void)ws.send(data1, false);
         CHECK(client->sent == "\x81\x1A" + data1);
 
-        ws.send(data2, false);
+        (void)ws.send(data2, false);
         CHECK(util::startsWith(client->sent, "\x81"));
         CHECK(client->sent == WebSocket::pack(data2, false));
 
-        ws.send(data3, false);
+        (void)ws.send(data3, false);
         CHECK(util::startsWith(client->sent, "\x81"));
         CHECK(client->sent == WebSocket::pack(data3, false));
     }
 
     SECTION("Binary") {
-        ws.send(data1, true);
+        (void)ws.send(data1, true);
         CHECK(client->sent == "\x82\x1A" + data1);
 
-        ws.send(data2, true);
+        (void)ws.send(data2, true);
         CHECK(util::startsWith(client->sent, "\x82"));
         CHECK(client->sent == WebSocket::pack(data2, true));
 
-        ws.send(data3, true);
+        (void)ws.send(data3, true);
         CHECK(util::startsWith(client->sent, "\x82"));
         CHECK(client->sent == WebSocket::pack(data3, true));
     }
@@ -59,5 +57,5 @@ TEST_CASE("WebSocket - Handshake Fail") {
     Request request;
     Response response = WebSocket::handshake(request);
     Response expected = Response::BadRequest("Sec-WebSocket-Key header not found");
-    CHECK(string(response) == string(expected));
+    CHECK(response.str() == expected.str());
 }

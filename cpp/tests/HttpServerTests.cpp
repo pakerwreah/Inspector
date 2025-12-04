@@ -6,26 +6,26 @@
 #include "MockHttpServer.h"
 #include <thread>
 
-using namespace std;
+using namespace std::chrono_literals;
 
-void operator<<(string &lhs, const Request &request) {
+void operator<<(std::string &lhs, const Request &request) {
     lhs = request.str();
 }
 
-bool operator==(const string &lhs, const Response &response) {
+bool operator==(const std::string &lhs, const Response &response) {
     return lhs == response.str();
 }
 
 static constexpr int test_port = 50000;
 
 TEST_CASE_METHOD(HttpServer, "HttpServer - Invalid request") {
-    auto client = make_shared<MockClient>();
+    auto client = std::make_shared<MockClient>();
     REQUIRE_NOTHROW(process(client));
     CHECK(client->sent == Response::BadRequest());
 }
 
 TEST_CASE_METHOD(HttpServer, "HttpServer - Route not found") {
-    auto client = make_shared<MockClient>();
+    auto client = std::make_shared<MockClient>();
     client->recv << Request {.method = "GET", .path = "/test/path"};
     REQUIRE_NOTHROW(process(client));
     CHECK(client->sent == Response::NotFound("Route not found"));
@@ -33,16 +33,16 @@ TEST_CASE_METHOD(HttpServer, "HttpServer - Route not found") {
 
 TEST_CASE_METHOD(HttpServer, "HttpServer - Internal error") {
     router.get("/test/path", [](const Request &, const Params &) -> Response {
-        throw runtime_error("Internal error");
+        throw std::runtime_error("Internal error");
     });
-    auto client = make_shared<MockClient>();
+    auto client = std::make_shared<MockClient>();
     client->recv << Request {.method = "GET", .path = "/test/path"};
     REQUIRE_NOTHROW(process(client));
     CHECK(client->sent == Response::InternalError("Internal error"));
 }
 
 TEST_CASE_METHOD(HttpServer, "HttpServer - Route found") {
-    auto client = make_shared<MockClient>();
+    auto client = std::make_shared<MockClient>();
     Request request {.method = "GET", .path = "/test/path"};
     Response expected("response data");
 
@@ -67,7 +67,7 @@ TEST_CASE_METHOD(HttpServer, "HttpServer - Route found") {
 }
 
 TEST_CASE_METHOD(HttpServer, "HttpServer - CORS") {
-    auto client = make_shared<MockClient>();
+    auto client = std::make_shared<MockClient>();
 
     client->recv << Request {.method = "OPTIONS", .path = "/path"};
     REQUIRE_NOTHROW(process(client));
@@ -81,8 +81,8 @@ TEST_CASE_METHOD(HttpServer, "HttpServer - CORS") {
 TEST_CASE("HttpServer - Start/Stop") {
     HttpServer server;
     CHECK_FALSE(server.listening());
-    thread *th = server.start(test_port);
-    this_thread::sleep_for(1ms);
+    std::thread *th = server.start(test_port);
+    std::this_thread::sleep_for(1ms);
     CHECK(server.listening());
     REQUIRE(server.stop());
     th->join();
@@ -98,8 +98,8 @@ TEST_CASE("HttpServer - Fail") {
 
     HttpServer server;
     server.setReconnectInterval(10ms);
-    thread *th = server.start(test_port);
-    this_thread::sleep_for(1ms);
+    std::thread *th = server.start(test_port);
+    std::this_thread::sleep_for(1ms);
     CHECK_FALSE(server.listening());
     REQUIRE(server.stop());
     th->join();
@@ -108,14 +108,14 @@ TEST_CASE("HttpServer - Fail") {
 
 TEST_CASE("HttpServer - Accept Success") {
     MockHttpServer server;
-    server.processor = [](shared_ptr<Client> client) {
+    server.processor = [](std::shared_ptr<Client> client) {
         (void)client->send("hello");
     };
-    thread *th = server.start(test_port);
-    this_thread::sleep_for(1ms);
+    std::thread *th = server.start(test_port);
+    std::this_thread::sleep_for(1ms);
     CHECK(server.listening());
 
-    unique_ptr client = make_unique<Socket>();
+    auto client = std::make_unique<Socket>();
     CHECK(client->create());
     CHECK(client->connect("localhost", test_port));
 
@@ -129,14 +129,14 @@ TEST_CASE("HttpServer - Accept Success") {
 
 TEST_CASE_METHOD(HttpServer, "HttpServer - Accept Fail") {
     setReconnectInterval(10ms);
-    thread *th = start(test_port);
-    this_thread::sleep_for(1ms);
+    std::thread *th = start(test_port);
+    std::this_thread::sleep_for(1ms);
 
     // simulate network failure
     int m_sock = server.fd();
     shutdown(m_sock, SHUT_RDWR);
     close(m_sock);
-    this_thread::sleep_for(1ms);
+    std::this_thread::sleep_for(1ms);
 
     stop();
     th->join();

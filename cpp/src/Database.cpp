@@ -5,12 +5,10 @@
 #include "Database.h"
 #include <stdexcept>
 
-using namespace std;
-
-Database::Database(const string &path, const string &password, int version, bool create) : db(nullptr), failed(false) {
+Database::Database(const std::string &path, const std::string &password, int version, bool create) : db(nullptr), failed(false) {
 
     if (!path.length()) {
-        throw runtime_error("Invalid database path");
+        throw std::runtime_error("Invalid database path");
     }
     auto m_path = path.find("file://") == 0 ? path.substr(7) : path;
     auto flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_WAL | SQLITE_OPEN_SHAREDCACHE;
@@ -19,7 +17,7 @@ Database::Database(const string &path, const string &password, int version, bool
     }
     auto err = sqlite3_open_v2(m_path.c_str(), &db, flags, nullptr);
     if (err != SQLITE_OK) {
-        throw runtime_error("Error opening database (" + to_string(err) + "): " + m_path);
+        throw std::runtime_error("Error opening database (" + std::to_string(err) + "): " + m_path);
     }
 
     if (password.length()) {
@@ -27,7 +25,7 @@ Database::Database(const string &path, const string &password, int version, bool
         execute("PRAGMA key = '" + password + "'");
 
         if (version) {
-            execute("PRAGMA cipher_compatibility = " + to_string(version));
+            execute("PRAGMA cipher_compatibility = " + std::to_string(version));
         }
     }
 
@@ -55,26 +53,26 @@ void Database::rollback() const {
     sqlite3_exec(db, "rollback", nullptr, nullptr, nullptr);
 }
 
-ResultSet Database::query(const string &sql) const {
+ResultSet Database::query(const std::string &sql) const {
     sqlite3_stmt *stmt;
     int rc = sqlite3_prepare_v2(db, sql.c_str(), -1, &stmt, nullptr);
     if (rc != SQLITE_OK || stmt == nullptr) {
         failed = true;
-        const string errmsg = sqlite3_errmsg(db);
-        throw runtime_error("Error executing query: " + errmsg);
+        const std::string errmsg = sqlite3_errmsg(db);
+        throw std::runtime_error("Error executing query: " + errmsg);
     }
 
     return ResultSet(db, stmt);
 }
 
-void Database::execute(const string &sql) const {
+void Database::execute(const std::string &sql) const {
     char *error;
     sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &error);
 
     if (error) {
         failed = true;
-        const string errmsg = error;
+        const std::string errmsg = error;
         sqlite3_free(error);
-        throw runtime_error("Error executing script: " + errmsg);
+        throw std::runtime_error("Error executing script: " + errmsg);
     }
 }

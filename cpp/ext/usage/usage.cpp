@@ -5,7 +5,7 @@
 #include "usage.h"
 #include "read_file.h"
 
-using namespace std;
+using namespace std::chrono_literals;
 using nlohmann::json;
 
 Usage::Usage(Inspector &inspector) {
@@ -13,7 +13,7 @@ Usage::Usage(Inspector &inspector) {
         return read_file("../ext/usage/usage.html");
     });
 
-    thread([&] {
+    std::thread([&] {
         float cpu_usage = 50, memory_used = 50, memory_max = 512;
         unsigned int seed = 0;
         while (true) {
@@ -31,7 +31,7 @@ Usage::Usage(Inspector &inspector) {
                     {"memory", memory}
             };
             inspector.sendMessage("usage", data.dump());
-            this_thread::sleep_for(1s);
+            std::this_thread::sleep_for(1s);
         }
     }).detach();
 }
