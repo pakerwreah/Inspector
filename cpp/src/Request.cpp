@@ -6,44 +6,33 @@
 #include "picohttpparser.h"
 #include <sstream>
 
-using namespace std;
-
-Request::Request(shared_ptr<Client> client)
-        : client(std::move(client)) {}
-
-Request::Request(string method, string path, string body)
-        : method(std::move(method)), path(std::move(path)), body(std::move(body)) {}
-
-Request::Request(string method, string path, std::shared_ptr<Client> client, Headers headers)
-        : method(std::move(method)), path(std::move(path)), client(std::move(client)), headers(std::move(headers)) {}
-
-bool Request::parse(const string &plain) {
+bool Request::parse(const std::string &plain) {
     const char *method, *path;
     size_t path_len, method_len;
     int minor_version;
     size_t num_headers = 50;
-    struct phr_header headers[50];
+    phr_header headers[50];
     const char *buffer = plain.c_str();
 
     int body_start = phr_parse_request(
-            buffer, plain.length(),
-            &method, &method_len,
-            &path, &path_len,
-            &minor_version,
-            headers, &num_headers,
-            0
+        buffer, plain.length(),
+        &method, &method_len,
+        &path, &path_len,
+        &minor_version,
+        headers, &num_headers,
+        0
     );
 
     if (body_start > 0) {
         for (int i = 0; i < num_headers; i++) {
             auto header = headers[i];
-            auto name = string(header.name, header.name_len);
-            auto value = string_view(header.value, header.value_len);
+            auto name = std::string(header.name, header.name_len);
+            auto value = std::string_view(header.value, header.value_len);
             this->headers[name] = value;
         }
 
-        this->method = string_view(method, method_len);
-        this->path = string_view(path, path_len);
+        this->method = std::string_view(method, method_len);
+        this->path = std::string_view(path, path_len);
         this->body = plain.substr(body_start);
 
         return true;
@@ -52,13 +41,13 @@ bool Request::parse(const string &plain) {
     return false;
 }
 
-Request::operator std::string() const {
-    const char *crlf = "\r\n";
-    ostringstream resp;
+std::string Request::str() const {
+    auto crlf = "\r\n";
+    std::ostringstream resp;
     resp << method << " " << path << " HTTP/1.1" << crlf;
 
-    for (const auto &header : headers) {
-        resp << header.first << ": " << header.second << crlf;
+    for (const auto &[name, value] : headers) {
+        resp << name << ": " << value << crlf;
     }
 
     resp << "Content-Length: " << body.length() << crlf << crlf << body;

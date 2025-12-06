@@ -7,23 +7,22 @@
 
 #include <filesystem>
 
-using namespace std;
 using nlohmann::json;
 
-Explorer::Explorer(Inspector &inspector, const string &root) {
+Explorer::Explorer(Inspector &inspector, const std::string &root) {
 
     inspector.addLivePlugin("explorer", "Explorer", [] {
         return read_file("../ext/explorer/explorer.html");
     });
 
     inspector.addPluginAPI("GET", "filesystem/list", [root](const Params &params) {
-        const auto entries = filesystem::directory_iterator(root + params.at("path"));
+        const auto entries = std::filesystem::directory_iterator(root + params.at("path"));
 
         json out = json::array();
 
         for (const auto &entry : entries) {
-            string name = entry.path().filename();
-            string type = entry.is_regular_file() ? "file" : "folder";
+            std::string name = entry.path().filename();
+            std::string type = entry.is_regular_file() ? "file" : "folder";
             out.push_back({
                                     {"type", type},
                                     {"name", name},

@@ -2,7 +2,7 @@
 
 #include "DatabasePlugin.h"
 
-struct MockDatabaseProvider : public DatabaseProvider {
+struct MockDatabaseProvider : DatabaseProvider {
     std::vector<std::string> databases;
     std::vector<std::string> databasePathList() const override;
 };

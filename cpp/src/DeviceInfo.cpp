@@ -9,32 +9,35 @@
 #include <sys/socket.h>
 #include <ifaddrs.h>
 
-using namespace std;
 using nlohmann::json;
 
 void to_json(json &j, const DeviceInfo &i) {
-    j = {{"type",    i.type},
-         {"name",    i.name},
-         {"appId",   i.appId},
-         {"version", i.version}};
+    j = {
+        {"type", i.type},
+        {"name", i.name},
+        {"appId", i.appId},
+        {"version", i.version},
+    };
 }
 
 void to_json(json &j, const IPAddress &i) {
-    j = {{"adapter", i.adapter},
-         {"ip",      i.ip}};
+    j = {
+        {"adapter", i.adapter},
+        {"ip", i.ip},
+    };
 }
 
-vector<IPAddress> getIPAddress() {
+std::vector<IPAddress> getIPAddress() {
     ifaddrs *ifap, *ifa;
     sockaddr_in *sa;
-    vector<IPAddress> addresses;
+    std::vector<IPAddress> addresses;
 
     getifaddrs(&ifap);
     for (ifa = ifap; ifa; ifa = ifa->ifa_next) {
         if (ifa->ifa_addr && ifa->ifa_addr->sa_family == AF_INET) {
             sa = reinterpret_cast<sockaddr_in *>(ifa->ifa_addr);
-            string adp = ifa->ifa_name;
-            string addr = inet_ntoa(sa->sin_addr);
+            std::string adp = ifa->ifa_name;
+            std::string addr = inet_ntoa(sa->sin_addr);
             addresses.push_back({adp, addr});
         }
     }

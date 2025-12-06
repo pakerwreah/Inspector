@@ -1,18 +1,16 @@
 #include "catch.hpp"
 #include "Router.h"
 
-using namespace std;
-
 TEST_CASE("Router - Invalid header") {
     Router router;
     Request request;
-    CHECK_THROWS_MATCHES(router.handle(request), runtime_error, Catch::Message("Bad Request"));
+    CHECK_THROWS_MATCHES(router.handle(request), std::runtime_error, Catch::Message("Bad Request"));
 }
 
 TEST_CASE("Router - No route defined") {
     Router router;
-    Request request("GET", "/test/path");
-    CHECK_THROWS_MATCHES(router.handle(request), out_of_range, Catch::Message("Route not found"));
+    Request request {.method = "GET", .path = "/test/path"};
+    CHECK_THROWS_MATCHES(router.handle(request), std::out_of_range, Catch::Message("Route not found"));
 }
 
 TEST_CASE("Router - Match route") {
@@ -20,17 +18,17 @@ TEST_CASE("Router - Match route") {
     Request request;
 
     router.get("/test/path/{param}", [](const Request &, const Params &) {
-        return "";
+        return Response();
     });
 
     SECTION("Found") {
-        request = {"GET", "/test/path/p_1"};
+        request = {.method = "GET", .path = "/test/path/p_1"};
         REQUIRE_NOTHROW(router.handle(request));
     }
 
     SECTION("Not found") {
-        request = {"GET", "/test/wrong/p_1"};
-        CHECK_THROWS_MATCHES(router.handle(request), out_of_range, Catch::Message("Route not found"));
+        request = {.method = "GET", .path = "/test/wrong/p_1"};
+        CHECK_THROWS_MATCHES(router.handle(request), std::out_of_range, Catch::Message("Route not found"));
     }
 }
 
@@ -48,10 +46,10 @@ TEST_CASE("Router - GET") {
 
     router.get("/test/path1/{param1}/path2/{param2}", [&m_params](const Request &, const Params &params) {
         m_params = params;
-        return "";
+        return Response();
     });
 
-    request = {"GET", "/test/path1/p_1/path2/p_2?param3=q%201&param4=q%202"};
+    request = {.method = "GET", .path = "/test/path1/p_1/path2/p_2?param3=q%201&param4=q%202"};
     REQUIRE_NOTHROW(router.handle(request));
     CHECK(m_params == expected_params);
 }
@@ -63,7 +61,7 @@ TEST_CASE("Router - POST") {
 
     router.post("/test/path1/{param1}/path2/{param2}", [&m_params](const Request &, const Params &params) {
         m_params = params;
-        return "";
+        return Response();
     });
 
     SECTION("Should parse body") {
@@ -74,9 +72,11 @@ TEST_CASE("Router - POST") {
                 {"param4", "q 2"}
         };
 
-        request = {"POST",
-                   "/test/path1/p_1/path2/p_2",
-                   "param3=q%201&param4=q%202"};
+        request = {
+            .method = "POST",
+            .path = "/test/path1/p_1/path2/p_2",
+            .body = "param3=q%201&param4=q%202",
+        };
 
         request.headers[Http::ContentType::Key] = Http::ContentType::URL_ENCODED;
 
@@ -90,9 +90,11 @@ TEST_CASE("Router - POST") {
                 {"param2", "p_2"}
         };
 
-        request = {"POST",
-                   "/test/path1/p_1/path2/p_2",
-                   "param3=q%201&param4=q%202"};
+        request = {
+            .method = "POST",
+            .path = "/test/path1/p_1/path2/p_2",
+            .body = "param3=q%201&param4=q%202",
+        };
 
         REQUIRE_NOTHROW(router.handle(request));
         CHECK(m_params == expected_params);
@@ -107,26 +109,26 @@ TEST_CASE("Router - Methods") {
 
     router.get("/test/path", [&get](const Request &, const Params &) {
         get++;
-        return "";
+        return Response();
     });
 
     router.post("/test/path", [&post](const Request &, const Params &) {
         post++;
-        return "";
+        return Response();
     });
 
     router.put("/test/path", [&put](const Request &, const Params &) {
         put++;
-        return "";
+        return Response();
     });
 
     router.route("PATCH", "/test/path", [&patch](const Request &, const Params &) {
         patch++;
-        return "";
+        return Response();
     });
 
     SECTION("GET") {
-        request = {"GET", "/test/path"};
+        request = {.method = "GET", .path = "/test/path"};
         REQUIRE_NOTHROW(router.handle(request));
         CHECK(get == 1);
         CHECK(post == 0);
@@ -135,7 +137,7 @@ TEST_CASE("Router - Methods") {
     }
 
     SECTION("POST") {
-        request = {"POST", "/test/path"};
+        request = {.method = "POST", .path = "/test/path"};
         REQUIRE_NOTHROW(router.handle(request));
         CHECK(get == 0);
         CHECK(post == 1);
@@ -144,7 +146,7 @@ TEST_CASE("Router - Methods") {
     }
 
     SECTION("PUT") {
-        request = {"PUT", "/test/path"};
+        request = {.method = "PUT", .path = "/test/path"};
         REQUIRE_NOTHROW(router.handle(request));
         CHECK(get == 0);
         CHECK(post == 0);
@@ -153,7 +155,7 @@ TEST_CASE("Router - Methods") {
     }
 
     SECTION("PATCH") {
-        request = {"PATCH", "/test/path"};
+        request = {.method = "PATCH", .path = "/test/path"};
         REQUIRE_NOTHROW(router.handle(request));
         CHECK(get == 0);
         CHECK(post == 0);

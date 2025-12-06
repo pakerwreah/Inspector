@@ -4,8 +4,6 @@
 
 #include "MockHttpServer.h"
 
-using namespace std;
-
-void MockHttpServer::process(shared_ptr<Client> client) const {
+void MockHttpServer::process(std::shared_ptr<Client> client) const {
     processor(client);
 }

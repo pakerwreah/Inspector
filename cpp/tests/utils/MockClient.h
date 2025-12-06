@@ -2,7 +2,7 @@
 
 #include "Client.h"
 
-struct MockClient : public Client {
+struct MockClient : Client {
     std::string recv;
     mutable std::string sent;
     bool connected = true;

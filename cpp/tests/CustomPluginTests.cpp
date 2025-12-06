@@ -1,7 +1,6 @@
 #include "catch.hpp"
 #include "CustomPlugin.h"
 
-using namespace std;
 using nlohmann::json;
 
 TEST_CASE("CustomPlugin - Execute") {
@@ -10,7 +9,7 @@ TEST_CASE("CustomPlugin - Execute") {
     CustomPlugin plugin(router);
 
     SECTION("HTML") {
-        string content = "text";
+        std::string content = "text";
         CHECK_NOTHROW(response = plugin.execute([&] {
             return content;
         }));
@@ -20,7 +19,7 @@ TEST_CASE("CustomPlugin - Execute") {
     }
 
     SECTION("JSON") {
-        string content = "{\"json\":true}";
+        std::string content = "{\"json\":true}";
         CHECK_NOTHROW(response = plugin.execute([&] {
             return content;
         }));
@@ -30,7 +29,7 @@ TEST_CASE("CustomPlugin - Execute") {
     }
 
     SECTION("Fail") {
-        struct MyException : public exception {
+        struct MyException : std::exception {
         };
         CHECK_THROWS_AS(plugin.execute([] {
             return throw MyException(), "";
@@ -48,8 +47,6 @@ TEST_CASE("CustomPlugin - PluginMeta") {
 
 TEST_CASE("CustomPlugin - Routes") {
     Router router;
-    Request request;
-    Response response;
     CustomPlugin plugin(router);
 
     int normal = 0, live = 0, api_get = 0, api_post = 0;
@@ -73,7 +70,8 @@ TEST_CASE("CustomPlugin - Routes") {
     });
 
     SECTION("Get Plugins") {
-        request = {"GET", "/plugins"};
+        Response response;
+        Request request = {.method = "GET", .path = "/plugins"};
         REQUIRE_NOTHROW(response = router.handle(request));
         PluginMeta expected[] = {
                 {"normal", "Normal Plugin", false},
@@ -83,7 +81,7 @@ TEST_CASE("CustomPlugin - Routes") {
     }
 
     SECTION("Normal Plugin") {
-        request = {"GET", "/plugins/normal"};
+        Request request {.method = "GET", .path = "/plugins/normal"};
         REQUIRE_NOTHROW(router.handle(request));
         CHECK(normal == 1);
         CHECK(live == 0);
@@ -92,7 +90,7 @@ TEST_CASE("CustomPlugin - Routes") {
     }
 
     SECTION("Live Plugin") {
-        request = {"GET", "/plugins/live"};
+        Request request {.method = "GET", .path = "/plugins/live"};
         REQUIRE_NOTHROW(router.handle(request));
         CHECK(normal == 0);
         CHECK(live == 1);
@@ -101,7 +99,7 @@ TEST_CASE("CustomPlugin - Routes") {
     }
 
     SECTION("API GET") {
-        request = {"GET", "/plugins/api/path/test?p=123&q=234"};
+        Request request {.method = "GET", .path = "/plugins/api/path/test?p=123&q=234"};
         Params expected{{"p", "123"},
                         {"q", "234"}};
         REQUIRE_NOTHROW(router.handle(request));
@@ -113,7 +111,7 @@ TEST_CASE("CustomPlugin - Routes") {
     }
 
     SECTION("API POST") {
-        request = {"POST", "/plugins/api/path/test"};
+        Request request {.method = "POST", .path = "/plugins/api/path/test"};
         request.headers[Http::ContentType::Key] = Http::ContentType::URL_ENCODED;
         request.body = "p=234&q=345";
         Params expected{{"p", "234"},

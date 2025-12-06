@@ -17,10 +17,10 @@ private:
     HttpServer server;
     Broadcaster broadcaster;
     std::vector<std::thread*> threads;
-    std::unique_ptr<NetworkPlugin> networkPlugin;
-    std::unique_ptr<DatabasePlugin> databasePlugin;
-    std::unique_ptr<CustomPlugin> customPlugin;
-    std::unique_ptr<WebSocketPlugin> webSocketPlugin;
+    NetworkPlugin networkPlugin;
+    DatabasePlugin databasePlugin;
+    CustomPlugin customPlugin;
+    WebSocketPlugin webSocketPlugin;
 
 public:
     Inspector(std::shared_ptr<DatabaseProvider> databaseProvider, DeviceInfo info);

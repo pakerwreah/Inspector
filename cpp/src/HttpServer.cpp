@@ -8,7 +8,7 @@
 
 #include <thread>
 
-using namespace std;
+using namespace std::chrono_literals;
 
 HttpServer::HttpServer() : _listening(false), _stop(false), _error(0), interval(1s) {}
 
@@ -29,18 +29,17 @@ bool HttpServer::listening() const {
     return _listening;
 }
 
-thread *HttpServer::start(int port) {
+std::thread *HttpServer::start(int port) {
     _stop = false;
-    return new thread([this, port] {
+    return new std::thread([this, port] {
         do {
             if (server.create() && server.bind(port) && server.listen()) {
                 for (int i = 0; !_stop && i < 3; i++) {
                     _listening = true;
-                    Socket *client;
-                    if (server.accept(client)) {
+                    if (Socket *socket; server.accept(socket)) {
                         i = -1;
-                        auto socket_client = make_shared<SocketClient>(unique_ptr<Socket>(client));
-                        thread(&HttpServer::process, this, socket_client).detach();
+                        auto socket_client = std::make_shared<SocketClient>(std::unique_ptr<Socket>(socket));
+                        std::thread(&HttpServer::process, this, std::move(socket_client)).detach();
                     } else if (server.is_valid()) {
                         _error = errno;
                     }
@@ -51,15 +50,15 @@ thread *HttpServer::start(int port) {
                 _error = errno;
             }
             if (!_stop) {
-                this_thread::sleep_for(interval);
+                std::this_thread::sleep_for(interval);
             }
         } while (!_stop);
     });
 }
 
-void HttpServer::process(shared_ptr<Client> client) const {
+void HttpServer::process(std::shared_ptr<Client> client) const {
     Request request(client);
-    string plain, buf;
+    std::string plain, buf;
     bool valid;
     int tries = 3;
 
@@ -71,21 +70,21 @@ void HttpServer::process(shared_ptr<Client> client) const {
                 Response response;
                 response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, PATCH, DELETE";
 
-                client->send(response);
+                (void)client->send(response);
             } else {
                 try {
                     Response response = router.handle(request);
 
-                    if (!response.body.empty() && request.headers["Accept-Encoding"].find("gzip") != string::npos) {
+                    if (!response.body.empty() && request.headers["Accept-Encoding"].find("gzip") != std::string::npos) {
                         response.body = gzip::compress(response.body.data(), response.body.size());
                         response.headers["Content-Encoding"] = "gzip";
                     }
 
-                    client->send(response);
+                    (void)client->send(response);
 
-                } catch (const out_of_range &ex) {
+                } catch (const std::out_of_range &ex) {
                     client->send(Response::NotFound(ex.what()));
-                } catch (const exception &ex) {
+                } catch (const std::exception &ex) {
                     client->send(Response::InternalError(ex.what()));
                 }
             }

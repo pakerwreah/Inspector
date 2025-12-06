@@ -2,37 +2,35 @@
 #include "Database.h"
 #include <filesystem>
 
-using namespace std;
-
 TEST_CASE("Database - Invalid path") {
     const auto matcher = Catch::Message("Invalid database path");
-    CHECK_THROWS_MATCHES(Database(""), runtime_error, matcher);
+    CHECK_THROWS_MATCHES(Database(""), std::runtime_error, matcher);
 }
 
 TEST_CASE("Database - Does not exist") {
-    const string path = "no_database.db";
+    const std::string path = "no_database.db";
     const auto matcher = Catch::Message("Error opening database (14): " + path);
-    filesystem::remove(path);
-    CHECK_THROWS_MATCHES(Database(path), runtime_error, matcher);
+    std::filesystem::remove(path);
+    CHECK_THROWS_MATCHES(Database(path), std::runtime_error, matcher);
 }
 
 TEST_CASE("Database - Create") {
-    const string path = "no_database.db";
-    filesystem::remove(path);
+    const std::string path = "no_database.db";
+    std::filesystem::remove(path);
     REQUIRE_NOTHROW(Database("file://" + path, "", 0, true));
-    CHECK(filesystem::exists(path));
+    CHECK(std::filesystem::exists(path));
 }
 
 TEST_CASE("Database - SQLCipher") {
-    const string path = "sqlchiper1.db";
+    const std::string path = "sqlchiper1.db";
 
     SECTION("Create") {
         REQUIRE_NOTHROW([&] {
-            filesystem::remove(path);
+            std::filesystem::remove(path);
             Database db(path, "123", 4, true);
             db.execute("CREATE TABLE tb_test (id INT, name TEXT)");
         }());
-        CHECK(filesystem::exists(path));
+        CHECK(std::filesystem::exists(path));
     }
 
     SECTION("Open") {
@@ -42,21 +40,21 @@ TEST_CASE("Database - SQLCipher") {
             CHECK_THROWS_MATCHES([&] {
                 Database db(path, "", 4);
                 db.query("SELECT * FROM tb_test");
-            }(), runtime_error, matcher);
+            }(), std::runtime_error, matcher);
         }
 
         SECTION("Wrong password") {
             CHECK_THROWS_MATCHES([&] {
                 Database db(path, "111", 4);
                 db.query("SELECT * FROM tb_test");
-            }(), runtime_error, matcher);
+            }(), std::runtime_error, matcher);
         }
 
         SECTION("Wrong version") {
             CHECK_THROWS_MATCHES([&] {
                 Database db(path, "123", 3);
                 db.query("SELECT * FROM tb_test");
-            }(), runtime_error, matcher);
+            }(), std::runtime_error, matcher);
         }
 
         SECTION("Success") {
@@ -69,24 +67,24 @@ TEST_CASE("Database - SQLCipher") {
 }
 
 TEST_CASE("Database - Query") {
-    const string path = "database.db";
-    filesystem::remove(path);
+    const std::string path = "database.db";
+    std::filesystem::remove(path);
     Database db(path, "", 0, true);
-    REQUIRE(filesystem::exists(path));
+    REQUIRE(std::filesystem::exists(path));
 
     SECTION("Success") {
-        const string create_sql = "CREATE TABLE tb_test (id INT, name TEXT)";
-        const string insert_sql = "INSERT INTO tb_test VALUES (1,'tuple 1'),(2,'tuple 2'),(3,'tuple 3')";
+        const std::string create_sql = "CREATE TABLE tb_test (id INT, name TEXT)";
+        const std::string insert_sql = "INSERT INTO tb_test VALUES (1,'tuple 1'),(2,'tuple 2'),(3,'tuple 3')";
         REQUIRE_NOTHROW(db.execute(create_sql + ";" + insert_sql));
 
         ResultSet r = db.query(
                 "SELECT *, id/10.0 as 'decimal', "
                 "CASE WHEN id = 2 THEN 'text' ELSE NULL END as 'null' "
                 "FROM tb_test");
-        vector<string> expected_headers = {"id", "name", "decimal", "null"};
+        std::vector<std::string> expected_headers = {"id", "name", "decimal", "null"};
         CHECK(r.headers() == expected_headers);
 
-        using rows_t = vector<tuple<int, string, double>>;
+        using rows_t = std::vector<std::tuple<int, std::string, double>>;
         rows_t expected_rows = {{1, "tuple 1", 0.1},
                                 {2, "tuple 2", 0.2},
                                 {3, "tuple 3", 0.3}};
@@ -103,25 +101,25 @@ TEST_CASE("Database - Query") {
 
     SECTION("Error") {
         const auto matcher = Catch::Message("Error executing query: no such table: tb_test");
-        CHECK_THROWS_MATCHES(db.query("SELECT * FROM tb_test"), runtime_error, matcher);
+        CHECK_THROWS_MATCHES(db.query("SELECT * FROM tb_test"), std::runtime_error, matcher);
     }
 
     SECTION("Invalid next") {
         ResultSet r = db.query("CREATE TABLE tb_test (id INT)");
         REQUIRE_NOTHROW(r.next()); // fake first step
         const auto matcher = Catch::Message("Error executing query: table tb_test already exists");
-        CHECK_THROWS_MATCHES(r.next(), runtime_error, matcher);
+        CHECK_THROWS_MATCHES(r.next(), std::runtime_error, matcher);
     }
 }
 
 TEST_CASE("Database - Execute") {
-    const string path = "database.db";
-    filesystem::remove(path);
+    const std::string path = "database.db";
+    std::filesystem::remove(path);
     Database db(path, "", 0, true);
-    REQUIRE(filesystem::exists(path));
+    REQUIRE(std::filesystem::exists(path));
 
     SECTION("Success") {
-        const string script = "CREATE TABLE tb1 (id INT);CREATE TABLE tb2 (id INT);CREATE TABLE tb3 (id INT)";
+        const std::string script = "CREATE TABLE tb1 (id INT);CREATE TABLE tb2 (id INT);CREATE TABLE tb3 (id INT)";
         REQUIRE_NOTHROW(db.execute(script));
 
         ResultSet r = db.query("SELECT COUNT(*) FROM sqlite_master WHERE type = 'table'");
@@ -130,28 +128,28 @@ TEST_CASE("Database - Execute") {
     }
 
     SECTION("Error") {
-        const string script = "CREATE TABLEs tb1 (id INT)";
+        const std::string script = "CREATE TABLEs tb1 (id INT)";
         const auto matcher = Catch::Message("Error executing script: near \"TABLEs\": syntax error");
-        CHECK_THROWS_MATCHES(db.execute(script), runtime_error, matcher);
+        CHECK_THROWS_MATCHES(db.execute(script), std::runtime_error, matcher);
     }
 }
 
 TEST_CASE("Database - Transaction") {
-    const string path = "database.db";
-    filesystem::remove(path);
+    const std::string path = "database.db";
+    std::filesystem::remove(path);
     Database db(path, "", 0, true);
-    REQUIRE(filesystem::exists(path));
+    REQUIRE(std::filesystem::exists(path));
     REQUIRE_NOTHROW(db.execute("CREATE TABLE tb1 (id INT)"));
 
     SECTION("Not in transaction") {
         const auto matcher = Catch::Message("Error executing script: cannot commit - no transaction is active");
-        CHECK_THROWS_MATCHES(db.commit(), runtime_error, matcher);
+        CHECK_THROWS_MATCHES(db.commit(), std::runtime_error, matcher);
     }
 
     SECTION("Already in transaction") {
         const auto matcher = Catch::Message("Error executing script: cannot start a transaction within a transaction");
         CHECK_NOTHROW(db.transaction());
-        CHECK_THROWS_MATCHES(db.transaction(), runtime_error, matcher);
+        CHECK_THROWS_MATCHES(db.transaction(), std::runtime_error, matcher);
     }
 
     SECTION("Success") {
