@@ -7,21 +7,34 @@
 
 #import <UIKit/UIKit.h>
 #import "IOSInspector.h"
-#import "DatabaseProviderAdapter.h"
+#import "Inspector.h"
 
-using namespace std;
+// MARK: - Database Adapter
 
-static unique_ptr<Inspector> inspector;
+class DatabaseProviderAdapter : public DatabaseProvider {
+    __weak id<IOSInspectorProtocol> _Nonnull delegate;
 
-@implementation IOSInspector
+public:
+    DatabaseProviderAdapter(id<IOSInspectorProtocol> _Nonnull delegate): delegate(delegate) {}
+
+protected:
+    std::vector<std::string> databasePathList() const override {
+        auto list = std::vector<std::string>();
+        auto paths = delegate.databaseList;
+        for (NSString *path in paths) {
+            list.push_back(path.UTF8String);
+        }
+        return list;
+    }
+};
 
 // MARK: - Utilities
 
-static inline string stringFromData(NSData *str) {
-    return string((const char*)str.bytes, str.length);
+static inline std::string stringFromData(NSData *str) {
+    return std::string((const char*)str.bytes, str.length);
 }
 
-static inline NSString* NS(const string &str) {
+static inline NSString* NS(const std::string &str) {
     return [NSString stringWithUTF8String:str.c_str()];
 }
 
@@ -33,18 +46,24 @@ static inline NSDictionary<NSString *, NSString *>* NS(const Params &params) {
     return dict;
 }
 
-static string buildHeaders(NSDictionary<NSString *,NSString *> *headers) {
-    string headerstr;
+static std::string buildHeaders(NSDictionary<NSString *,NSString *> *headers) {
+    std::string headerstr;
     NSArray<NSString *> *sorted_headers = [[headers allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
     for (NSString *_key in sorted_headers) {
         NSString *key = _key;
         if ([key hasPrefix:@"_"]) {
             key = [key substringFromIndex: 1];
         }
-        headerstr += string() + key.UTF8String + ": " + headers[_key].UTF8String + "\n";
+        headerstr += std::string() + key.UTF8String + ": " + headers[_key].UTF8String + "\n";
     }
     return headerstr;
 }
+
+// MARK: - Implementation
+
+static std::unique_ptr<Inspector> inspector; // singleton
+
+@implementation IOSInspector
 
 // MARK: - Initializer
 
@@ -57,7 +76,7 @@ static string buildHeaders(NSDictionary<NSString *,NSString *> *headers) {
     NSBundle *bundle = [NSBundle mainBundle];
     NSString *version = bundle.infoDictionary[@"CFBundleShortVersionString"];
     DeviceInfo info = {"ios", device.name.UTF8String, bundle.bundleIdentifier.UTF8String, version.UTF8String};
-    inspector = make_unique<Inspector>(make_shared<DatabaseProviderAdapter>(delegate), info);
+    inspector = std::make_unique<Inspector>(std::make_shared<DatabaseProviderAdapter>(delegate), info);
     inspector->bind(port);
 }
 
@@ -71,9 +90,6 @@ static string buildHeaders(NSDictionary<NSString *,NSString *> *headers) {
 }
 
 + (void)setCipherKey:(nonnull NSString *)database password:(nonnull NSString *)password version:(int)version {
-#ifdef NO_SQLCIPHER
-    NSAssert(NO, @"SQLCipher is not yet supported by SPM");
-#endif
     inspector->setCipherKey(database.UTF8String, password.UTF8String, version);
 }
 
@@ -92,7 +108,7 @@ static string buildHeaders(NSDictionary<NSString *,NSString *> *headers) {
 
     auto body = request.HTTPBody;
 
-    inspector->sendRequest(uid.UTF8String, buildHeaders(headers), body ? string((const char*)body.bytes, body.length) : "");
+    inspector->sendRequest(uid.UTF8String, buildHeaders(headers), body ? std::string((const char*)body.bytes, body.length) : "");
 }
 
 + (void)sendResponseWithUID:(nonnull NSString *)uid response:(nullable NSHTTPURLResponse *)response body:(NSData *)body {
@@ -105,7 +121,7 @@ static string buildHeaders(NSDictionary<NSString *,NSString *> *headers) {
         [headers addEntriesFromDictionary: response.allHeaderFields];
     }
 
-    inspector->sendResponse(uid.UTF8String, buildHeaders(headers), body ? string((const char*)body.bytes, body.length) : "");
+    inspector->sendResponse(uid.UTF8String, buildHeaders(headers), body ? std::string((const char*)body.bytes, body.length) : "");
 }
 
 // MARK: - Plugins

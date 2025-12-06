@@ -24,8 +24,7 @@ std::shared_ptr<Database> DatabasePlugin::open() {
 
     if (!db_con) {
         const std::string &name = databaseName();
-        const auto &it = db_meta.find(name);
-        if (it != db_meta.end()) {
+        if (const auto &it = db_meta.find(name); it != db_meta.end()) {
             DatabaseMeta config = it->second;
             db_con = make_shared<Database>(db_path, config.password, config.version);
         } else {

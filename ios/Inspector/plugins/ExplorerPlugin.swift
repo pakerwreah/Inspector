@@ -5,9 +5,7 @@
 //  Created by Paker on 18/08/20.
 //
 
-#if canImport(IOSInspector)
 import IOSInspector
-#endif
 
 class ExplorerPlugin: PluginActionProtocol {
     private lazy var frontend: String = {
