@@ -17,19 +17,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: CocoaPods
-        working-directory: ios
-        run: pod install
-
       - name: Build
         working-directory: ios
         env:
           scheme: Inspector
           platform: iOS Simulator
           device: iPhone 17
-          workspace: Inspector.xcworkspace
         run: |
           xcodebuild build \
-          -scheme "$scheme" -workspace "$workspace" \
+          -scheme "$scheme" \
           -destination "platform=$platform,name=$device" \
           COMPILER_INDEX_STORE_ENABLE=NO CODE_SIGNING_ALLOWED=NO
