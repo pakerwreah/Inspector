@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.4
 
 import PackageDescription
 
@@ -10,23 +10,27 @@ let package = Package(
             targets: ["IOSInspector"]
         )
     ],
+    dependencies: [
+        .package(url: "https://github.com/sqlcipher/SQLCipher.swift.git", from: "4.11.0")
+    ],
     targets: [
         .target(
             name: "IOSInspector",
             dependencies: ["Inspector"],
-            path: "ios/Inspector/lib",
-            publicHeadersPath: ".",
-            cSettings: [
-                .define("NO_SQLCIPHER") // FIXME: Waiting for official SPM support
-            ],
+            path: ".",
+            sources: ["ios/Inspector/lib"],
+            publicHeadersPath: "ios/Inspector/lib",
             cxxSettings: [
-                .headerSearchPath("../../../cpp/src"),
-                .headerSearchPath("../../../cpp/src/utils"),
-                .headerSearchPath("../../../cpp/src/libs")
+                .headerSearchPath("./cpp/src"),
+                .headerSearchPath("./cpp/src/utils"),
+                .headerSearchPath("./cpp/src/libs")
             ]
         ),
         .target(
             name: "Inspector",
+            dependencies: [
+                .product(name: "SQLCipher", package: "SQLCipher.swift")
+            ],
             path: "cpp/src",
             exclude: ["libs/CPPLINT.cfg"],
             cxxSettings: [
@@ -34,8 +38,7 @@ let package = Package(
                 .headerSearchPath("libs")
             ],
             linkerSettings: [
-                .linkedLibrary("z"),
-                .linkedLibrary("sqlite3")
+                .linkedLibrary("z")
             ]
         )
     ],

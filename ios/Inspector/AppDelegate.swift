@@ -6,10 +6,7 @@
 //
 
 import UIKit
-
-#if canImport(IOSInspector)
 import IOSInspector
-#endif
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, IOSInspectorProtocol {
@@ -18,10 +15,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IOSInspectorProtocol {
 
         IOSInspector.initialize(withDelegate: self)
 
-        #if !NO_SQLCIPHER
         IOSInspector.setCipherKey("database_cipher3.db", password: "123456", version: 3)
         IOSInspector.setCipherKey("database_cipher4.db", password: "1234567", version: 4)
-        #endif
 
         IOSInspector.addPlugin("prefs", name: "User Defaults", plugin: UserDefaultsPlugin())
         IOSInspector.addLivePlugin("realtime", name: "Realtime", plugin: RealtimePlugin())
@@ -33,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IOSInspectorProtocol {
     }
     
     func mockNetwork() {
-        DispatchQueue.global().async {
+        Task {
             let urls = [
                 "https://google.com.br",
                 "https://viacep.com.br/ws/01001000/json",
@@ -43,19 +38,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, IOSInspectorProtocol {
             var i = 0
             while(true) {
                 let url = urls[i % urls.count]
-                sleep(UInt32.random(in: 0...3))
-                Http.request(url: url)
+                try await Task.sleep(for: .seconds(.random(in: 0...5)))
+                try await Http.request(url: url)
                 i += 1
             }
         }
     }
 
     func mockMessages() {
-        DispatchQueue.global().async {
+        Task {
             while(true) {
-                sleep(UInt32.random(in: 0...3))
-                let uid = UUID().uuidString
-                IOSInspector.sendMessage(to: "realtime", message: "Message \(uid)")
+                try await Task.sleep(for: .seconds(.random(in: 0...3)))
+                IOSInspector.sendMessage(to: "realtime", message: "Message \(UUID().uuidString)")
             }
         }
     }
