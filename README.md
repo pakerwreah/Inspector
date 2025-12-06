@@ -1,5 +1,4 @@
 # Inspector
-[![release](https://img.shields.io/github/v/release/pakerwreah/Inspector)](https://github.com/pakerwreah/Inspector/releases/latest)
 ![c++](https://img.shields.io/badge/C++-17-blue.svg?style=flat&logo=c%2B%2B)
 ![android](https://img.shields.io/badge/Android-grey.svg?style=flat&logo=android)
 ![ios](https://img.shields.io/badge/iOS-grey.svg?style=flat&logo=apple)
@@ -139,15 +138,24 @@ Or configure its network as bridge and use the device's IP
 </details>
 
 ## iOS
-[![Version](https://img.shields.io/cocoapods/v/IOSInspector.svg)](https://cocoapods.org/pods/IOSInspector)
+[![release](https://img.shields.io/github/v/release/pakerwreah/Inspector?label=spm)](https://github.com/pakerwreah/Inspector/releases/latest)
 
 <details>
     <summary>Setup</summary>
 
+#### SPM
+```swift
+dependencies: [
+  .package(url: "https://github.com/pakerwreah/Inspector", from: "1.5.5")
+]
+```
+
 #### CocoaPods
-```gradle
+[![Version](https://img.shields.io/cocoapods/v/IOSInspector.svg)](https://cocoapods.org/pods/IOSInspector) <sup>(Deprecated)</sup>
+```ruby
+// Deprecated
 target 'MyApp' do
-   pod "IOSInspector"
+  pod "IOSInspector"
 end
 ```
 </details>
