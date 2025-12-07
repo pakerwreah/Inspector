@@ -1,6 +1,7 @@
 jdk:
   - openjdk17
 before_install:
+  - sdk install cmake 3.31.6
   - cd android/lib
 install:
   - ./gradlew assembleRelease publishToMavenLocal
