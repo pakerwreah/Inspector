@@ -42,7 +42,7 @@ TEST_CASE("CustomPlugin - PluginMeta") {
     json expected = {{"key",  "key-val"},
                      {"name", "name-val"},
                      {"live", true}};
-    CHECK(meta == expected);
+    CHECK(json(meta) == expected);
 }
 
 TEST_CASE("CustomPlugin - Routes") {

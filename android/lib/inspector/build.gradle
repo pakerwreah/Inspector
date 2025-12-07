@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 33
-    ndkVersion '21.1.6352462'
-    buildToolsVersion "30.0.3"
+    namespace "br.newm.inspector"
+    compileSdkVersion 36
+    ndkVersion '29.0.14206865'
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 33
+        minSdkVersion 21
+        targetSdkVersion 36
     }
     buildTypes {
         release {
@@ -17,14 +17,18 @@ android {
     externalNativeBuild {
         cmake {
             path "src/main/cpp/CMakeLists.txt"
-            version "3.10.2"
+            version "3.31.6"
         }
+    }
+    publishing {
+        singleVariant("release")
     }
 }
 
 dependencies {
-    implementation 'com.squareup.okhttp3:okhttp:4.4.0'
-    implementation "net.zetetic:android-database-sqlcipher:4.4.0@aar"
+    implementation 'com.squareup.okhttp3:okhttp:5.3.2'
+    //noinspection Aligned16KB
+    implementation "net.zetetic:android-database-sqlcipher:4.5.4@aar"
 }
 
 apply from: 'publish.gradle'

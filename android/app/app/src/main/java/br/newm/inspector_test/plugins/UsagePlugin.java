@@ -29,7 +29,7 @@ public class UsagePlugin implements PluginAction {
             reader = new RandomAccessFile("/proc/stat", "r");
             old_stats = getCpuUsage();
 
-            new Timer().scheduleAtFixedRate(new TimerTask() {
+            new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
                     try {
