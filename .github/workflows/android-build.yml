@@ -2,9 +2,9 @@ name: Android CI
 
 on:
   push:
-    branches: [ master-disabled ]
+    branches: [ master ]
   pull_request:
-    branches: [ master-disabled ]
+    branches: [ master ]
     types: [ opened, reopened, synchronize, ready_for_review ]
 
 jobs:
@@ -14,7 +14,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      NDK_VERSION: 21.1.6352462
+      # needs to match build.gradle ndkVersion
+      NDK_VERSION: 29.0.14206865
 
     steps:
     - name: Checkout
@@ -42,4 +43,4 @@ jobs:
 
     - name: Build
       working-directory: android/app
-      run: ./gradlew assembleLocalDebug
+      run: ./gradlew assembleLocalDebug --warning-mode all

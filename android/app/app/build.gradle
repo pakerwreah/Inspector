@@ -1,11 +1,12 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 33
+    namespace "br.newm.inspector_test"
+    compileSdkVersion 36
     defaultConfig {
         applicationId "br.newm.inspector_test"
         minSdkVersion 21
-        targetSdkVersion 33
+        targetSdkVersion 36
         versionCode 1
         versionName "1.0"
     }
@@ -29,14 +30,11 @@ android {
 
 dependencies {
     localImplementation project(':inspector')
-    localImplementation 'com.squareup.okhttp3:okhttp:4.4.0'
+    localImplementation 'com.squareup.okhttp3:okhttp:5.3.2'
 
     // gradle resolves all flavors every time, so we have to comment this out
     // mavenImplementation 'com.github.pakerwreah:Inspector:develop-SNAPSHOT'
 
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.5.1'
-    implementation "androidx.preference:preference:1.2.0"
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
-    implementation 'commons-io:commons-io:2.5'
+    implementation 'commons-io:commons-io:2.21.0'
+    implementation "androidx.preference:preference:1.2.1"
 }
