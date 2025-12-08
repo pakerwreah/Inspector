@@ -1,4 +1,20 @@
 before_install:
-  - cd android/lib
+  # install cmake
+  - export CMAKE_VERSION=3.31.6
+  - wget -q "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz"
+  - tar -xzf "cmake-${CMAKE_VERSION}-linux-x86_64.tar.gz"
+  - export PATH="$PWD/cmake-${CMAKE_VERSION}-linux-x86_64/bin:$PATH"
+
+  # install ninja
+  - wget -q "https://github.com/ninja-build/ninja/releases/download/v1.13.2/ninja-linux.zip"
+  - unzip ninja-linux.zip -d ninja
+  - chmod +x ninja/ninja
+  - export PATH="$PWD/ninja:$PATH"
+
+  # install jdk 17
+  - sdk install java 17.0.17-tem
+  - sdk use java 17.0.17-tem
+
 install:
+  - cd android/lib
   - ./gradlew assembleRelease publishToMavenLocal
