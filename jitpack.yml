@@ -1,14 +1,8 @@
-jdk:
-  - openjdk17
-
-before_install: |
-  export CMAKE_VERSION=3.31.6
-  export CMAKE_FILENAME=cmake-${CMAKE_VERSION}-linux-x86_64
-  wget "https://github.com/Kitware/CMake/releases/download/v${CMAKE_VERSION}/${CMAKE_FILENAME}.tar.gz"
-  tar -xzf "${CMAKE_FILENAME}.tar.gz"
-  export PATH="$PWD/${CMAKE_FILENAME}/bin:$PATH"
-  
-  cd android/lib
+before_install:
+  - yes | sdkmanager "cmake;3.31.6"
+  - sdk install java 17.0.17-tem
+  - sdk use java 17.0.17-tem
+  - cd android/lib
 
 install:
   - ./gradlew assembleRelease publishToMavenLocal
