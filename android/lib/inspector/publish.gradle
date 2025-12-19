@@ -1,6 +1,6 @@
 apply plugin: 'maven-publish'
 
-version '1.5.6'
+version '1.6.0'
 group 'br.pakerwreah.inspector'
 
 publishing {
