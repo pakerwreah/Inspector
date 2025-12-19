@@ -36,7 +36,7 @@ dependencies {
 
 #### Proguard
 ```
--keep class br.newm.inspector.* { *; }
+-keep class br.pakerwreah.inspector.* { *; }
 ```
 </details>
 
@@ -45,7 +45,7 @@ dependencies {
 
 #### Application
 ```java
-import br.newm.inspector.Inspector;
+import br.pakerwreah.inspector.Inspector;
 
 public class Application extends android.app.Application {
     @Override
@@ -71,7 +71,7 @@ public class Application extends android.app.Application {
 #### Intercept network requests
 <sub>:warning: if you use addNetworkInterceptor it won't intercept timeouts</sub>
 ```java
-import br.newm.inspector.NetworkInterceptor;
+import br.pakerwreah.inspector.NetworkInterceptor;
 
 new OkHttpClient.Builder().addInterceptor(new NetworkInterceptor());
 ```

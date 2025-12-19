@@ -1,4 +1,4 @@
-package br.newm.inspector_test.plugins;
+package br.pakerwreah.inspector_test.plugins;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 import org.json.JSONObject;
 
 import androidx.preference.PreferenceManager;
-import br.newm.inspector.PluginAction;
+import br.pakerwreah.inspector.PluginAction;
 
 public class SharedPrefsPlugin implements PluginAction {
 

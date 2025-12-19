@@ -1,7 +1,7 @@
 apply plugin: 'maven-publish'
 
 version '1.5.6'
-group 'br.newm.inspector'
+group 'br.pakerwreah.inspector'
 
 publishing {
     publications {

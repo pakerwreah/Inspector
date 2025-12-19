@@ -1,4 +1,4 @@
-package br.newm.inspector_test.plugins;
+package br.pakerwreah.inspector_test.plugins;
 
 import android.content.Context;
 
@@ -11,8 +11,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import br.newm.inspector.Inspector;
-import br.newm.inspector.PluginAction;
+import br.pakerwreah.inspector.Inspector;
+import br.pakerwreah.inspector.PluginAction;
 
 public class UsagePlugin implements PluginAction {
     private String frontend = null;

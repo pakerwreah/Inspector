@@ -1,8 +1,8 @@
-package br.newm.inspector_test;
+package br.pakerwreah.inspector_test;
 
 import java.io.IOException;
 
-import br.newm.inspector.NetworkInterceptor;
+import br.pakerwreah.inspector.NetworkInterceptor;
 import okhttp3.Call;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

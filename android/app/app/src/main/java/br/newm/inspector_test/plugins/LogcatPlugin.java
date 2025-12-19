@@ -1,4 +1,4 @@
-package br.newm.inspector_test.plugins;
+package br.pakerwreah.inspector_test.plugins;
 
 import android.content.Context;
 
@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
-import br.newm.inspector.Inspector;
-import br.newm.inspector.PluginAction;
+import br.pakerwreah.inspector.Inspector;
+import br.pakerwreah.inspector.PluginAction;
 
 public class LogcatPlugin implements PluginAction {
     private String frontend = null;

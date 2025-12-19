@@ -1,4 +1,4 @@
-package br.newm.inspector_test;
+package br.pakerwreah.inspector_test;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
