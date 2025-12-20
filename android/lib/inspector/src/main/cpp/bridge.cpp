@@ -23,7 +23,7 @@ jint JNI_OnLoad(JavaVM *vm, void *) {
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_br_newm_inspector_Inspector_initialize(JNIEnv *env, jclass clazz, jint port) {
+Java_br_pakerwreah_inspector_Inspector_initialize(JNIEnv *env, jclass clazz, jint port) {
     clazz = (jclass) env->NewGlobalRef(clazz);
     inspector = make_unique<Inspector>(make_shared<AndroidDatabaseProvider>(jvm, clazz), getDeviceInfo(env, clazz));
     // Emulator: ./adb forward tcp:30000 tcp:30000
@@ -31,13 +31,13 @@ Java_br_newm_inspector_Inspector_initialize(JNIEnv *env, jclass clazz, jint port
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_br_newm_inspector_Inspector_setCipherKeyJNI(JNIEnv *env, jclass, jstring database, jstring password, jint version) {
+Java_br_pakerwreah_inspector_Inspector_setCipherKeyJNI(JNIEnv *env, jclass, jstring database, jstring password, jint version) {
     inspector->setCipherKey(readString(env, database), readString(env, password), version);
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_br_newm_inspector_Inspector_addPluginJNI(JNIEnv *env, jclass, jstring key, jstring name, jobject _plugin) {
+Java_br_pakerwreah_inspector_Inspector_addPluginJNI(JNIEnv *env, jclass, jstring key, jstring name, jobject _plugin) {
     jobject plugin = env->NewGlobalRef(_plugin);
 
     inspector->addPlugin(readString(env, key), readString(env, name), [plugin] {
@@ -55,7 +55,7 @@ Java_br_newm_inspector_Inspector_addPluginJNI(JNIEnv *env, jclass, jstring key, 
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_br_newm_inspector_Inspector_addLivePluginJNI(JNIEnv *env, jclass, jstring key, jstring name, jobject _plugin) {
+Java_br_pakerwreah_inspector_Inspector_addLivePluginJNI(JNIEnv *env, jclass, jstring key, jstring name, jobject _plugin) {
     jobject plugin = env->NewGlobalRef(_plugin);
 
     inspector->addLivePlugin(readString(env, key), readString(env, name), [plugin] {
@@ -73,7 +73,7 @@ Java_br_newm_inspector_Inspector_addLivePluginJNI(JNIEnv *env, jclass, jstring k
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_br_newm_inspector_Inspector_addPluginAPIJNI(JNIEnv *env, jclass, jstring method, jstring path, jobject _plugin) {
+Java_br_pakerwreah_inspector_Inspector_addPluginAPIJNI(JNIEnv *env, jclass, jstring method, jstring path, jobject _plugin) {
     auto *plugin = env->NewGlobalRef(_plugin);
 
     inspector->addPluginAPI(readString(env, method), readString(env, path), [plugin](const Params &params) {
@@ -92,22 +92,22 @@ Java_br_newm_inspector_Inspector_addPluginAPIJNI(JNIEnv *env, jclass, jstring me
 }
 
 extern "C" JNIEXPORT jboolean JNICALL
-Java_br_newm_inspector_NetworkInterceptor_isConnected(JNIEnv *, jobject) {
+Java_br_pakerwreah_inspector_NetworkInterceptor_isConnected(JNIEnv *, jobject) {
     return static_cast<jboolean>(inspector->isConnected());
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_br_newm_inspector_NetworkInterceptor_sendRequest(JNIEnv *env, jobject, jstring uid, jstring headers, jbyteArray data) {
+Java_br_pakerwreah_inspector_NetworkInterceptor_sendRequest(JNIEnv *env, jobject, jstring uid, jstring headers, jbyteArray data) {
     inspector->sendRequest(readString(env, uid), readString(env, headers), readByteArray(env, data));
 }
 
 extern "C" JNIEXPORT void JNICALL
-Java_br_newm_inspector_NetworkInterceptor_sendResponse(JNIEnv *env, jobject, jstring uid, jstring headers, jbyteArray data, jboolean compressed) {
+Java_br_pakerwreah_inspector_NetworkInterceptor_sendResponse(JNIEnv *env, jobject, jstring uid, jstring headers, jbyteArray data, jboolean compressed) {
     inspector->sendResponse(readString(env, uid), readString(env, headers), readByteArray(env, data), compressed);
 }
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_br_newm_inspector_Inspector_sendMessageJNI(JNIEnv *env, jclass, jstring key, jstring message) {
+Java_br_pakerwreah_inspector_Inspector_sendMessageJNI(JNIEnv *env, jclass, jstring key, jstring message) {
     inspector->sendMessage(readString(env, key), readString(env, message));
 }

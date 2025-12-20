@@ -1,4 +1,4 @@
-package br.newm.inspector_test.plugins;
+package br.pakerwreah.inspector_test.plugins;
 
 import android.content.Context;
 
@@ -12,10 +12,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
-import br.newm.inspector.Inspector;
-import br.newm.inspector.PluginAPIAction;
-import br.newm.inspector.PluginAPIActionBinary;
-import br.newm.inspector.PluginAction;
+import br.pakerwreah.inspector.Inspector;
+import br.pakerwreah.inspector.PluginAPIAction;
+import br.pakerwreah.inspector.PluginAPIActionBinary;
+import br.pakerwreah.inspector.PluginAction;
 
 public class ExplorerPlugin implements PluginAction {
     private String frontend = null;

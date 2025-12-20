@@ -1,4 +1,4 @@
-package br.newm.inspector;
+package br.pakerwreah.inspector;
 
 import java.util.Map;
 

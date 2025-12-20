@@ -1,4 +1,4 @@
-package br.newm.inspector;
+package br.pakerwreah.inspector;
 
 import android.content.Context;
 import android.content.pm.PackageManager;

@@ -1,10 +1,10 @@
-package br.newm.inspector_test;
+package br.pakerwreah.inspector_test;
 
-import br.newm.inspector.Inspector;
-import br.newm.inspector_test.plugins.ExplorerPlugin;
-import br.newm.inspector_test.plugins.LogcatPlugin;
-import br.newm.inspector_test.plugins.SharedPrefsPlugin;
-import br.newm.inspector_test.plugins.UsagePlugin;
+import br.pakerwreah.inspector.Inspector;
+import br.pakerwreah.inspector_test.plugins.ExplorerPlugin;
+import br.pakerwreah.inspector_test.plugins.LogcatPlugin;
+import br.pakerwreah.inspector_test.plugins.SharedPrefsPlugin;
+import br.pakerwreah.inspector_test.plugins.UsagePlugin;
 
 public class Application extends android.app.Application {
     @Override

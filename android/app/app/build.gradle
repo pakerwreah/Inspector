@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 
 android {
-    namespace "br.newm.inspector_test"
+    namespace "br.pakerwreah.inspector_test"
     compileSdkVersion 36
     defaultConfig {
-        applicationId "br.newm.inspector_test"
+        applicationId "br.pakerwreah.inspector_test"
         minSdkVersion 21
         targetSdkVersion 36
         versionCode 1

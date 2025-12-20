@@ -1,4 +1,4 @@
-package br.newm.inspector;
+package br.pakerwreah.inspector;
 
 import okhttp3.*;
 import okio.Buffer;
